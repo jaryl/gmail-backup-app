@@ -83,3 +83,5 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+# Mac OS artifacts
+.DS_Store
