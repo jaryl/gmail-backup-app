@@ -1,6 +1,6 @@
 module.exports = {
 
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Tokens', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('GoogleTokens', {
     id: {
       allowNull: false,
       autoIncrement: true,

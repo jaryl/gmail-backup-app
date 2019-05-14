@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Token = sequelize.define('Token', {
+  const GoogleToken = sequelize.define('GoogleToken', {
     accessToken: DataTypes.STRING,
     refreshToken: DataTypes.STRING,
     scope: DataTypes.STRING,
@@ -7,9 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     expiryDate: DataTypes.DATE,
   }, {});
 
-  Token.associate = function associations(models) {
+  GoogleToken.associate = function associations(models) {
     // TODO: add association to mailbox
   };
 
-  return Token;
+  return GoogleToken;
 };
