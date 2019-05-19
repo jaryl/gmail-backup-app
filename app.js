@@ -6,9 +6,13 @@ const debug = require('debug')('app');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  res.send(`Hello World on port ${port}`);
-});
+const rootRouter = require('./app/root');
+const frontendRouter = require('./app/frontend');
+const apiRouter = require('./app/api');
+
+app.use('/', rootRouter);
+app.use('/frontend', frontendRouter);
+app.use('/api', apiRouter);
 
 app.listen(port, () => {
   debug(`listening on port ${port}`);
