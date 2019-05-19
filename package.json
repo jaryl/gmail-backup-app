@@ -21,6 +21,7 @@
   "dependencies": {
     "debug": "^4.1.1",
     "dotenv": "^8.0.0",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
     "googleapis": "^39.2.0",
     "passport": "^0.4.0",

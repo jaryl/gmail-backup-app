@@ -1,7 +1,7 @@
 function controller() {
   function getLogin(req, res) {
     // TODO: show template for logging in via Google OAuth 2.0
-    res.send('login');
+    res.render('./sessions/login');
   }
 
   function postLogin(req, res) {
