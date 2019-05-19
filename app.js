@@ -11,7 +11,7 @@ const frontendRouter = require('./app/frontend');
 const apiRouter = require('./app/api');
 
 app.use('/', rootRouter);
-app.use('/frontend', frontendRouter);
+app.use('/app', frontendRouter);
 app.use('/api', apiRouter);
 
 app.listen(port, () => {
