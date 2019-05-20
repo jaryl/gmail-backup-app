@@ -1,17 +1,11 @@
 const express = require('express');
-const passport = require('passport');
 
-const router = express.Router();
+const app = express();
 
-// TODO: serve entire Vue.js app
+const router = require('./routes');
 
-function frontendRouter(app) {
-  app.use(passport.initialize());
+// TODO: serve entire Vue.js app (no auth needed)
 
-  router.route('/').get((req, res) => {
-    res.send('frontend');
-  });
-  return router;
-}
+app.use('/', router);
 
-module.exports = frontendRouter;
+module.exports = app;
