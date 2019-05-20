@@ -1,11 +1,17 @@
 const express = require('express');
+const passport = require('passport');
 
 const router = express.Router();
 
 // TODO: enforce JWT authentication on all routes
 
-router.route('/').get((req, res) => {
-  res.send('api');
-});
+function apiRouter(app) {
+  app.use(passport.initialize());
 
-module.exports = router;
+  router.route('/').get((req, res) => {
+    res.send('api');
+  });
+  return router;
+}
+
+module.exports = apiRouter;

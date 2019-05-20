@@ -10,9 +10,9 @@ const port = process.env.PORT || 3000;
 app.set('views', [path.join(__dirname, '/app/root/views')]);
 app.set('view engine', 'ejs');
 
-const rootRouter = require('./app/root');
-const frontendRouter = require('./app/frontend');
-const apiRouter = require('./app/api');
+const rootRouter = require('./app/root')(app);
+const frontendRouter = require('./app/frontend')(app);
+const apiRouter = require('./app/api')(app);
 
 app.use('/', rootRouter);
 app.use('/app', frontendRouter);

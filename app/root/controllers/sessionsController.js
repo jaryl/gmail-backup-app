@@ -6,7 +6,7 @@ function controller() {
 
   function postLogin(req, res) {
     // TODO: upon success, check if mailbox is already created
-    res.send('logged in');
+    res.redirect('/mailbox');
   }
 
   function deleteLogout(req, res) {
