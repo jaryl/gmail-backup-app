@@ -11,7 +11,7 @@ function controller() {
 
   function deleteLogout(req, res) {
     req.logout();
-    res.redirect('/session');
+    res.redirect('/auth');
   }
 
   return {
