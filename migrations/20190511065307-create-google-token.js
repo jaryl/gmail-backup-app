@@ -8,6 +8,10 @@ module.exports = {
       unique: true,
       type: Sequelize.INTEGER,
     },
+    googleId: {
+      allowNull: false,
+      type: Sequelize.STRING,
+    },
     accessToken: {
       allowNull: false,
       unique: true,
@@ -17,18 +21,6 @@ module.exports = {
       allowNull: false,
       unique: true,
       type: Sequelize.STRING,
-    },
-    scope: {
-      allowNull: false,
-      type: Sequelize.STRING,
-    },
-    tokenType: {
-      allowNull: false,
-      type: Sequelize.STRING,
-    },
-    expiryDate: {
-      allowNull: false,
-      type: Sequelize.DATE,
     },
     createdAt: {
       allowNull: false,

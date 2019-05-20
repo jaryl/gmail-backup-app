@@ -10,8 +10,8 @@ function controller() {
   }
 
   function deleteLogout(req, res) {
-    // TODO: logut user
-    res.send('logged out');
+    req.logout();
+    res.redirect('/session');
   }
 
   return {

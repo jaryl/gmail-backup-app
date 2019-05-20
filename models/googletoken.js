@@ -2,9 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const GoogleToken = sequelize.define('GoogleToken', {
     accessToken: DataTypes.STRING,
     refreshToken: DataTypes.STRING,
-    scope: DataTypes.STRING,
-    tokenType: DataTypes.STRING,
-    expiryDate: DataTypes.DATE,
+    googleId: DataTypes.STRING,
   }, {});
 
   GoogleToken.associate = function associations(models) {

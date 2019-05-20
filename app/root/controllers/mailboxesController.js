@@ -4,7 +4,7 @@ function controller() {
   function getMailbox(req, res) {
     // TODO: otherwise, display mailbox status (thread/message counts, last updated, etc)
     // res.send('mailbox data');
-    res.render('mailboxes/show');
+    res.render('mailboxes/show', { session: req.session, user: req.user, auth: req.isAuthenticated() });
   }
 
   function createMailbox(req, res, next) {
