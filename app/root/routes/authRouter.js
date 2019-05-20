@@ -4,7 +4,11 @@ const passport = require('passport');
 const router = express.Router();
 
 const sessionsController = require('../controllers/sessionsController');
-const scopes = require('../config/passport').scopes();
+
+const AUTH_SCOPES = [
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/gmail.readonly',
+];
 
 const { getLogin, postLogin, deleteLogout } = sessionsController();
 
@@ -18,7 +22,7 @@ router.route('/logout').get(passport.authenticateUser,
   deleteLogout); // TODO: support only DELETE requests
 
 router.get('/google', passport.alreadyAuthenticated,
-  passport.authenticate('google', { scope: scopes }));
+  passport.authenticate('google', { scope: AUTH_SCOPES }));
 
 router.get('/google/callback', passport.alreadyAuthenticated,
   passport.authenticate('google', { failureRedirect: '/session' }), postLogin);

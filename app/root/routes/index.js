@@ -6,8 +6,7 @@ const authRouter = require('./authRouter');
 const mailboxRouter = require('./mailboxRouter');
 
 router.route('/').get((req, res) => {
-  // TODO: redirect to /login if user is not logged in
-  // TODO: otherwise, redirect to /mailbox
+  // TODO: show home page, which links to admin backend, or to frontend app
   res.send('root');
 });
 
