@@ -2,9 +2,12 @@ require('dotenv').config();
 
 const express = require('express');
 const debug = require('debug')('app');
+const logger = require('morgan');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(logger('combined'));
 
 const rootApp = require('./app/root');
 const frontendApp = require('./app/frontend');

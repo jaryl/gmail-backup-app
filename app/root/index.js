@@ -1,6 +1,6 @@
 const express = require('express');
-const passport = require('passport');
 const path = require('path');
+const passport = require('passport');
 // const debug = require('debug')('app:root:index');
 
 const router = require('./routes');
