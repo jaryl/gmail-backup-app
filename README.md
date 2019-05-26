@@ -15,3 +15,16 @@ Run the server:
 ```
 npm start
 ```
+
+System Design
+---
+
+This app (the main Express instance) is composed of 3 nested apps (also Express instances), as follows:
+
+* root [See README](app/root/README.md)
+* frontend [See README](app/frontend/README.md)
+* api [See README](app/api/README.md)
+
+The root app is what you will see when you access the root url of where you've deployed the app to, and will be used for setup and configuration.
+
+The frontend app (implemented with Vue.js) will work in conjunction with the api app (served over a GraphQL interface), to be the viewer of backed up emails (read-only access).
