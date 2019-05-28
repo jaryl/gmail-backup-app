@@ -1,9 +1,13 @@
 const express = require('express');
 const passport = require('passport');
 
+const graphql = require('graphql');
 const graphqlHTTP = require('express-graphql');
 
-const { schema, root } = require('./schemas');
+const { query } = require('./queries');
+
+const { GraphQLSchema } = graphql;
+const schema = new GraphQLSchema({ query });
 
 // TODO: enforce JWT authentication on all routes
 
@@ -16,8 +20,7 @@ passportConfig.setup();
 
 app.use('/', graphqlHTTP({
   schema,
-  rootValue: root,
-  graphiql: true, // TODO: toggle based on environment
+  graphiql: (process.env.API_ENABLE_GRAPHQL === 'true' || false),
 }));
 
 module.exports = app;
