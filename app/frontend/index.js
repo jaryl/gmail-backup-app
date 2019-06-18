@@ -1,10 +1,12 @@
+const path = require('path');
+
 const express = require('express');
 
 const app = express();
 
 const router = require('./routes');
 
-// TODO: serve entire Vue.js app (no auth needed)
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', router);
 
