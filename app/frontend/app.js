@@ -1,6 +1,6 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-const FrontendApp = require('./components/frontendapp');
+import FrontendApp from './components/frontendapp';
 
-ReactDOM.render(React.createElement(FrontendApp), document.getElementById('app'));
+ReactDOM.render(<FrontendApp />, document.querySelector('#app'));
