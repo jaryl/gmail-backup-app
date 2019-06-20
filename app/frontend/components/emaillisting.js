@@ -7,7 +7,13 @@ import { Search as SearchIcon } from '@material-ui/icons';
 const useStyles = makeStyles(theme => ({
   avatar: {
     minWidth: '16px',
-  }
+  },
+  listItem: {
+    alignItems: 'flex-start',
+  },
+  dateTimeDisplay: {
+    whiteSpace: 'nowrap',
+  },
 }));
 
 export default function EmailListing(props) {
@@ -21,7 +27,7 @@ export default function EmailListing(props) {
         margin="none"
         variant="filled"
         InputProps={{
-          ariaLabel: 'Search',
+          'aria-label': 'Search',
           startAdornment: (
             <InputAdornment position="start">
               <SearchIcon />
@@ -32,18 +38,20 @@ export default function EmailListing(props) {
 
       <List component="nav">
 
-        <ListItem button alignItems="start" key={0} divider={true}>
+        <ListItem button className={classes.listItem} key={0} divider={true}>
           <ListItemAvatar className={classes.avatar}>
-            <Badge color="primary" variant="dot"></Badge>
+            <Badge color="primary" variant="dot"><React.Fragment /></Badge>
           </ListItemAvatar>
-          <ListItemText primary="Hello world" secondary="This is great lorem ipsum sit amet dolor" />
+          <ListItemText primary="Lorem ipsum sit amet dolor" secondary="This is great lorem ipsum sit amet dolor" />
+          <ListItemText className={classes.dateTimeDisplay} secondary="15:32" />
         </ListItem>
 
-        <ListItem button alignItems="start" key={1} divider={true}>
+        <ListItem button className={classes.listItem} key={1} divider={true}>
           <ListItemAvatar className={classes.avatar}>
-            <Badge color="primary" variant="dot"></Badge>
+            <Badge color="primary" variant="dot"><React.Fragment /></Badge>
           </ListItemAvatar>
-          <ListItemText primary="Hello world" secondary="This is great lorem ipsum sit amet dolor" />
+          <ListItemText primary="Lorem ipsum sit amet dolor" secondary="This is great lorem ipsum sit amet dolor" />
+          <ListItemText className={classes.dateTimeDisplay} secondary="13 May" />
         </ListItem>
 
       </List>

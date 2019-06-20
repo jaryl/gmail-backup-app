@@ -55,9 +55,7 @@ export default function FrontendApp(props) {
           </Grid>
 
           <Grid item xs>
-            <Paper square={true} className={classes.paper}>
-              <EmailViewer></EmailViewer>
-            </Paper>
+            <EmailViewer></EmailViewer>
           </Grid>
         </Grid>
 
