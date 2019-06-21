@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, Typography, FormControl, TextField, Button, Paper, Grid, Divider } from '@material-ui/core';
 
-export default function Login(props) {
+export default function LoginScene(props) {
 
   const [values, setValues] = React.useState({
     name: '',

@@ -41,10 +41,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function MainDrawer(props) {
+export default function DrawerContainer(props) {
   const classes = useStyles({ drawerWidth: 240 });
   const theme = useTheme();
-  const open = props.open;
+  const open = props.drawerOpen;
 
   return (
     <Drawer variant="permanent"

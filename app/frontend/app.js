@@ -3,17 +3,17 @@ import ReactDOM from 'react-dom';
 
 import { HashRouter as Router, Link, Switch, Route } from 'react-router-dom';
 
-import Login from './src/scenes/Login';
-import MailClient from './src/scenes/MailClient';
-import Settings from './src/scenes/Settings';
+import LoginScene from './src/scenes/LoginScene';
+import MailScene from './src/scenes/MailScene';
+import SettingsScene from './src/scenes/SettingsScene';
 
 const App = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path="/" component={MailClient} />
-        <Route path="/login" component={Login} />
-        <Route path="/settings" component={Settings} />
+        <Route exact path="/" component={MailScene} />
+        <Route path="/login" component={LoginScene} />
+        <Route path="/settings" component={SettingsScene} />
       </Switch>
     </Router>
    );

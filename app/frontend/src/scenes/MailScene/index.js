@@ -5,11 +5,11 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { CssBaseline, Grid, Paper } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 
-import MainAppBar from '../../../components/mainappbar';
-import MainDrawer from '../../../components/maindrawer';
+import AppBarContainer from './containers/AppBarContainer';
+import DrawerContainer from './containers/DrawerContainer';
 
-import EmailListing from '../../../components/emaillisting';
-import EmailViewer from '../../../components/emailviewer';
+import EmailListing from './containers/EmailListing';
+import EmailViewer from './containers/EmailViewer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,18 +31,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function MailClient(props) {
+export default function MailScene(props) {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
     <div className={classes.root}>
 
       <CssBaseline />
 
-      <MainAppBar open={open} drawerWidth={240} onOpenDrawer={() => setOpen(true)} />
-      <MainDrawer open={open} drawerWidth={240} onCloseDrawer={() => setOpen(false)} />
+      <AppBarContainer drawerOpen={drawerOpen} drawerWidth={240} onOpenDrawer={() => setOpen(true)} />
+      <DrawerContainer drawerOpen={drawerOpen} drawerWidth={240} onCloseDrawer={() => setOpen(false)} />
 
       <main className={classes.content}>
         <div className={classes.toolbar} />

@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function MainAppBar(props) {
+export default function AppBarContainer(props) {
   const classes = useStyles(props);
   // const theme = useTheme();
 
@@ -44,9 +44,9 @@ export default function MainAppBar(props) {
   }
 
   return (
-    <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: props.open, }) }>
+    <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: props.drawerOpen, }) }>
       <Toolbar>
-        <IconButton color="inherit" aria-label="Open drawer" onClick={() => props.onOpenDrawer()} edge="start" className={clsx(classes.menuButton, { [classes.hide]: props.open, })}>
+        <IconButton color="inherit" aria-label="Open drawer" onClick={() => props.onOpenDrawer()} edge="start" className={clsx(classes.menuButton, { [classes.hide]: props.drawerOpen, })}>
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap className={classes.mainAppTitle}>Gmail Backup App</Typography>
