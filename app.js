@@ -15,7 +15,7 @@ const frontendApp = require('./app/frontend');
 const apiApp = require('./app/api');
 
 app.use('/', rootApp);
-app.use('/app', frontendApp);
+app.use('/app/', frontendApp);
 app.use('/api', apiApp);
 
 const sequelize = new Sequelize({

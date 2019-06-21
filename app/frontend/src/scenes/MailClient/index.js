@@ -5,11 +5,11 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { CssBaseline, Grid, Paper } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 
-import MainAppBar from './mainappbar';
-import MainDrawer from './maindrawer';
+import MainAppBar from '../../../components/mainappbar';
+import MainDrawer from '../../../components/maindrawer';
 
-import EmailListing from './emaillisting';
-import EmailViewer from './emailviewer';
+import EmailListing from '../../../components/emaillisting';
+import EmailViewer from '../../../components/emailviewer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,11 +27,11 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(0),
   },
   paper: {
-    height: '100vh'
+    height: '100vh',
   },
 }));
 
-export default function FrontendApp(props) {
+export default function MailClient(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -47,8 +47,8 @@ export default function FrontendApp(props) {
       <main className={classes.content}>
         <div className={classes.toolbar} />
 
-        <Grid container spacing={0}>
-          <Grid item xs={3}>
+        <Grid container spacing={0} direction="row">
+          <Grid item xs={3} alignItems="stretch">
             <Paper square={true} className={classes.paper}>
               <EmailListing></EmailListing>
             </Paper>
@@ -58,7 +58,6 @@ export default function FrontendApp(props) {
             <EmailViewer></EmailViewer>
           </Grid>
         </Grid>
-
 
       </main>
 
