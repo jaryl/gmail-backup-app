@@ -12,7 +12,7 @@ const AuthContextProvider = (props) => {
   };
 
   return (
-    <AuthContext.Provider value={values}>
+    <AuthContext.Provider value={values} {...props}>
       {props.children}
     </AuthContext.Provider>
   );
