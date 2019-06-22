@@ -43,6 +43,8 @@ export default function MailScene(props) {
       { ({ loggedIn, login, logout }) =>
         <div className={classes.root}>
 
+          <CssBaseline />
+
           <AppBarContainer drawerOpen={drawerOpen} drawerWidth={240} onOpenDrawer={() => setDrawerOpen(true)} onLogout={() => logout()} />
           <DrawerContainer drawerOpen={drawerOpen} drawerWidth={240} onCloseDrawer={() => setDrawerOpen(false)} />
 
