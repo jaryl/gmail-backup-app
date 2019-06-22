@@ -40,7 +40,7 @@ export default function AppBarContainer(props) {
   // const theme = useTheme();
 
   const handleLogout = (event) => {
-    console.log('TODO: logout user');
+    props.onLogout();
   }
 
   return (

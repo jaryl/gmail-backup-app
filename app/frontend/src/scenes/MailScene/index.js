@@ -5,6 +5,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { CssBaseline, Grid, Paper } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 
+import { AuthContext } from '../../contexts/AuthContext';
+
 import AppBarContainer from './containers/AppBarContainer';
 import DrawerContainer from './containers/DrawerContainer';
 
@@ -37,30 +39,32 @@ export default function MailScene(props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className={classes.root}>
+    <AuthContext.Consumer>
+      { ({ loggedIn, login, logout }) =>
+        <div className={classes.root}>
 
-      <CssBaseline />
+          <AppBarContainer drawerOpen={drawerOpen} drawerWidth={240} onOpenDrawer={() => setDrawerOpen(true)} onLogout={() => logout()} />
+          <DrawerContainer drawerOpen={drawerOpen} drawerWidth={240} onCloseDrawer={() => setDrawerOpen(false)} />
 
-      <AppBarContainer drawerOpen={drawerOpen} drawerWidth={240} onOpenDrawer={() => setOpen(true)} />
-      <DrawerContainer drawerOpen={drawerOpen} drawerWidth={240} onCloseDrawer={() => setOpen(false)} />
+          <main className={classes.content}>
+            <div className={classes.toolbar} />
 
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
+            <Grid container spacing={0} direction="row">
+              <Grid item xs={3}>
+                <Paper square={true} className={classes.paper}>
+                  <EmailListing></EmailListing>
+                </Paper>
+              </Grid>
 
-        <Grid container spacing={0} direction="row">
-          <Grid item xs={3} alignItems="stretch">
-            <Paper square={true} className={classes.paper}>
-              <EmailListing></EmailListing>
-            </Paper>
-          </Grid>
+              <Grid item xs>
+                <EmailViewer></EmailViewer>
+              </Grid>
+            </Grid>
 
-          <Grid item xs>
-            <EmailViewer></EmailViewer>
-          </Grid>
-        </Grid>
+          </main>
 
-      </main>
-
-    </div>
+        </div>
+      }
+    </AuthContext.Consumer>
   );
 };

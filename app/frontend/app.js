@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ReactDOM from 'react-dom';
 
-import { HashRouter as Router, Link, Switch, Route } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+
+import { AuthContext, AuthContextProvider } from './src/contexts/AuthContext';
+
+import AuthenticatedRoute from './src/components/AuthenticatedRoute';
 
 import LoginScene from './src/scenes/LoginScene';
 import MailScene from './src/scenes/MailScene';
-import SettingsScene from './src/scenes/SettingsScene';
 
 const App = () => {
+  const authContext = useContext(AuthContext);
+
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={MailScene} />
-        <Route path="/login" component={LoginScene} />
-        <Route path="/settings" component={SettingsScene} />
-      </Switch>
-    </Router>
+    <AuthContextProvider>
+      <Router>
+        <Switch>
+          <Route path="/login" render={props => <LoginScene {...props} />} />
+          <AuthenticatedRoute path="/" render={props => <MailScene {...props} />} />
+        </Switch>
+      </Router>
+    </AuthContextProvider>
    );
 }
 
