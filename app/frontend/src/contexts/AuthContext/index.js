@@ -5,10 +5,9 @@ const AuthContext = React.createContext();
 const AuthContextProvider = ({ authenticate, token, ...props }) => {
   const [authToken, setAuthToken] = useState(token);
 
-  const handleLogin = (params) => {
-    return authenticate(params).then(({ token }) => { // return to support promise chaining
-      setAuthToken(token);
-    });
+  const handleLogin = async (params) => {
+    const { token } = await authenticate(params);
+    setAuthToken(token);
   };
 
   const handleLogout = () => {

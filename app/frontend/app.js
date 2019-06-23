@@ -24,7 +24,7 @@ const FakeAuthenticationService = { // TODO: move this into an actual authentica
 }
 
 const LocalStorageService = { // TODO: move this into an actual local storage service
-  /*
+  //*
   retrieve: (key) => null,
   /*/
   retrieve: (key) => 'some-token-value-for-testing',

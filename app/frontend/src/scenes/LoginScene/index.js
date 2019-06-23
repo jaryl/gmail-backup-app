@@ -19,10 +19,14 @@ export default function LoginScene(props) {
     base: '',
   };
 
-  const handleSubmit = (values, { setSubmitting, setErrors }) => {
-    login(values)
-      .catch(({ message }) => setErrors({ base: message }))
-      .finally(() => setSubmitting(false));
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+    try {
+      await login(values);
+    } catch ({ message }) {
+      setErrors({ base: message });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
