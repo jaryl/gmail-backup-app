@@ -35,7 +35,7 @@ export default function LoginScene(props) {
                 <Box p={3} mt={6}>
                   <FormControl fullWidth={true}>
 
-                    <Typography variant="h6">Gmail Backup App </Typography>
+                    <Typography variant="h6">Gmail Backup App</Typography>
 
                     <TextField
                       id="standard-name"
