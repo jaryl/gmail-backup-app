@@ -9,17 +9,17 @@ import { AuthContext } from '../../contexts/AuthContext';
 export default function LoginScene(props) {
 
   const [values, setValues] = React.useState({
-    name: '',
+    username: '',
     password: '',
   });
 
-  const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
+  const handleChange = username => event => {
+    setValues({ ...values, [username]: event.target.value });
   };
 
   return (
     <AuthContext.Consumer>
-      { ({ loggedIn, login }) => loggedIn ? (
+      { ({ loggedIn, login, _logout, errorMessage }) => loggedIn ? (
           <Redirect
             to={{
               pathname: "/",
@@ -38,11 +38,12 @@ export default function LoginScene(props) {
                     <Typography variant="h6">Gmail Backup App</Typography>
 
                     <TextField
-                      id="standard-name"
-                      label="Name"
-                      value={values.name}
-                      onChange={handleChange('name')}
+                      id="standard-username"
+                      label="Username"
+                      value={values.username}
+                      onChange={handleChange('username')}
                       margin="normal"
+                      error={errorMessage != null}
                       required
                     />
 
@@ -53,6 +54,7 @@ export default function LoginScene(props) {
                       type = "Password"
                       onChange={handleChange('password')}
                       margin="normal"
+                      error={errorMessage != null}
                       required
                     />
 

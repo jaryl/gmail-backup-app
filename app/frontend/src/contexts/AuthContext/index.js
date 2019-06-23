@@ -4,11 +4,23 @@ const AuthContext = React.createContext();
 
 const AuthContextProvider = (props) => {
   const [loggedIn, setLoggedIn] = useState(false); // TODO: expand on state to include user info
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const values = {
     loggedIn,
-    login: (username, password) => { setLoggedIn(true) }, // TODO: use auth service
-    logout: () => { setLoggedIn(false) },
+    login: ({ username, password }) => { // TODO: move into auth service
+      if (username === "admin" && password === "123123123") {
+        setLoggedIn(true);
+        // TODO: store access token locally
+      } else {
+        setErrorMessage('Your username or password is incorrect');
+      }
+    },
+    logout: () => {
+      setLoggedIn(false);
+      setErrorMessage(null);
+    },
+    errorMessage,
   };
 
   return (
