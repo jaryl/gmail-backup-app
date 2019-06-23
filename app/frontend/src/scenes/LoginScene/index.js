@@ -1,25 +1,33 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Redirect } from 'react-router-dom';
 
-import { CssBaseline, Box, Typography, FormControl, TextField, Button, Paper, Grid, Divider } from '@material-ui/core';
+import { CssBaseline, Box, Paper, Grid } from '@material-ui/core';
+
+import { Formik } from 'formik';
 
 import { AuthContext } from '../../contexts/AuthContext';
 
-export default function LoginScene(props) {
+import InputForm from './components/InputForm';
 
-  const [values, setValues] = React.useState({
+export default function LoginScene(props) {
+  const { loggedIn, login } = useContext(AuthContext);
+
+  const initialValues = {
     username: '',
     password: '',
-  });
+    base: '',
+  };
 
-  const handleChange = username => event => {
-    setValues({ ...values, [username]: event.target.value });
+  const handleSubmit = (values, { setSubmitting, setErrors }) => {
+    login(values)
+      .catch(({ message }) => setErrors({ base: message }))
+      .finally(() => setSubmitting(false));
   };
 
   return (
-    <AuthContext.Consumer>
-      { ({ loggedIn, login, _logout, errorMessage }) => loggedIn ? (
+    <React.Fragment>
+      { loggedIn ? (
           <Redirect
             to={{
               pathname: "/",
@@ -33,38 +41,11 @@ export default function LoginScene(props) {
               <CssBaseline />
               <Paper>
                 <Box p={3} mt={6}>
-                  <FormControl fullWidth={true}>
-
-                    <Typography variant="h6">Gmail Backup App</Typography>
-
-                    <TextField
-                      id="standard-username"
-                      label="Username"
-                      value={values.username}
-                      onChange={handleChange('username')}
-                      margin="normal"
-                      error={errorMessage != null}
-                      required
-                    />
-
-                    <TextField
-                      id="standard-password-input"
-                      label="Password"
-                      value={values.password}
-                      type = "Password"
-                      onChange={handleChange('password')}
-                      margin="normal"
-                      error={errorMessage != null}
-                      required
-                    />
-
-                    <Box my={3}>
-                      <Divider />
-                    </Box>
-
-                    <Button variant="contained" color="primary" size="large" onClick={() => login(values)}>Login</Button>
-
-                  </FormControl>
+                  <Formik
+                    initialValues={initialValues}
+                    render={props => <InputForm {...props} />}
+                    onSubmit={handleSubmit}
+                   />
                 </Box>
               </Paper>
             </Grid>
@@ -72,6 +53,6 @@ export default function LoginScene(props) {
           </Grid>
         )
       }
-    </AuthContext.Consumer>
+    </React.Fragment>
    );
 };

@@ -2,25 +2,24 @@ import React, { useState } from 'react';
 
 const AuthContext = React.createContext();
 
-const AuthContextProvider = (props) => {
-  const [loggedIn, setLoggedIn] = useState(false); // TODO: expand on state to include user info
-  const [errorMessage, setErrorMessage] = useState(null);
+const AuthContextProvider = ({ authenticate, token, ...props }) => {
+  const [authToken, setAuthToken] = useState(token);
+
+  const handleLogin = (params) => {
+    return authenticate(params).then(({ token }) => { // return to support promise chaining
+      setAuthToken(token);
+    });
+  };
+
+  const handleLogout = () => {
+    setAuthToken(null);
+  };
 
   const values = {
-    loggedIn,
-    login: ({ username, password }) => { // TODO: move into auth service
-      if (username === "admin" && password === "123123123") {
-        setLoggedIn(true);
-        // TODO: store access token locally
-      } else {
-        setErrorMessage('Your username or password is incorrect');
-      }
-    },
-    logout: () => {
-      setLoggedIn(false);
-      setErrorMessage(null);
-    },
-    errorMessage,
+    authToken: authToken || token,
+    loggedIn: authToken ? true : false,
+    login: handleLogin,
+    logout: handleLogout,
   };
 
   return (
