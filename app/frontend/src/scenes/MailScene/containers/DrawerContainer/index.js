@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-import { Drawer, IconButton, Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { Menu as MenuIcon, Mail as MailIcon, Inbox as InboxIcon, ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
+import {
+  Drawer,
+  IconButton,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
+
+import {
+  Mail as MailIcon,
+  Inbox as InboxIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+} from '@material-ui/icons';
 
 const drawerWidth = 240;
 
@@ -41,7 +55,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function DrawerContainer(props) {
+const DrawerContainer = (props) => {
   const classes = useStyles({ drawerWidth: 240 });
   const theme = useTheme();
   const open = props.drawerOpen;
@@ -81,3 +95,5 @@ export default function DrawerContainer(props) {
     </Drawer>
   );
 };
+
+export default DrawerContainer;

@@ -1,8 +1,14 @@
 import React from 'react';
 
-import { Box, Typography, TextField, Button, Divider } from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+} from '@material-ui/core';
 
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { ErrorMessage } from 'formik';
 
 const InputForm = (props) => {
   const {
@@ -23,12 +29,11 @@ const InputForm = (props) => {
         id="username"
         name="username"
         label="Username"
-        helperText={touched.username ? errors.username : ""}
+        helperText={touched.username ? errors.username : ''}
         error={touched.username && Boolean(errors.username)}
         value={username}
         onChange={handleChange}
         margin="normal"
-        error={false}
         fullWidth
       />
 
@@ -42,7 +47,6 @@ const InputForm = (props) => {
         onChange={handleChange}
         type = "Password"
         margin="normal"
-        error={false}
         fullWidth
       />
 

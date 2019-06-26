@@ -6,8 +6,8 @@ const AuthContextProvider = ({ authenticate, token, ...props }) => {
   const [authToken, setAuthToken] = useState(token);
 
   const handleLogin = async (params) => {
-    const { token } = await authenticate(params);
-    setAuthToken(token);
+    const { token: newToken } = await authenticate(params);
+    setAuthToken(newToken);
   };
 
   const handleLogout = () => {
@@ -16,7 +16,7 @@ const AuthContextProvider = ({ authenticate, token, ...props }) => {
 
   const values = {
     authToken: authToken || token,
-    loggedIn: authToken ? true : false,
+    loggedIn: !!authToken,
     login: handleLogin,
     logout: handleLogout,
   };

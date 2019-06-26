@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { CssBaseline, Box, Typography, Paper, Grid } from '@material-ui/core';
+import {
+  CssBaseline,
+  Box,
+  Typography,
+  Paper,
+  Grid,
+} from '@material-ui/core';
 
 class MainErrorBoundary extends React.Component {
   constructor(props) {
@@ -8,13 +14,13 @@ class MainErrorBoundary extends React.Component {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
-  componentDidCatch(error, info) {
-    // TODO: log error here
-  }
+  // componentDidCatch(error, info) {
+  //   // TODO: log error here
+  // }
 
   render() {
     if (this.state.hasError) {

@@ -1,9 +1,7 @@
 import React, { useState, useContext } from 'react';
 
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Grid, Paper } from '@material-ui/core';
-import { Menu as MenuIcon } from '@material-ui/icons';
 
 import { AuthContext } from '../../contexts/AuthContext';
 
@@ -33,9 +31,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function MailScene(props) {
+export default function MailScene() {
   const classes = useStyles();
-  const theme = useTheme();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { logout } = useContext(AuthContext);
@@ -45,8 +42,17 @@ export default function MailScene(props) {
 
       <CssBaseline />
 
-      <AppBarContainer drawerOpen={drawerOpen} drawerWidth={240} onOpenDrawer={() => setDrawerOpen(true)} onLogout={logout} />
-      <DrawerContainer drawerOpen={drawerOpen} drawerWidth={240} onCloseDrawer={() => setDrawerOpen(false)} />
+      <AppBarContainer
+        drawerOpen={drawerOpen}
+        drawerWidth={240}
+        onOpenDrawer={() => setDrawerOpen(true)} onLogout={logout}
+      />
+
+      <DrawerContainer
+        drawerOpen={drawerOpen}
+        drawerWidth={240}
+        onCloseDrawer={() => setDrawerOpen(false)}
+      />
 
       <main className={classes.content}>
         <div className={classes.toolbar} />

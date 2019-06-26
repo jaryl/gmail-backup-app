@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { AppBar, Toolbar, IconButton, Typography, Button } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+} from '@material-ui/core';
+
 import { Menu as MenuIcon } from '@material-ui/icons';
 
 const drawerWidth = 240;
@@ -35,11 +42,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function AppBarContainer(props) {
+const AppBarContainer = (props) => {
   const classes = useStyles(props);
   // const theme = useTheme();
 
-  const handleLogout = (event) => {
+  const handleLogout = () => {
     props.onLogout();
   }
 
@@ -55,3 +62,5 @@ export default function AppBarContainer(props) {
     </AppBar>
   );
 };
+
+export default AppBarContainer;

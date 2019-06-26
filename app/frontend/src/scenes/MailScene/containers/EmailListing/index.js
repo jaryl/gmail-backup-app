@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { TextField, InputAdornment, Typography, Badge, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import {
+  TextField,
+  InputAdornment,
+  Badge,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+} from '@material-ui/core';
+
 import { Search as SearchIcon } from '@material-ui/icons';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   avatar: {
     minWidth: '16px',
   },
@@ -16,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function EmailListing(props) {
+const EmailListing = () => {
   const classes = useStyles();
 
   return (
@@ -58,3 +67,5 @@ export default function EmailListing(props) {
     </div>
   );
 };
+
+export default EmailListing;
