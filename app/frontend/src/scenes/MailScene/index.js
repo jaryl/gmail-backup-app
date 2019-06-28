@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react';
 
+import { Route } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Grid, Paper } from '@material-ui/core';
 
@@ -31,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function MailScene() {
+const MailScene = (props) => {
   const classes = useStyles();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -60,12 +62,12 @@ export default function MailScene() {
         <Grid container spacing={0} direction="row">
           <Grid item xs={3}>
             <Paper square={true} className={classes.paper}>
-              <EmailListing></EmailListing>
+              <Route path="/:label" component={EmailListing} />
             </Paper>
           </Grid>
 
           <Grid item xs>
-            <EmailViewer></EmailViewer>
+            <Route path="/:label/:id" component={EmailViewer} />
           </Grid>
         </Grid>
 
@@ -74,3 +76,5 @@ export default function MailScene() {
     </div>
   );
 };
+
+export default MailScene;

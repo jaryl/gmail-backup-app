@@ -1,5 +1,5 @@
 const LocalStorageService = { // TODO: move this into an actual local storage service
-  retrieve: () => null,
+  retrieve: () => 'some-random-token',
 };
 
 export default LocalStorageService;

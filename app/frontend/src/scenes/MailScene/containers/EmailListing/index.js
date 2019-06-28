@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles';
 import {
   TextField,
@@ -11,7 +13,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 
-import { Search as SearchIcon } from '@material-ui/icons';
+import { Search as SearchIcon, ContactSupportOutlined } from '@material-ui/icons';
 
 const useStyles = makeStyles(() => ({
   avatar: {
@@ -25,8 +27,33 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const EmailListing = () => {
+const emailHeaders = [
+  {
+    id: 'ccc76246-dccb-4725-b179-225bfaa3fca0',
+    sender: 'Charles Parrish',
+    title: 'Meet at the Met?',
+    lead: 'Hey Eden, Looking forward to seeing you and the gang Saturday night...',
+    datetime: '15:32 AM',
+  },
+  {
+    id: '4a0196ae-9e7e-4fc7-8b70-ab381f3630ba',
+    sender: 'Sarah Castelblanco',
+    title: 'Not the same without you',
+    lead: 'I just walked by your old cube and looked to see if you were in there...',
+    datetime: '13 May',
+  },
+];
+
+const EmailListing = ({ match }) => {
   const classes = useStyles();
+
+  const listItems = emailHeaders.map(item => <ListItem button className={classes.listItem} divider={true} component={Link} key={item.id} to={{ pathname: `/${match.params.label}/${item.id}`}}>
+      <ListItemAvatar className={classes.avatar}>
+        <Badge color="primary" variant="dot"><React.Fragment /></Badge>
+      </ListItemAvatar>
+    <ListItemText primary={item.sender} secondary={item.title} />
+    <ListItemText className={classes.dateTimeDisplay} secondary={item.datetime} />
+  </ListItem>);
 
   return (
     <div>
@@ -46,23 +73,7 @@ const EmailListing = () => {
       />
 
       <List component="nav">
-
-        <ListItem button className={classes.listItem} key={0} divider={true}>
-          <ListItemAvatar className={classes.avatar}>
-            <Badge color="primary" variant="dot"><React.Fragment /></Badge>
-          </ListItemAvatar>
-          <ListItemText primary="Lorem ipsum sit amet dolor" secondary="This is great lorem ipsum sit amet dolor" />
-          <ListItemText className={classes.dateTimeDisplay} secondary="15:32" />
-        </ListItem>
-
-        <ListItem button className={classes.listItem} key={1} divider={true}>
-          <ListItemAvatar className={classes.avatar}>
-            <Badge color="primary" variant="dot"><React.Fragment /></Badge>
-          </ListItemAvatar>
-          <ListItemText primary="Lorem ipsum sit amet dolor" secondary="This is great lorem ipsum sit amet dolor" />
-          <ListItemText className={classes.dateTimeDisplay} secondary="13 May" />
-        </ListItem>
-
+        {listItems}
       </List>
     </div>
   );
