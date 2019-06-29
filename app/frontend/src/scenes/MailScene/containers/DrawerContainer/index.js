@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
+import { Link, Redirect } from 'react-router-dom';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -19,6 +21,8 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
 } from '@material-ui/icons';
+
+import { PresentationContext } from '../../hooks/PresentationContext';
 
 const drawerWidth = 240;
 
@@ -60,6 +64,14 @@ const DrawerContainer = (props) => {
   const theme = useTheme();
   const open = props.drawerOpen;
 
+  const {
+    selectedLabel,
+    selectLabel,
+    allLabels,
+    selectedThread,
+    selectedThreadForLabel,
+  } = useContext(PresentationContext);
+
   return (
     <Drawer variant="permanent"
       className={clsx(classes.drawer, {
@@ -81,9 +93,19 @@ const DrawerContainer = (props) => {
 
       <Divider />
 
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
+      {selectedThread && <Redirect to={{ pathname: `/${selectedLabel}/${selectedThread}`, state: { from: props.location } }} />}
+
+      <List component="nav">
+        {allLabels.map((text, index) => (
+          <ListItem
+            button
+            key={text}
+            selected={selectedLabel === text}
+            onClick={() => selectLabel(text)}
+            component={Link}
+            to={{ pathname: selectedThreadForLabel(text) ? `/${text}/${selectedThreadForLabel(text)}` : `/${text}` }}
+            replace={true}
+          >
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>

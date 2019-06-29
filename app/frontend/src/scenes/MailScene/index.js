@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Grid, Paper } from '@material-ui/core';
 
 import { AuthContext } from '../../contexts/AuthContext';
+import { PresentationContextProvider } from './hooks/PresentationContext';
 
 import AppBarContainer from './containers/AppBarContainer';
 import DrawerContainer from './containers/DrawerContainer';
@@ -33,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const MailScene = (props) => {
+const MailScene = () => {
   const classes = useStyles();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -41,38 +42,40 @@ const MailScene = (props) => {
 
   return (
     <div className={classes.root}>
+      <PresentationContextProvider>
 
-      <CssBaseline />
+        <CssBaseline />
 
-      <AppBarContainer
-        drawerOpen={drawerOpen}
-        drawerWidth={240}
-        onOpenDrawer={() => setDrawerOpen(true)} onLogout={logout}
-      />
+        <AppBarContainer
+          drawerOpen={drawerOpen}
+          drawerWidth={240}
+          onOpenDrawer={() => setDrawerOpen(true)} onLogout={logout}
+        />
 
-      <DrawerContainer
-        drawerOpen={drawerOpen}
-        drawerWidth={240}
-        onCloseDrawer={() => setDrawerOpen(false)}
-      />
+        <DrawerContainer
+          drawerOpen={drawerOpen}
+          drawerWidth={240}
+          onCloseDrawer={() => setDrawerOpen(false)}
+        />
 
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
 
-        <Grid container spacing={0} direction="row">
-          <Grid item xs={3}>
-            <Paper square={true} className={classes.paper}>
-              <Route path="/:label" component={EmailListing} />
-            </Paper>
+          <Grid container spacing={0} direction="row">
+            <Grid item xs={3}>
+              <Paper square={true} className={classes.paper}>
+                <Route path="/:label" component={EmailListing} />
+              </Paper>
+            </Grid>
+
+            <Grid item xs>
+              <Route path="/:label/:id" component={EmailViewer} />
+            </Grid>
           </Grid>
 
-          <Grid item xs>
-            <Route path="/:label/:id" component={EmailViewer} />
-          </Grid>
-        </Grid>
+        </main>
 
-      </main>
-
+      </PresentationContextProvider>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -13,7 +13,9 @@ import {
   ListItemText,
 } from '@material-ui/core';
 
-import { Search as SearchIcon, ContactSupportOutlined } from '@material-ui/icons';
+import { Search as SearchIcon } from '@material-ui/icons';
+
+import { PresentationContext } from '../../hooks/PresentationContext';
 
 const useStyles = makeStyles(() => ({
   avatar: {
@@ -27,27 +29,24 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const emailHeaders = [
-  {
-    id: 'ccc76246-dccb-4725-b179-225bfaa3fca0',
-    sender: 'Charles Parrish',
-    title: 'Meet at the Met?',
-    lead: 'Hey Eden, Looking forward to seeing you and the gang Saturday night...',
-    datetime: '15:32 AM',
-  },
-  {
-    id: '4a0196ae-9e7e-4fc7-8b70-ab381f3630ba',
-    sender: 'Sarah Castelblanco',
-    title: 'Not the same without you',
-    lead: 'I just walked by your old cube and looked to see if you were in there...',
-    datetime: '13 May',
-  },
-];
-
 const EmailListing = ({ match }) => {
   const classes = useStyles();
+  const { selectedThread, selectThread, mailCache } = useContext(PresentationContext);
+  const { getThread, getLabel } = mailCache;
 
-  const listItems = emailHeaders.map(item => <ListItem button className={classes.listItem} divider={true} component={Link} key={item.id} to={{ pathname: `/${match.params.label}/${item.id}`}}>
+  const emailHeaders = getLabel(match.params.label).map(id => getThread(id));
+
+  const listItems = emailHeaders.map(item => <ListItem
+    button
+    className={classes.listItem}
+    divider={true}
+    key={item.id}
+    selected={selectedThread === item.id}
+    onClick={() => selectThread(match.params.label, item.id)}
+    component={Link}
+    to={{ pathname: `/${match.params.label}/${item.id}` }}
+    replace={true}
+  >
       <ListItemAvatar className={classes.avatar}>
         <Badge color="primary" variant="dot"><React.Fragment /></Badge>
       </ListItemAvatar>
