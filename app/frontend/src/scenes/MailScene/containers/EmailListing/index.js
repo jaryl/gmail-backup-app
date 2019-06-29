@@ -29,12 +29,19 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const EmailListing = ({ match }) => {
+const EmailListing = () => {
   const classes = useStyles();
-  const { selectedThread, selectThread, mailCache } = useContext(PresentationContext);
+
+  const {
+    selectedLabel,
+    selectedThread,
+    selectThread,
+    mailCache,
+  } = useContext(PresentationContext);
+
   const { getThread, getLabel } = mailCache;
 
-  const emailHeaders = getLabel(match.params.label).map(id => getThread(id));
+  const emailHeaders = getLabel(selectedLabel).map(id => getThread(id));
 
   const listItems = emailHeaders.map(item => <ListItem
     button
@@ -42,9 +49,9 @@ const EmailListing = ({ match }) => {
     divider={true}
     key={item.id}
     selected={selectedThread === item.id}
-    onClick={() => selectThread(match.params.label, item.id)}
+    onClick={() => selectThread(selectedLabel, item.id)}
     component={Link}
-    to={{ pathname: `/${match.params.label}/${item.id}` }}
+    to={{ pathname: `/${selectedLabel}/${item.id}` }}
     replace={true}
   >
       <ListItemAvatar className={classes.avatar}>

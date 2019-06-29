@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 
-import { Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Grid, Paper } from '@material-ui/core';
@@ -34,16 +34,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const MailScene = () => {
+const MainContainer = ({ match }) => {
   const classes = useStyles();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { logout } = useContext(AuthContext);
 
   return (
-    <div className={classes.root}>
-      <PresentationContextProvider>
-
+    <PresentationContextProvider label={match.params.label} threadId={match.params.id}>
+      <div className={classes.root}>
         <CssBaseline />
 
         <AppBarContainer
@@ -64,20 +63,27 @@ const MailScene = () => {
           <Grid container spacing={0} direction="row">
             <Grid item xs={3}>
               <Paper square={true} className={classes.paper}>
-                <Route path="/:label" component={EmailListing} />
+                <EmailListing />
               </Paper>
             </Grid>
 
             <Grid item xs>
-              <Route path="/:label/:id" component={EmailViewer} />
+              {match.params.id && <EmailViewer threadId={match.params.id} />}
             </Grid>
           </Grid>
 
         </main>
-
-      </PresentationContextProvider>
-    </div>
+      </div>
+    </PresentationContextProvider>
   );
 };
+
+const MailScene = () => (
+  <Switch>
+    <Route exact path="/:label" component={MainContainer} />
+    <Route exact path="/:label/:id" component={MainContainer} />
+    <Redirect from='/' to='/all' />
+  </Switch>
+);
 
 export default MailScene;

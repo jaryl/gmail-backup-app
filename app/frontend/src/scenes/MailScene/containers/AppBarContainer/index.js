@@ -44,11 +44,10 @@ const useStyles = makeStyles(theme => ({
 
 const AppBarContainer = (props) => {
   const classes = useStyles(props);
-  // const theme = useTheme();
 
   const handleLogout = () => {
     props.onLogout();
-  }
+  };
 
   return (
     <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: props.drawerOpen, }) }>

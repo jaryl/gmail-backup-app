@@ -20,9 +20,14 @@ const reducer = (state, action) => {
   }
 };
 
-const PresentationContextProvider = (props) => {
-  const [selectedLabel, setSelectedLabel] = useState('all');
-  const [selectedThreadsCache, dispatch] = useReducer(reducer, {});
+const PresentationContextProvider = ({ label: initialLabel, threadId: initialThreadId, ...props }) => {
+  const [selectedLabel, setSelectedLabel] = useState(initialLabel);
+
+  const initialSelectedThreads = {};
+  if (initialThreadId) {
+    initialSelectedThreads[initialLabel] = initialThreadId;
+  }
+  const [selectedThreadsCache, dispatch] = useReducer(reducer, initialSelectedThreads);
 
   const mailCache = useMailCache(mailCacheData);
   const conversationCache = useConversationCache(conversationCacheData);

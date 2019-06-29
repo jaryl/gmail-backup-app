@@ -15,14 +15,13 @@ import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
 import { PresentationContext } from '../../hooks/PresentationContext';
 
-const EmailViewer = ({ match }) => {
-
+const EmailViewer = ({ threadId }) => {
   const { mailCache, conversationCache } = useContext(PresentationContext);
 
   const { getThread } = mailCache;
   const { getConversation } = conversationCache;
 
-  const { title } = getThread(match.params.id);
+  const { title } = getThread(threadId);
 
   const formatter = ({ to, cc, bcc }) => { // TODO: improve this
     const toLine = `To: ${to.map(i => i)}`;
@@ -32,7 +31,7 @@ const EmailViewer = ({ match }) => {
     return `${toLine}, ${ccLine}, ${bccLine}`;
   };
 
-  const conversation = getConversation(match.params.id).map(({
+  const conversation = getConversation(threadId).map(({
     id, from, datetime, body, ...rest
   }) => <Box key={id} p={2}>
     <Paper>
