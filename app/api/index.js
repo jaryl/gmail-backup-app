@@ -4,10 +4,10 @@ const passport = require('passport');
 const graphql = require('graphql');
 const graphqlHTTP = require('express-graphql');
 
-const { query } = require('./queries');
+const { query, mutation } = require('./queries');
 
 const { GraphQLSchema } = graphql;
-const schema = new GraphQLSchema({ query });
+const schema = new GraphQLSchema({ query, mutation });
 
 // TODO: enforce JWT authentication on all routes
 

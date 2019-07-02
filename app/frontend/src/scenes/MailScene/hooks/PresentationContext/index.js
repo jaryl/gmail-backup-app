@@ -1,11 +1,12 @@
 import React, { useState, useReducer } from 'react';
 
-import mailCacheData from './MailCacheData';
+// import mailCacheData from './MailCacheData';
 import useMailCache from '../MailCache';
 
 import conversationCacheData from './ConversationCacheData';
 import useConversationCache from '../ConversationCache';
 
+import ApiService from '../../../../services/ApiService';
 
 const PresentationContext = React.createContext();
 
@@ -20,7 +21,7 @@ const reducer = (state, action) => {
   }
 };
 
-const PresentationContextProvider = ({ label: initialLabel, threadId: initialThreadId, ...props }) => {
+const PresentationContextProvider = async ({ label: initialLabel, threadId: initialThreadId, ...props }) => {
   const [selectedLabel, setSelectedLabel] = useState(initialLabel);
 
   const initialSelectedThreads = {};
@@ -28,6 +29,8 @@ const PresentationContextProvider = ({ label: initialLabel, threadId: initialThr
     initialSelectedThreads[initialLabel] = initialThreadId;
   }
   const [selectedThreadsCache, dispatch] = useReducer(reducer, initialSelectedThreads);
+
+  const mailCacheData = await ApiService.Label.all();
 
   const mailCache = useMailCache(mailCacheData);
   const conversationCache = useConversationCache(conversationCacheData);
