@@ -1,12 +1,6 @@
 import React, { useState, useReducer } from 'react';
 
-// import mailCacheData from './MailCacheData';
-import useMailCache from '../MailCache';
-
-import conversationCacheData from './ConversationCacheData';
-import useConversationCache from '../ConversationCache';
-
-import ApiService from '../../../../services/ApiService';
+import { find } from 'lodash';
 
 const PresentationContext = React.createContext();
 
@@ -14,45 +8,46 @@ const reducer = (state, action) => {
   const newState = {};
   switch (action.type) {
     case 'select':
-      newState[action.payload.label] = action.payload.threadId;
+      newState[action.payload.labelId] = action.payload.threadId;
       return { ...state, ...newState };
     default:
       throw new Error();
   }
 };
 
-const PresentationContextProvider = async ({ label: initialLabel, threadId: initialThreadId, ...props }) => {
-  const [selectedLabel, setSelectedLabel] = useState(initialLabel);
+const PresentationContextProvider = ({
+  labelSlug: initialLabelSlug,
+  threadId: initialThreadId,
+  mailbox,
+  ...props
+}) => {
+  const { labels, threads } = mailbox;
 
-  const initialSelectedThreads = {};
-  if (initialThreadId) {
-    initialSelectedThreads[initialLabel] = initialThreadId;
-  }
-  const [selectedThreadsCache, dispatch] = useReducer(reducer, initialSelectedThreads);
+  const [selectedLabel, setSelectedLabel] = useState(find(labels, { slug: initialLabelSlug }));
+  const [selectedThread, setSelectedThread] = useState();
 
-  const mailCacheData = await ApiService.Label.all();
+  const [selectedThreadsCache, dispatch] = useReducer(reducer, {});
 
-  const mailCache = useMailCache(mailCacheData);
-  const conversationCache = useConversationCache(conversationCacheData);
-
-  const selectThread = (label, threadId) => {
+  const selectThread = (threadId) => {
     dispatch({
       type: 'select',
-      payload: { label, threadId },
+      payload: { labelId: selectedLabel.id, threadId },
     });
+    setSelectedThread(find(threads, { id: threadId }));
   };
 
-  const selectLabel = label => setSelectedLabel(label);
+  const selectLabelWithSlug = (slug) => {
+    const targetLabel = find(labels, { slug });
+    setSelectedLabel(targetLabel);
+    const targetThread = find(threads, { id: selectedThreadsCache[targetLabel.id] });
+    setSelectedThread(targetThread);
+  };
 
   const values = {
-    selectedThread: selectedThreadsCache[selectedLabel],
-    selectedThreadForLabel: target => selectedThreadsCache[target],
+    selectedThread,
     selectThread,
     selectedLabel,
-    selectLabel,
-    allLabels: ['all', 'important'],
-    mailCache,
-    conversationCache,
+    selectLabelWithSlug,
   };
 
   return (

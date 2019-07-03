@@ -10,13 +10,13 @@ const {
 } = graphql;
 
 const labelData = [
-  { mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', id: '712e0a64-6564-4951-a181-1b15ee101e8c', name: 'All' },
-  { mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', id: 'f4f73538-e9c2-429c-8bb4-7e1535036198', name: 'Important' },
-  { mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', id: '0ea950c4-1488-45fa-a7b2-b25fb8602934', name: 'Clients' },
+  { mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', id: '712e0a64-6564-4951-a181-1b15ee101e8c', name: 'All', slug: 'all' },
+  { mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', id: 'f4f73538-e9c2-429c-8bb4-7e1535036198', name: 'Important', slug: 'important' },
+  { mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', id: '0ea950c4-1488-45fa-a7b2-b25fb8602934', name: 'Clients', slug: 'clients' },
 
-  { mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', id: 'dfe745a8-992b-4536-8f1a-3a8c66bbf93b', name: 'All' },
-  { mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', id: 'e43f42d9-9eef-4c78-b158-77b245cbda0b', name: 'Important' },
-  { mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', id: 'ae602a7c-57ce-4466-a7dd-db507388534b', name: 'Design' },
+  { mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', id: 'dfe745a8-992b-4536-8f1a-3a8c66bbf93b', name: 'All', slug: 'all' },
+  { mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', id: 'e43f42d9-9eef-4c78-b158-77b245cbda0b', name: 'Important', slug: 'important' },
+  { mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', id: 'ae602a7c-57ce-4466-a7dd-db507388534b', name: 'Design', slug: 'design' },
 ];
 
 const threadData = [
@@ -81,10 +81,24 @@ const MailboxType = new GraphQLObjectType({
         return _.filter(labelData, { mailboxId: parent.id });
       },
     },
+    label: {
+      type: LabelType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, { id }) {
+        return _.find(labelData, { id });
+      },
+    },
     threads: {
       type: new GraphQLList(ThreadType),
       resolve(parent, args) {
         return _.filter(threadData, { mailboxId: parent.id });
+      },
+    },
+    thread: {
+      type: ThreadType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, { id }) {
+        return _.find(threadData, { id });
       },
     },
     messages: {
@@ -102,10 +116,10 @@ const LabelType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
+    slug: { type: GraphQLString },
     threads: {
       type: new GraphQLList(ThreadType),
       resolve(parent, args) {
-        console.log(parent.id);
         return _.filter(threadData, thread => _.includes(thread.labelIds, parent.id));
       },
     }
@@ -143,6 +157,8 @@ const MessageType = new GraphQLObjectType({
     threadId: { type: GraphQLID },
     labelIds: { type: GraphQLString },
     snippet: { type: GraphQLString },
+    from: { type: GraphQLString },
+    to: { type: new GraphQLList(GraphQLString) },
     thread: {
       type: MessageType,
       resolve(parent, args) {

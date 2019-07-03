@@ -1,19 +1,22 @@
-import { useState } from 'react';
+// import { useState } from 'react';
+// import { find } from 'lodash';
 
-const useMailCache = ({ threadData, labelData }) => {
-  const [threads] = useState(threadData);
-  const [labels] = useState(labelData);
+// const useMailCache = (mailbox) => {
+//   const [threads] = useState(mailbox.threads);
+//   const [labels] = useState(mailbox.labels);
 
-  // TODO: create reducers to update cache upon cache misses
+//   // TODO: create reducers to update cache upon cache misses
 
-  const getThread = id => threads[id]; // TODO: dispatch upon cache miss
-  const getLabel = id => labels[id]; // TODO: dispatch upon cache miss
+//   const getThread = id => find(threads, { id }); // TODO: dispatch upon cache miss
+//   const getLabel = id => find(labels, { id }); // TODO: dispatch upon cache miss
+//   const getLabelBySlug = slug => find(labels, { slug }); // TODO: dispatch upon cache miss
 
-  return {
-    getThread,
-    getLabel,
-    allLabels: () => labels.keys(),
-  };
-};
+//   return {
+//     getThread,
+//     getLabel,
+//     getLabelBySlug,
+//     allLabels: labels,
+//   };
+// };
 
-export default useMailCache;
+// export default useMailCache;

@@ -17,7 +17,6 @@ import {
 
 import {
   Mail as MailIcon,
-  Inbox as InboxIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
 } from '@material-ui/icons';
@@ -59,17 +58,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DrawerContainer = (props) => {
+const DrawerContainer = ({ labels, ...props }) => {
   const classes = useStyles({ drawerWidth: 240 });
   const theme = useTheme();
   const open = props.drawerOpen;
 
   const {
     selectedLabel,
-    selectLabel,
-    allLabels,
+    selectLabelWithSlug,
     selectedThread,
-    selectedThreadForLabel,
   } = useContext(PresentationContext);
 
   return (
@@ -93,21 +90,19 @@ const DrawerContainer = (props) => {
 
       <Divider />
 
-      {selectedThread && <Redirect to={{ pathname: `/${selectedLabel}/${selectedThread}`, state: { from: props.location } }} />}
-
       <List component="nav">
-        {allLabels.map((text, index) => (
+        {labels.map(label => (
           <ListItem
             button
-            key={text}
-            selected={selectedLabel === text}
-            onClick={() => selectLabel(text)}
+            key={label.id}
+            selected={selectedLabel.slug === label.slug}
+            onClick={() => selectLabelWithSlug(label.slug)}
             component={Link}
-            to={{ pathname: selectedThreadForLabel(text) ? `/${text}/${selectedThreadForLabel(text)}` : `/${text}` }}
+            to={{ pathname: selectedThread ? `/${label.slug}/${selectedThread.id}` : `/${label.slug}` }}
             replace={true}
           >
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemIcon><MailIcon /></ListItemIcon>
+            <ListItemText primary={label.name} />
           </ListItem>
         ))}
       </List>

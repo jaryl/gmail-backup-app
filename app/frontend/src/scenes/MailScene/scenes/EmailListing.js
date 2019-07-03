@@ -15,7 +15,7 @@ import {
 
 import { Search as SearchIcon } from '@material-ui/icons';
 
-import { PresentationContext } from '../../hooks/PresentationContext';
+import { PresentationContext } from '../hooks/PresentationContext';
 
 const useStyles = makeStyles(() => ({
   avatar: {
@@ -29,36 +29,27 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const EmailListing = () => {
+const EmailListing = ({ threads }) => {
   const classes = useStyles();
 
-  const {
-    selectedLabel,
-    selectedThread,
-    selectThread,
-    mailCache,
-  } = useContext(PresentationContext);
+  const { selectedLabel, selectedThread, selectThread } = useContext(PresentationContext);
 
-  const { getThread, getLabel } = mailCache;
-
-  const emailHeaders = getLabel(selectedLabel).map(id => getThread(id));
-
-  const listItems = emailHeaders.map(item => <ListItem
+  const listItems = threads.map(thread => <ListItem
     button
     className={classes.listItem}
     divider={true}
-    key={item.id}
-    selected={selectedThread === item.id}
-    onClick={() => selectThread(selectedLabel, item.id)}
+    key={thread.id}
+    selected={selectedThread && selectedThread.id === thread.id}
+    onClick={() => selectThread(thread.id)}
     component={Link}
-    to={{ pathname: `/${selectedLabel}/${item.id}` }}
+    to={{ pathname: `/${selectedLabel.slug}/${thread.id}` }}
     replace={true}
   >
-      <ListItemAvatar className={classes.avatar}>
-        <Badge color="primary" variant="dot"><React.Fragment /></Badge>
-      </ListItemAvatar>
-    <ListItemText primary={item.sender} secondary={item.title} />
-    <ListItemText className={classes.dateTimeDisplay} secondary={item.datetime} />
+    <ListItemAvatar className={classes.avatar}>
+      <Badge color="primary" variant="dot"><React.Fragment /></Badge>
+    </ListItemAvatar>
+    <ListItemText primary={thread.sender} secondary={thread.snippet} />
+    <ListItemText className={classes.dateTimeDisplay} secondary={thread.datetime} />
   </ListItem>);
 
   return (

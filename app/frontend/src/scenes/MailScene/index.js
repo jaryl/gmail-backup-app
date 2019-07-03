@@ -5,14 +5,17 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Grid, Paper } from '@material-ui/core';
 
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+
 import { AuthContext } from '../../contexts/AuthContext';
-import { PresentationContextProvider } from './hooks/PresentationContext';
+import { PresentationContext, PresentationContextProvider } from './hooks/PresentationContext';
 
 import AppBarContainer from './containers/AppBarContainer';
 import DrawerContainer from './containers/DrawerContainer';
 
-import EmailListing from './containers/EmailListing';
-import EmailViewer from './containers/EmailViewer';
+import EmailListingContainer from './containers/EmailListingContainer';
+import EmailViewerContainer from './containers/EmailViewerContainer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,6 +37,22 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const MAILBOX_QUERY = gql`
+{
+  mailbox(token: "e953183d-7e9f-4a75-b5e1-5f7ff8ee6cd7") {
+    labels {
+      id
+      name
+      slug
+    }
+    threads {
+      id
+      snippet
+    }
+  }
+}
+`;
+
 const MainContainer = ({ match }) => {
   const classes = useStyles();
 
@@ -41,40 +60,55 @@ const MainContainer = ({ match }) => {
   const { logout } = useContext(AuthContext);
 
   return (
-    <PresentationContextProvider label={match.params.label} threadId={match.params.id}>
-      <div className={classes.root}>
-        <CssBaseline />
+    <Query query={MAILBOX_QUERY}>
+      {({ loading, error, data }) => {
+        if (loading) return <div>Loading...</div>;
+        if (error) return <div>{error.message}</div>;
 
-        <AppBarContainer
-          drawerOpen={drawerOpen}
-          drawerWidth={240}
-          onOpenDrawer={() => setDrawerOpen(true)} onLogout={logout}
-        />
+        return (
+          <PresentationContextProvider labelSlug={match.params.label} threadId={match.params.id} mailbox={data.mailbox}>
+            <div className={classes.root}>
+              <CssBaseline />
 
-        <DrawerContainer
-          drawerOpen={drawerOpen}
-          drawerWidth={240}
-          onCloseDrawer={() => setDrawerOpen(false)}
-        />
+              <AppBarContainer
+                drawerOpen={drawerOpen}
+                drawerWidth={240}
+                onOpenDrawer={() => setDrawerOpen(true)} onLogout={logout}
+              />
 
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
+              <DrawerContainer
+                drawerOpen={drawerOpen}
+                drawerWidth={240}
+                onCloseDrawer={() => setDrawerOpen(false)}
+                labels={data.mailbox.labels}
+              />
 
-          <Grid container spacing={0} direction="row">
-            <Grid item xs={3}>
-              <Paper square={true} className={classes.paper}>
-                <EmailListing />
-              </Paper>
-            </Grid>
+              <main className={classes.content}>
+                <PresentationContext.Consumer>
+                  {({ selectedLabel, selectedThread }) => (
+                    <React.Fragment>
+                      <div className={classes.toolbar} />
 
-            <Grid item xs>
-              {match.params.id && <EmailViewer threadId={match.params.id} />}
-            </Grid>
-          </Grid>
+                      <Grid container spacing={0} direction="row">
+                        <Grid item xs={3}>
+                          <Paper square={true} className={classes.paper}>
+                            <EmailListingContainer labelId={selectedLabel.id} />
+                          </Paper>
+                        </Grid>
 
-        </main>
-      </div>
-    </PresentationContextProvider>
+                        <Grid item xs>
+                          {selectedThread && <EmailViewerContainer threadId={selectedThread.id} />}
+                        </Grid>
+                      </Grid>
+                    </React.Fragment>
+                  )}
+                </PresentationContext.Consumer>
+              </main>
+            </div>
+          </PresentationContextProvider>
+        );
+      }}
+    </Query>
   );
 };
 
