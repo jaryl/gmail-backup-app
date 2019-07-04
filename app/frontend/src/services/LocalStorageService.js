@@ -1,7 +1,7 @@
 const LocalStorageService = {
   set: (key, value) => localStorage.setItem(key, value),
   get: key => localStorage.getItem(key),
-  clear: key => localStorage.setItem(key, null),
+  remove: key => localStorage.removeItem(key),
 };
 
 export default LocalStorageService;

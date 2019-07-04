@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
-import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 
 import { AuthContextProvider } from './src/contexts/AuthContext';
@@ -17,14 +16,24 @@ import MailScene from './src/scenes/MailScene';
 import AuthService from './src/services/AuthService';
 import LocalStorageService from './src/services/LocalStorageService';
 
-const client = new ApolloClient({
-  uri: 'http://localhost:4000/api',
-});
+import apolloConnect from './config/apolloConnect';
+
+let client = apolloConnect(LocalStorageService.get('authToken'));
+
+AuthService.use(client);
 
 const App = () => {
   const authContextProviderProps = {
-    authenticate: AuthService.call,
-    localStorageService: LocalStorageService,
+    authService: AuthService,
+    initialLoggedIn: !!LocalStorageService.get('authToken'),
+    onLogin: (token) => {
+      LocalStorageService.set('authToken', token);
+      client = apolloConnect(token);
+      AuthService.use(client);
+    },
+    onLogout: () => {
+      LocalStorageService.remove('authToken');
+    },
   };
 
   return (

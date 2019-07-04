@@ -40,6 +40,7 @@ const useStyles = makeStyles(theme => ({
 const MAILBOX_QUERY = gql`
 {
   mailbox(token: "e953183d-7e9f-4a75-b5e1-5f7ff8ee6cd7") {
+    emailAddress
     labels {
       id
       name

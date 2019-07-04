@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import ApolloClient from 'apollo-boost';
 
 const AUTHENTICATE_MUTATION = gql`
   mutation ($username: String!, $password: String!) {
@@ -9,13 +8,13 @@ const AUTHENTICATE_MUTATION = gql`
   }
 `;
 
-// TODO: inject apollo client
-const client = new ApolloClient({
-  uri: 'http://localhost:4000/api',
-});
+let client = null;
 
 const AuthService = {
-  call: ({ username, password }) => new Promise(async (resolve, reject) => {
+  use: (_client) => {
+    client = _client;
+  },
+  authenticate: ({ username, password }) => new Promise(async (resolve, reject) => {
     try {
       const result = await client.mutate({
         mutation: AUTHENTICATE_MUTATION,

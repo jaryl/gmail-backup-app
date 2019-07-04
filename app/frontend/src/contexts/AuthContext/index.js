@@ -2,24 +2,28 @@ import React, { useState } from 'react';
 
 const AuthContext = React.createContext();
 
-const AuthContextProvider = ({ authenticate, localStorageService, ...props }) => {
-  const initialToken = localStorageService.get('authToken');
-  const [authToken, setAuthToken] = useState(initialToken);
+const AuthContextProvider = ({
+  authService,
+  initialLoggedIn,
+  onLogin,
+  onLogout,
+  ...props
+}) => {
+  const [loggedIn, setLoggedIn] = useState(initialLoggedIn);
 
   const handleLogin = async (params) => {
-    const { token: newToken } = await authenticate(params);
-    setAuthToken(newToken);
-    localStorageService.set('authToken', newToken);
+    const { token: newToken } = await authService.authenticate(params);
+    onLogin(newToken);
+    setLoggedIn(true);
   };
 
   const handleLogout = () => {
-    setAuthToken(null);
-    localStorageService.clear('authToken');
+    onLogout();
+    setLoggedIn(false);
   };
 
   const values = {
-    authToken: authToken || initialToken,
-    loggedIn: !!authToken,
+    loggedIn,
     login: handleLogin,
     logout: handleLogout,
   };
