@@ -34,7 +34,8 @@ const RootQuery = new GraphQLObjectType({
     mailbox: {
       type: MailboxType,
       args: { token: { type: GraphQLID } },
-      resolve(parentValue, { token }) {
+      resolve(parentValue, args, ctx) {
+        const token = ctx.headers.authorization || args.token;
         const { mailboxId } = jwt.verify(token, JWT_SECRET, (error, decoded) => {
           if (error) throw error;
           return decoded;

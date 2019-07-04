@@ -13,6 +13,7 @@ let client = null;
 const AuthService = {
   use: (_client) => {
     client = _client;
+    client.clearStore();
   },
   authenticate: ({ username, password }) => new Promise(async (resolve, reject) => {
     try {

@@ -29,13 +29,13 @@ const labelData = [
 ];
 
 const threadData = [
-  { id: '74d5bca9-c52f-4aac-a0c6-9b07d61cb16a', mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', labelIds: ['712e0a64-6564-4951-a181-1b15ee101e8c', 'f4f73538-e9c2-429c-8bb4-7e1535036198', '0ea950c4-1488-45fa-a7b2-b25fb8602934'], snippet: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit' },
-  { id: '31b2e30f-bcb7-4dc0-82d3-c64af76653f9', mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', labelIds: ['712e0a64-6564-4951-a181-1b15ee101e8c', 'f4f73538-e9c2-429c-8bb4-7e1535036198'], snippet: 'Ut enim ad minim veniam, quis nostrud exercitation' },
-  { id: 'b216ced9-a1c5-40a6-954b-22e51555d70e', mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', labelIds: ['712e0a64-6564-4951-a181-1b15ee101e8c'], snippet: 'Neque purus posuere quam ultricies facilisis a semper proin eros' },
+  { id: '74d5bca9-c52f-4aac-a0c6-9b07d61cb16a', mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', labelIds: ['712e0a64-6564-4951-a181-1b15ee101e8c', 'f4f73538-e9c2-429c-8bb4-7e1535036198', '0ea950c4-1488-45fa-a7b2-b25fb8602934'], snippet: 'John: Lorem ipsum dolor sit amet, consectetur adipiscing elit' },
+  { id: '31b2e30f-bcb7-4dc0-82d3-c64af76653f9', mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', labelIds: ['712e0a64-6564-4951-a181-1b15ee101e8c', 'f4f73538-e9c2-429c-8bb4-7e1535036198'], snippet: 'John: Ut enim ad minim veniam, quis nostrud exercitation' },
+  { id: 'b216ced9-a1c5-40a6-954b-22e51555d70e', mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', labelIds: ['712e0a64-6564-4951-a181-1b15ee101e8c'], snippet: 'John: Neque purus posuere quam ultricies facilisis a semper proin eros' },
 
-  { id: '658b95d5-bc1b-4cfc-b4e8-0c06dae4e8d4', mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', labelIds: ['dfe745a8-992b-4536-8f1a-3a8c66bbf93b', 'e43f42d9-9eef-4c78-b158-77b245cbda0b', 'ae602a7c-57ce-4466-a7dd-db507388534b'], snippet: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit' },
-  { id: 'ff518a7d-b74f-448c-8df7-5fbbefd2395a', mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', labelIds: ['dfe745a8-992b-4536-8f1a-3a8c66bbf93b', 'e43f42d9-9eef-4c78-b158-77b245cbda0b'], snippet: 'Ut enim ad minim veniam, quis nostrud exercitation' },
-  { id: '68bc097c-1e2e-4b5f-a8f8-cae4ee0b4f3c', mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', labelIds: ['dfe745a8-992b-4536-8f1a-3a8c66bbf93b'], snippet: 'Neque purus posuere quam ultricies facilisis a semper proin eros' },
+  { id: '658b95d5-bc1b-4cfc-b4e8-0c06dae4e8d4', mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', labelIds: ['dfe745a8-992b-4536-8f1a-3a8c66bbf93b', 'e43f42d9-9eef-4c78-b158-77b245cbda0b', 'ae602a7c-57ce-4466-a7dd-db507388534b'], snippet: 'Jane: Lorem ipsum dolor sit amet, consectetur adipiscing elit' },
+  { id: 'ff518a7d-b74f-448c-8df7-5fbbefd2395a', mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', labelIds: ['dfe745a8-992b-4536-8f1a-3a8c66bbf93b', 'e43f42d9-9eef-4c78-b158-77b245cbda0b'], snippet: 'Jane: Ut enim ad minim veniam, quis nostrud exercitation' },
+  { id: '68bc097c-1e2e-4b5f-a8f8-cae4ee0b4f3c', mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', labelIds: ['dfe745a8-992b-4536-8f1a-3a8c66bbf93b'], snippet: 'Jane: Neque purus posuere quam ultricies facilisis a semper proin eros' },
 ];
 
 const messageData = [
