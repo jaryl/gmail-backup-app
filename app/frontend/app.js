@@ -24,7 +24,7 @@ const client = new ApolloClient({
 const App = () => {
   const authContextProviderProps = {
     authenticate: AuthService.call,
-    token: LocalStorageService.retrieve('authToken'),
+    localStorageService: LocalStorageService,
   };
 
   return (
