@@ -6,6 +6,11 @@ import { Query } from 'react-apollo';
 import EmailViewer from '../scenes/EmailViewer';
 
 const CONVERSATION_QUERY = gql`
+fragment UserParts on User {
+  name
+  email
+}
+
 query($id: ID!) {
   mailbox(token: "e953183d-7e9f-4a75-b5e1-5f7ff8ee6cd7") {
     thread(id: $id) {
@@ -17,8 +22,10 @@ query($id: ID!) {
       }
       messages {
         id
-        from
-        to
+        from { ...UserParts }
+        to { ...UserParts }
+        cc { ...UserParts }
+        bcc { ...UserParts }
         snippet
         timestamp
       }

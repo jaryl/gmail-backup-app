@@ -7,9 +7,16 @@ const {
   GraphQLObjectType,
   GraphQLID,
   GraphQLString,
+  GraphQLBoolean,
   GraphQLList,
   GraphQLScalarType,
 } = graphql;
+
+const userData = [
+  { name: 'John Doe', email: 'john.doe@example.net', owner: false },
+  { name: 'Jane Doe', email: 'jane.doe@example.net', owner: false },
+  { name: 'John Smith', email: 'john.smith@example.net', owner: false },
+];
 
 const labelData = [
   { mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', id: '712e0a64-6564-4951-a181-1b15ee101e8c', name: 'All', slug: 'all' },
@@ -34,30 +41,30 @@ const threadData = [
 const messageData = [
 
   // messages for mailbox '80a9521e-c07a-4b21-aca3-66eea0fefe13'
-  { threadId: '74d5bca9-c52f-4aac-a0c6-9b07d61cb16a', id: '09b6eec2-2cc2-407d-993e-4a9fbc597447', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'] },
-  { threadId: '74d5bca9-c52f-4aac-a0c6-9b07d61cb16a', id: '21cb9276-bcef-4e75-b08d-3bbd35f0a8d8', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'] },
-  { threadId: '74d5bca9-c52f-4aac-a0c6-9b07d61cb16a', id: '08e16133-8e78-4e20-b20c-009351d27d7e', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'] },
+  { threadId: '74d5bca9-c52f-4aac-a0c6-9b07d61cb16a', id: '09b6eec2-2cc2-407d-993e-4a9fbc597447', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: '74d5bca9-c52f-4aac-a0c6-9b07d61cb16a', id: '21cb9276-bcef-4e75-b08d-3bbd35f0a8d8', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: '74d5bca9-c52f-4aac-a0c6-9b07d61cb16a', id: '08e16133-8e78-4e20-b20c-009351d27d7e', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'], cc: [], bcc: [] },
 
-  { threadId: '31b2e30f-bcb7-4dc0-82d3-c64af76653f9', id: '2fa94ae4-3777-41ce-ab81-41128ab3d501', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'] },
-  { threadId: '31b2e30f-bcb7-4dc0-82d3-c64af76653f9', id: 'fe9cacd3-6490-4d96-a0af-2c6755588bac', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'] },
-  { threadId: '31b2e30f-bcb7-4dc0-82d3-c64af76653f9', id: 'bd6ad865-8e9c-49b6-9d4e-4a962d65975d', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'] },
+  { threadId: '31b2e30f-bcb7-4dc0-82d3-c64af76653f9', id: '2fa94ae4-3777-41ce-ab81-41128ab3d501', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: '31b2e30f-bcb7-4dc0-82d3-c64af76653f9', id: 'fe9cacd3-6490-4d96-a0af-2c6755588bac', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: '31b2e30f-bcb7-4dc0-82d3-c64af76653f9', id: 'bd6ad865-8e9c-49b6-9d4e-4a962d65975d', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'], cc: [], bcc: [] },
 
-  { threadId: 'b216ced9-a1c5-40a6-954b-22e51555d70e', id: 'd6712adf-91df-42f7-be5a-3871daa7e43e', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'] },
-  { threadId: 'b216ced9-a1c5-40a6-954b-22e51555d70e', id: 'e64ed7fb-863f-4342-821c-69d66688e0a8', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'] },
-  { threadId: 'b216ced9-a1c5-40a6-954b-22e51555d70e', id: '529d0dc8-fa05-4955-acc1-232ace296b83', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'] },
+  { threadId: 'b216ced9-a1c5-40a6-954b-22e51555d70e', id: 'd6712adf-91df-42f7-be5a-3871daa7e43e', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: 'b216ced9-a1c5-40a6-954b-22e51555d70e', id: 'e64ed7fb-863f-4342-821c-69d66688e0a8', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: 'b216ced9-a1c5-40a6-954b-22e51555d70e', id: '529d0dc8-fa05-4955-acc1-232ace296b83', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'], cc: [], bcc: [] },
 
   // messages for mailbox 'd71590d1-784c-4b5b-84cd-f548adb4c723'
-  { threadId: '658b95d5-bc1b-4cfc-b4e8-0c06dae4e8d4', id: '7435b452-348c-4c07-995d-e1441342a84e', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'] },
-  { threadId: '658b95d5-bc1b-4cfc-b4e8-0c06dae4e8d4', id: '4b40fe27-8f88-4696-bf8c-fbb89e6d6088', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'] },
-  { threadId: '658b95d5-bc1b-4cfc-b4e8-0c06dae4e8d4', id: '0172f91f-4d5c-430c-80f3-2241c736a270', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'] },
+  { threadId: '658b95d5-bc1b-4cfc-b4e8-0c06dae4e8d4', id: '7435b452-348c-4c07-995d-e1441342a84e', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: '658b95d5-bc1b-4cfc-b4e8-0c06dae4e8d4', id: '4b40fe27-8f88-4696-bf8c-fbb89e6d6088', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: '658b95d5-bc1b-4cfc-b4e8-0c06dae4e8d4', id: '0172f91f-4d5c-430c-80f3-2241c736a270', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'], cc: [], bcc: [] },
 
-  { threadId: 'ff518a7d-b74f-448c-8df7-5fbbefd2395a', id: '6d9e0542-4eeb-4fde-8a2c-0375609fcb9d', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'] },
-  { threadId: 'ff518a7d-b74f-448c-8df7-5fbbefd2395a', id: '073651bc-1e98-45fe-b876-308672492cf3', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'] },
-  { threadId: 'ff518a7d-b74f-448c-8df7-5fbbefd2395a', id: '60df4ca6-6bda-43fb-a30e-73ef1c3da014', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'] },
+  { threadId: 'ff518a7d-b74f-448c-8df7-5fbbefd2395a', id: '6d9e0542-4eeb-4fde-8a2c-0375609fcb9d', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: 'ff518a7d-b74f-448c-8df7-5fbbefd2395a', id: '073651bc-1e98-45fe-b876-308672492cf3', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: 'ff518a7d-b74f-448c-8df7-5fbbefd2395a', id: '60df4ca6-6bda-43fb-a30e-73ef1c3da014', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'], cc: [], bcc: [] },
 
-  { threadId: '68bc097c-1e2e-4b5f-a8f8-cae4ee0b4f3c', id: '96420806-dde1-4444-96c1-88f88bcfa69d', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'] },
-  { threadId: '68bc097c-1e2e-4b5f-a8f8-cae4ee0b4f3c', id: 'a1c28572-ee58-41c6-88e7-f9dbb2152b3c', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'] },
-  { threadId: '68bc097c-1e2e-4b5f-a8f8-cae4ee0b4f3c', id: 'b048d38d-45bd-47f5-8e71-3cd552a7c426', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'] },
+  { threadId: '68bc097c-1e2e-4b5f-a8f8-cae4ee0b4f3c', id: '96420806-dde1-4444-96c1-88f88bcfa69d', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.doe@example.net', to: ['jane.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: '68bc097c-1e2e-4b5f-a8f8-cae4ee0b4f3c', id: 'a1c28572-ee58-41c6-88e7-f9dbb2152b3c', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'jane.doe@example.net', to: ['john.doe@example.net', 'john.smith@example.net'], cc: [], bcc: [] },
+  { threadId: '68bc097c-1e2e-4b5f-a8f8-cae4ee0b4f3c', id: 'b048d38d-45bd-47f5-8e71-3cd552a7c426', timestamp: new Date(1562235612675), snippet: 'Nunc curae eget sociosqu maximus viverra rhoncus tellus luctus velit, et magna amet aliquam potenti suscipit volutpat enim.', from: 'john.smith@example.net', to: ['jane.doe@example.net', 'john.doe@example.net'], cc: [], bcc: [] },
 
 ];
 
@@ -159,8 +166,30 @@ const MessageType = new GraphQLObjectType({
     labelIds: { type: GraphQLString },
     snippet: { type: GraphQLString },
     timestamp: { type: DateScalarType },
-    from: { type: GraphQLString },
-    to: { type: new GraphQLList(GraphQLString) },
+    from: {
+      type: UserType,
+      resolve(parent, args) {
+        return _.find(userData, { email: parent.from });
+      },
+    },
+    to: {
+      type: new GraphQLList(UserType),
+      resolve(parent, args) {
+        return _.filter(userData, user => parent.to.includes(user.email));
+      },
+    },
+    cc: {
+      type: new GraphQLList(UserType),
+      resolve(parent, args) {
+        return _.filter(userData, user => parent.cc.includes(user.email));
+      },
+    },
+    bcc: {
+      type: new GraphQLList(UserType),
+      resolve(parent, args) {
+        return _.filter(userData, user => parent.bcc.includes(user.email));
+      },
+    },
     thread: {
       type: MessageType,
       resolve(parent, args) {
@@ -168,6 +197,16 @@ const MessageType = new GraphQLObjectType({
       },
     },
     // TODO: internalDate, payload, sizeEstimate, raw, etc
+  }),
+});
+
+const UserType = new GraphQLObjectType({
+  name: 'User',
+  type: 'Query',
+  fields: () => ({
+    name: { type: GraphQLString },
+    email: { type: GraphQLString },
+    owner: { type: GraphQLBoolean },
   }),
 });
 
