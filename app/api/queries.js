@@ -1,5 +1,7 @@
 const _ = require('lodash');
 
+const jwt = require('jsonwebtoken');
+
 const {
   GraphQLObjectType,
   GraphQLID,
@@ -18,10 +20,12 @@ const mailboxData = [
   { id: 'd71590d1-784c-4b5b-84cd-f548adb4c723', emailAddress: 'jane.doe@example.net', messagesTotal: 1000, threadsTotal: 800 },
 ];
 
-const accessTokenData = [
-  { token: 'e953183d-7e9f-4a75-b5e1-5f7ff8ee6cd7', mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', username: 'john.doe', password: '123123123' },
-  { token: 'bc60a212-7eca-47a9-8e11-f70f295e4e43', mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', username: 'jane.doe', password: '123123123' },
+const userCredentials = [
+  { mailboxId: '80a9521e-c07a-4b21-aca3-66eea0fefe13', username: 'john.doe', password: '123123123' },
+  { mailboxId: 'd71590d1-784c-4b5b-84cd-f548adb4c723', username: 'jane.doe', password: '123123123' },
 ];
+
+const JWT_SECRET = 'some random secret'; // TODO: replace with key from ENV
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -31,9 +35,11 @@ const RootQuery = new GraphQLObjectType({
       type: MailboxType,
       args: { token: { type: GraphQLID } },
       resolve(parentValue, { token }) {
-        // TODO: return real data
-        const accessToken = _.find(accessTokenData, { token });
-        return _.find(mailboxData, { id: accessToken.mailboxId });
+        const { mailboxId } = jwt.verify(token, JWT_SECRET, (error, decoded) => {
+          if (error) throw error;
+          return decoded;
+        });
+        return _.find(mailboxData, { id: mailboxId });
       },
     },
   },
@@ -49,8 +55,12 @@ const Mutation = new GraphQLObjectType({
         password: { type: GraphQLString },
       },
       resolve(parents, { username, password }) {
-        // TODO: return real data
-        return _.find(accessTokenData, { username, password });
+        const credentials = _.find(userCredentials, { username, password });
+        const token = jwt.sign({
+          exp: Math.floor(Date.now() / 1000) + (60 * 60), // 1 hour expiry
+          mailboxId: credentials.mailboxId,
+        }, JWT_SECRET);
+        return { token };
       },
     },
   },
