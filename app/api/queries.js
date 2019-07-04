@@ -2,7 +2,6 @@ const _ = require('lodash');
 
 const {
   GraphQLObjectType,
-  GraphQLList,
   GraphQLID,
   GraphQLString,
 } = require('graphql');
@@ -10,11 +9,9 @@ const {
 const {
   AccessTokenType,
   MailboxType,
-  LabelType,
-  ThreadType,
 } = require('./types');
 
-const { Mailbox } = require('../../models/');
+// const { Mailbox } = require('../../models/');
 
 const mailboxData = [
   { id: '80a9521e-c07a-4b21-aca3-66eea0fefe13', emailAddress: 'john.doe@example.net', messagesTotal: 1000, threadsTotal: 800 },

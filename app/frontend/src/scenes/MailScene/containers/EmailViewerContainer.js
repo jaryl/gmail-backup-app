@@ -20,6 +20,7 @@ query($id: ID!) {
         from
         to
         snippet
+        timestamp
       }
     }
   }

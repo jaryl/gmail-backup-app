@@ -29,7 +29,7 @@ const EmailViewer = ({ thread }) => {
                 <Typography variant="body1">{message.from}</Typography>
               </Grid>
               <Grid item xs>
-                <Typography variant="body1" align="right">{"DATE GOES HERE"}</Typography>
+                <Typography variant="body1" align="right">{new Date(message.timestamp).toGMTString()}</Typography>
               </Grid>
             </Grid>
           </Box>
