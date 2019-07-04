@@ -11,6 +11,10 @@ query($id: ID!) {
     thread(id: $id) {
       id
       snippet
+      labels {
+        id
+        name
+      }
       messages {
         id
         from

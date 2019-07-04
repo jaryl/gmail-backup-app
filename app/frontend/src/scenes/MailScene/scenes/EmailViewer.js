@@ -14,6 +14,10 @@ import {
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
 const EmailViewer = ({ thread }) => {
+  const labels = thread.labels.map((label) => {
+    return (<Chip key={label.id} label={label.name} variant="outlined" />);
+  });
+
   const conversation = thread.messages.map((message) => {
     return (
       <Box key={message.id} p={2}>
@@ -57,7 +61,7 @@ const EmailViewer = ({ thread }) => {
               <Typography variant="h6" component="h1">{thread.snippet}</Typography>
             </Grid>
             <Grid item xs align="right">
-              <Chip label="Starred" variant="outlined" />
+              {labels}
             </Grid>
           </Grid>
         </Box>

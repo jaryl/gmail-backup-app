@@ -136,7 +136,6 @@ const ThreadType = new GraphQLObjectType({
       type: new GraphQLList(LabelType),
       resolve(parent, args) {
         // TODO: use real data
-        // TODO: collect unique label ids from messages
         return _.filter(labelData, label => _.includes(parent.labelIds, label.id));
       },
     },
