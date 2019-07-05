@@ -18,10 +18,11 @@ const AuthService = {
     client.clearStore();
   },
   verify: (token) => {
+    if (!token) return false;
     try {
-      jwt.verify(token);
+      jwt.decode(token);
       return true;
-    } catch {
+    } catch (e) {
       return false;
     }
   },
