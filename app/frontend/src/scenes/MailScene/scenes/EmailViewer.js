@@ -19,6 +19,17 @@ const EmailViewer = ({ thread }) => {
   });
 
   const conversation = thread.messages.map((message) => {
+    // TODO: find a better way to do this
+    const to = `To: ${message.to.map(user => user.name).join(', ')}`;
+    const cc = (message.cc.length === 0) ? '' : `Cc: ${message.bcc.map(user => user.name).join(', ')}`;
+    const bcc = (message.bcc.length === 0) ? '' : `Bcc: ${message.bcc.map(user => user.name).join(', ')}`;
+    const headers = [to, cc, bcc].filter(v => !!v).join(', ');
+
+    const moreFrom = `${message.from.name} <${message.from.email}>`;
+    const moreTo = `${message.to.map(user => `${user.name} <${user.email}>`).join(', ')}`;
+    const moreCc = (message.cc.length === 0) ? '' : `Cc: ${message.to.map(user => `${user.name} <${user.email}>`).join(', ')}`;
+    const moreBcc = (message.bcc.length === 0) ? '' : `Bcc: ${message.to.map(user => `${user.name} <${user.email}>`).join(', ')}`;
+
     return (
       <Box key={message.id} p={2}>
         <Paper>
@@ -36,10 +47,13 @@ const EmailViewer = ({ thread }) => {
 
           <ExpansionPanel square={false} elevation={0}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="body2" color="primary">{"HEADERS GO HERE"}</Typography>
+              <Typography variant="body2" color="primary">{headers}</Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Typography variant="body2" color="primary">More data</Typography>
+            <ExpansionPanelDetails style={{ flexDirection: 'column' }}>
+              <Typography variant="body2" color="primary">From: {moreFrom}</Typography>
+              <Typography variant="body2" color="primary">To: {moreTo}</Typography>
+              {(message.cc.length > 0) && <Typography variant="body2" color="primary">Cc: {moreCc}</Typography>}
+              {(message.bcc.length > 0) && <Typography variant="body2" color="primary">Bcc: {moreBcc}</Typography>}
             </ExpansionPanelDetails>
           </ExpansionPanel>
 
