@@ -1,5 +1,7 @@
 import gql from 'graphql-tag';
 
+import jwt from 'jsonwebtoken';
+
 const AUTHENTICATE_MUTATION = gql`
   mutation ($username: String!, $password: String!) {
     authenticate(username: $username, password: $password) {
@@ -14,6 +16,14 @@ const AuthService = {
   use: (_client) => {
     client = _client;
     client.clearStore();
+  },
+  verify: (token) => {
+    try {
+      jwt.verify(token);
+      return true;
+    } catch {
+      return false;
+    }
   },
   authenticate: ({ username, password }) => new Promise(async (resolve, reject) => {
     try {

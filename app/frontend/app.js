@@ -23,6 +23,8 @@ const client = apolloConnect(() => LocalStorageService.get('authToken'));
 AuthService.use(client);
 
 const App = () => {
+  if (!AuthService.verify(LocalStorageService.get('authToken'))) LocalStorageService.remove('authToken');
+
   const authContextProviderProps = {
     authService: AuthService,
     initialLoggedIn: !!LocalStorageService.get('authToken'),

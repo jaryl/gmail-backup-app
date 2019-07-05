@@ -18,7 +18,9 @@ const apolloConnect = (getToken) => {
   });
 
   const withToken = setContext(() => {
-    return { headers: { authorization: getToken() } };
+    const token = getToken();
+    const authorizationHeader = token ? `Bearer ${getToken()}` : '';
+    return { headers: { authorization: authorizationHeader } };
   });
 
   return new ApolloClient({
