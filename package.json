@@ -54,6 +54,7 @@
     "react": "^16.8.6",
     "react-apollo": "^2.5.8",
     "react-dom": "^16.8.6",
+    "react-google-login": "^5.0.4",
     "react-router-dom": "^5.0.1",
     "sequelize": "^5.8.5",
     "sequelize-cli": "^5.5.0"

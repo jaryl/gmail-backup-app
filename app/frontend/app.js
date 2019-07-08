@@ -12,6 +12,7 @@ import MainErrorBoundary from './src/components/MainErrorBoundary';
 
 import LoginScene from './src/scenes/LoginScene';
 import MailScene from './src/scenes/MailScene';
+import SetupScene from './src/scenes/SetupScene';
 
 import AuthService from './src/services/AuthService';
 import LocalStorageService from './src/services/LocalStorageService';
@@ -45,6 +46,7 @@ const App = () => {
           <Router>
             <Switch>
               <Route path="/login" render={props => <LoginScene {...props} />} />
+              <Route path="/setup" render={props => <SetupScene {...props} />} />
               <AuthenticatedRoute path="/" render={props => <MailScene {...props} />} />
             </Switch>
           </Router>
