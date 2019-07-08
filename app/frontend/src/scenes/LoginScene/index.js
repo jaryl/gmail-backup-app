@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import {
   CssBaseline,
   Box,
   Paper,
   Grid,
+  Button,
 } from '@material-ui/core';
 
 import { Formik } from 'formik';
@@ -50,11 +51,17 @@ const LoginScene = (props) => {
               <CssBaseline />
               <Paper>
                 <Box p={3} mt={6}>
+
                   <Formik
                     initialValues={initialValues}
                     render={formikProps => <InputForm {...formikProps} />}
                     onSubmit={handleSubmit}
-                   />
+                  />
+
+                  <hr />
+
+                  <Button variant="contained" color="secondary" component={Link} to='/setup'>Setup an Account</Button>
+
                 </Box>
               </Paper>
             </Grid>

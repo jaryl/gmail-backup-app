@@ -12,8 +12,8 @@ const SetupContextProvider = ({
   // const [mailboxData, setMailboxData] = useState();
 
   const login = (token, profile) => {
-    setTokenObj(token);
     setProfileObj(profile);
+    setTokenObj(token);
   };
 
   const logout = () => {
