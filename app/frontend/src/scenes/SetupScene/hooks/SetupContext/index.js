@@ -6,28 +6,28 @@ const SetupContextProvider = ({
   clientId,
   ...props
 }) => {
-  const [tokenObj, setTokenObj] = useState();
-  const [profileObj, setProfileObj] = useState();
-
+  const [setupState, setSetupState] = useState({});
   // const [mailboxData, setMailboxData] = useState();
 
   const login = (token, profile) => {
-    setProfileObj(profile);
-    setTokenObj(token);
+    setSetupState({
+      token,
+      profile,
+    });
   };
 
   const logout = () => {
-    setTokenObj(null);
-    setProfileObj(null);
+    setSetupState({});
   };
 
-  const isAuthenticated = () => !!tokenObj;
+  const isAuthenticated = () => !!setupState.token;
 
   const values = {
     clientId,
     login,
     logout,
-    profileObj,
+    profile: setupState.profile,
+    token: setupState.token,
     isAuthenticated,
   };
 

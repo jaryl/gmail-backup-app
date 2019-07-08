@@ -1,16 +1,14 @@
-const graphql = require('graphql');
-const { Kind } = require('graphql/language');
+const JWT_SECRET = 'some random secret'; // TODO: replace with key from ENV
 
-const _ = require('lodash');
+const mailboxData = [
+  { id: '80a9521e-c07a-4b21-aca3-66eea0fefe13', userId: '14248491-2798-4647-baa1-e89a5a48cccd', emailAddress: 'john.doe@example.net', messagesTotal: 1000, threadsTotal: 800 },
+  { id: 'd71590d1-784c-4b5b-84cd-f548adb4c723', userId: 'a35be04d-79d1-452a-abb7-e2a624e59e45', emailAddress: 'jane.doe@example.net', messagesTotal: 1000, threadsTotal: 800 },
+];
 
-const {
-  GraphQLObjectType,
-  GraphQLID,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLScalarType,
-} = graphql;
+const userCredentials = [
+  { id: '14248491-2798-4647-baa1-e89a5a48cccd', username: 'john.doe', password: '123123123' },
+  { id: 'a35be04d-79d1-452a-abb7-e2a624e59e45', username: 'jane.doe', password: '123123123' },
+];
 
 const userData = [
   { name: 'John Doe', email: 'john.doe@example.net', owner: false },
@@ -68,170 +66,12 @@ const messageData = [
 
 ];
 
-const AccessTokenType = new GraphQLObjectType({
-  name: 'AccessToken',
-  type: 'Query',
-  fields: () => ({
-    token: { type: GraphQLID },
-  }),
-});
-
-const MailboxType = new GraphQLObjectType({
-  name: 'Mailbox',
-  type: 'Query',
-  fields: () => ({
-    id: { type: GraphQLID },
-    emailAddress: { type: GraphQLString },
-    messagesTotal: { type: GraphQLString },
-    threadsTotal: { type: GraphQLString },
-    labels: {
-      type: new GraphQLList(LabelType),
-      resolve(parent, args) {
-        return _.filter(labelData, { mailboxId: parent.id });
-      },
-    },
-    label: {
-      type: LabelType,
-      args: { id: { type: GraphQLID } },
-      resolve(parent, { id }) {
-        return _.find(labelData, { id });
-      },
-    },
-    threads: {
-      type: new GraphQLList(ThreadType),
-      resolve(parent, args) {
-        return _.filter(threadData, { mailboxId: parent.id });
-      },
-    },
-    thread: {
-      type: ThreadType,
-      args: { id: { type: GraphQLID } },
-      resolve(parent, { id }) {
-        return _.find(threadData, { id });
-      },
-    },
-    messages: {
-      type: new GraphQLList(MessageType),
-      resolve(parent, args) {
-        return _.filter(messageData, { mailboxId: parent.id });
-      },
-    },
-  }),
-});
-
-const LabelType = new GraphQLObjectType({
-  name: 'Label',
-  type: 'Query',
-  fields: () => ({
-    id: { type: GraphQLID },
-    name: { type: GraphQLString },
-    slug: { type: GraphQLString },
-    threads: {
-      type: new GraphQLList(ThreadType),
-      resolve(parent, args) {
-        return _.filter(threadData, thread => _.includes(thread.labelIds, parent.id));
-      },
-    }
-  }),
-});
-
-const ThreadType = new GraphQLObjectType({
-  name: 'Thread',
-  type: 'Query',
-  fields: () => ({
-    id: { type: GraphQLID },
-    snippet: { type: GraphQLString },
-    labels: {
-      type: new GraphQLList(LabelType),
-      resolve(parent, args) {
-        // TODO: use real data
-        return _.filter(labelData, label => _.includes(parent.labelIds, label.id));
-      },
-    },
-    messages: {
-      type: new GraphQLList(MessageType),
-      resolve(parent, args) {
-        return _.filter(messageData, { threadId: parent.id });
-      },
-    },
-  }),
-});
-
-const MessageType = new GraphQLObjectType({
-  name: 'Message',
-  type: 'Query',
-  fields: () => ({
-    id: { type: GraphQLID },
-    threadId: { type: GraphQLID },
-    labelIds: { type: GraphQLString },
-    snippet: { type: GraphQLString },
-    timestamp: { type: DateScalarType },
-    from: {
-      type: UserType,
-      resolve(parent, args) {
-        return _.find(userData, { email: parent.from });
-      },
-    },
-    to: {
-      type: new GraphQLList(UserType),
-      resolve(parent, args) {
-        return _.filter(userData, user => parent.to.includes(user.email));
-      },
-    },
-    cc: {
-      type: new GraphQLList(UserType),
-      resolve(parent, args) {
-        return _.filter(userData, user => parent.cc.includes(user.email));
-      },
-    },
-    bcc: {
-      type: new GraphQLList(UserType),
-      resolve(parent, args) {
-        return _.filter(userData, user => parent.bcc.includes(user.email));
-      },
-    },
-    thread: {
-      type: MessageType,
-      resolve(parent, args) {
-        return _.find(messageData, { id: parent.threadId });
-      },
-    },
-    // TODO: internalDate, payload, sizeEstimate, raw, etc
-  }),
-});
-
-const UserType = new GraphQLObjectType({
-  name: 'User',
-  type: 'Query',
-  fields: () => ({
-    name: { type: GraphQLString },
-    email: { type: GraphQLString },
-    owner: { type: GraphQLBoolean },
-  }),
-});
-
-const DateScalarType = new GraphQLScalarType({
-  name: 'Date',
-  description: 'Date custom scalar type',
-  parseValue(value) {
-    return new Date(value); // value from the client
-  },
-  serialize(value) {
-    return value.getTime(); // value sent to the client
-  },
-  parseLiteral(ast) {
-    if (ast.kind === Kind.INT) {
-      return new Date(ast.value); // ast value is always in string format
-    }
-    return null;
-  },
-});
-
 module.exports = {
-  AccessTokenType,
-  MailboxType,
-  LabelType,
-  ThreadType,
-  MessageType,
-  DateScalarType,
+  JWT_SECRET,
+  userData,
+  mailboxData,
+  labelData,
+  threadData,
+  messageData,
+  userCredentials,
 };

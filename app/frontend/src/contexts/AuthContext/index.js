@@ -22,10 +22,16 @@ const AuthContextProvider = ({
     setLoggedIn(false);
   };
 
+  const injectToken = (newToken) => {
+    onLogin(newToken);
+    setLoggedIn(true);
+  };
+
   const values = {
     loggedIn,
     login: handleLogin,
     logout: handleLogout,
+    injectToken,
   };
 
   return (

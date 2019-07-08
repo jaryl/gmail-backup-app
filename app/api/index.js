@@ -3,10 +3,14 @@ const express = require('express');
 const graphql = require('graphql');
 const graphqlHTTP = require('express-graphql');
 
-const { query, mutation } = require('./queries');
+const { RootQuery: query } = require('./queries');
+const { Mutation: mutation } = require('./mutations');
 
 const { GraphQLSchema } = graphql;
-const schema = new GraphQLSchema({ query, mutation });
+const schema = new GraphQLSchema({
+  query,
+  mutation,
+});
 
 const app = express();
 
