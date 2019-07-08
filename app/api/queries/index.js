@@ -36,7 +36,7 @@ const RootQuery = new GraphQLObjectType({
         const token = headerToken || args.token;
         const { userId } = jwt.verify(token, store.JWT_SECRET);
         if (args.id) return _.find(store.mailboxData, { id: args.id, userId });
-        return store.mailboxData[0];
+        return _.filter(store.mailboxData, { userId })[0];
       },
     },
   },

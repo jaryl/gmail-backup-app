@@ -7,7 +7,7 @@ import EmailListing from '../scenes/EmailListing';
 
 const THREADS_QUERY = gql`
 query($id: ID!) {
-  mailbox(token: "e953183d-7e9f-4a75-b5e1-5f7ff8ee6cd7") {
+  mailbox {
     label(id: $id) {
       id
       name

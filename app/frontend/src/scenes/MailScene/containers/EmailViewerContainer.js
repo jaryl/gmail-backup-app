@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
@@ -20,7 +20,7 @@ fragment UserParts on User {
 }
 
 query($id: ID!) {
-  mailbox(token: "e953183d-7e9f-4a75-b5e1-5f7ff8ee6cd7") {
+  mailbox {
     thread(id: $id) {
       id
       snippet
