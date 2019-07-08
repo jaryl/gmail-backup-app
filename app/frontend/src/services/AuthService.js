@@ -19,12 +19,8 @@ const AuthService = {
   },
   verify: (token) => {
     if (!token) return false;
-    try {
-      jwt.decode(token);
-      return true;
-    } catch (e) {
-      return false;
-    }
+    const values = jwt.decode(token);
+    return (new Date(values.exp * 1000) > new Date());
   },
   authenticate: ({ username, password }) => new Promise(async (resolve, reject) => {
     try {
