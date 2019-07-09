@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import jwt from 'jsonwebtoken';
 
 const AUTHENTICATE_MUTATION = gql`
-  mutation ($username: String!, $password: String!) {
+  mutation ($username: ID!, $password: String!) {
     authenticate(username: $username, password: $password) {
       token
     }

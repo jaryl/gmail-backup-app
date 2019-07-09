@@ -3,7 +3,7 @@ const typeDefs = `
 
   type Query {
     mailboxes(token: String): [Mailbox!]!
-    mailbox(id: ID!, token: String): Mailbox!
+    mailbox(id: ID, token: String): Mailbox!
   }
 
   type Mutation {
@@ -26,7 +26,9 @@ const typeDefs = `
     id: ID!
     emailAddress: String!
     labels: [Label]!
+    label(id: ID!): Label!
     threads: [Thread]!
+    thread(id: ID!): Thread!
     messages: [Message]!
   }
 
@@ -53,7 +55,6 @@ const typeDefs = `
     name: String
     email: String!
   }
-
 `;
 
 module.exports = typeDefs;
