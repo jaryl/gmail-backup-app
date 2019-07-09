@@ -5,6 +5,7 @@ const { ApolloServer, gql } = require('apollo-server-express');
 const schema = require('./schema');
 const resolvers = require('./resolvers');
 
+const db = require('../../models');
 const store = require('./store'); // TODO: remove this fake store, and replace with db
 
 const app = express();
@@ -14,7 +15,11 @@ const server = new ApolloServer({
   resolvers,
   context: ({ req }) => {
     const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : undefined;
-    return { store, token };
+    return {
+      db,
+      store,
+      token,
+    };
   },
 });
 

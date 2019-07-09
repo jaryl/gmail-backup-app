@@ -24,7 +24,7 @@ const typeDefs = `
 
   type Mailbox {
     id: ID!
-    emailAddress: String!
+    email: String!
     labels: [Label]!
     label(id: ID!): Label!
     threads: [Thread]!

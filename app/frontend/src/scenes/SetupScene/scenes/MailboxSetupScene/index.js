@@ -22,7 +22,7 @@ import { SetupContext } from '../../hooks/SetupContext';
 import InputForm from './components/form';
 
 const CREATE_ACCOUNT_MUTATION = gql`
-  mutation ($username: String!, $password: String!, $name: String!, $email: String!) {
+  mutation ($username: ID!, $password: String!, $name: String!, $email: String!) {
     register(username: $username, password: $password, name: $name, email: $email) {
       token
     }

@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 const MAILBOX_QUERY = gql`
 {
   mailbox {
-    emailAddress
+    email
     labels {
       id
       name

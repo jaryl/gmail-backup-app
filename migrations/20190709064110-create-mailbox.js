@@ -1,20 +1,26 @@
 module.exports = {
-
   up: (queryInterface, Sequelize) => queryInterface.createTable('Mailboxes', {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.literal('uuid_generate_v4()'),
     },
-    emailAddress: {
+    accountId: {
+      allowNull: false,
+      references: {
+        model: 'Accounts',
+        key: 'id',
+      },
+      type: Sequelize.UUID,
+    },
+    name: {
+      allowNull: false,
       type: Sequelize.STRING,
     },
-    messagesTotal: {
-      type: Sequelize.INTEGER,
-    },
-    threadsTotal: {
-      type: Sequelize.INTEGER,
+    email: {
+      allowNull: false,
+      type: Sequelize.STRING,
     },
     createdAt: {
       allowNull: false,
@@ -27,5 +33,4 @@ module.exports = {
   }),
 
   down: queryInterface => queryInterface.dropTable('Mailboxes'),
-
 };

@@ -1,17 +1,16 @@
+const { ApolloError } = require('apollo-server-express');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
-const uuidv4 = require('uuid/v4');
 
 const store = require('./store');
 
-const generateAccessToken = userId => jwt.sign({
+const generateAccessToken = accountId => jwt.sign({
   exp: Math.floor(Date.now() / 1000) + (60 * 60), // 1 hour expiry
-  userId,
+  accountId,
 }, store.JWT_SECRET);
-
 
 const resolverMap = {
   // custom scalar types
@@ -31,49 +30,45 @@ const resolverMap = {
   // resolvers for root queries
 
   Query: {
-    mailbox: (parent, args, { db, token }) => {
-      const { userId } = jwt.verify(token || args.token, store.JWT_SECRET);
-      if (args.id) return db.mailbox.find({ id: args.id, userId });
-      return db.mailbox.findOne({ userId });
+    mailbox: async (parent, args, { db, token }) => {
+      const { accountId } = jwt.verify(token || args.token, store.JWT_SECRET);
+      const mailbox = args.id ? await db.Mailbox.findOne({ where: { id: args.id, accountId } }) : await db.Mailbox.findOne({ where: { accountId } });
+      return mailbox;
     },
     mailboxes: (parent, args, { db, token }) => {
-      const { userId } = jwt.verify(token || args.token, store.JWT_SECRET);
-      return db.mailbox.findAll({ where: { userId } });
+      const { accountId } = jwt.verify(token || args.token, store.JWT_SECRET);
+      return db.mailbox.findAll({ where: { accountId } });
     },
   },
 
   Mutation: {
-    register: (parent, args, context, info) => {
-      if (_.find(store.userCredentials, { username: args.username })) throw new Error('This username is already taken.');
+    register: async (parent, { username, password, name, email }, { db }) => {
+      const existingAccount = await db.Account.findOne({ where: { username } });
+      if (existingAccount) throw new ApolloError('This username is already taken.', 'DUPLICATE_KEY', { field: 'username' });
 
-      const newUser = {
-        id: uuidv4(),
-        username: args.username,
-        password: args.password,
-      };
-      store.userCredentials.push(newUser);
+      const account = await db.Account.create({
+        username,
+        password,
+        Mailboxes: [
+          { name, email },
+        ],
+      }, {
+        include: [db.Mailbox], // TODO: include creation of All label?
+      });
 
-      const newMailbox = {
-        id: uuidv4(),
-        userId: newUser.id,
-        emailAddress: args.emailAddress,
-        messagesTotal: 0,
-        threadsTotal: 0,
-      };
-      store.mailboxData.push(newMailbox);
-
-      const token = generateAccessToken(newUser.id);
+      const token = generateAccessToken(account.id);
       return { token };
     },
-    authenticate: (parent, { username, password }, context, info) => {
-      console.log(username, password);
-      const credentials = _.find(store.userCredentials, { username, password });
-      const token = generateAccessToken(credentials.id);
+    authenticate: async (parent, { username, password }, { db }) => {
+      const account = await db.Account.findOne({ where: { username, password } }); // TODO; password should be encrypted/salted
+      if (!account) throw new ApolloError('Failed to authenticate', 'AUTH_FAILED', { field: ['username', 'password'] });
+      const token = generateAccessToken(account.id);
       return { token };
     },
   },
 
   // resolvers types
+
   Label: {
     threads: (parent, args, context, info) => _.filter(store.threadData, thread => _.includes(thread.labelIds, parent.id)),
   },
