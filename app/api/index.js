@@ -1,22 +1,17 @@
 const express = require('express');
 
-const graphql = require('graphql');
-const graphqlHTTP = require('express-graphql');
+const { ApolloServer, gql } = require('apollo-server-express');
 
-const { RootQuery: query } = require('./queries');
-const { Mutation: mutation } = require('./mutations');
+const schema = require('./schema');
+const resolvers = require('./resolvers');
 
-const { GraphQLSchema } = graphql;
-const schema = new GraphQLSchema({
-  query,
-  mutation,
+const server = new ApolloServer({
+  typeDefs: gql(schema),
+  resolvers,
 });
 
 const app = express();
 
-app.use('/', graphqlHTTP({
-  schema,
-  graphiql: (process.env.API_ENABLE_GRAPHQL === 'true' || false),
-}));
+server.applyMiddleware({ app, path: '/' });
 
 module.exports = app;
