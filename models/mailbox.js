@@ -6,15 +6,21 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
     },
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
     accountId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUIDV4,
       allowNull: false,
       references: {
         model: 'Accounts',
         key: 'id',
       },
+    },
+    name: {
+      allowNull: false,
+      type: DataTypes.STRING,
+    },
+    email: {
+      allowNull: false,
+      type: DataTypes.STRING,
     },
   }, {});
 
@@ -23,6 +29,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'accountId',
       sourceKey: 'id',
     });
+    Mailbox.hasMany(models.Label, {
+      foreignKey: 'mailboxId',
+      sourceKey: 'id',
+    });
   };
+
   return Mailbox;
 };

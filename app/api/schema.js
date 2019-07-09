@@ -7,8 +7,14 @@ const typeDefs = `
   }
 
   type Mutation {
-    register(username: ID!, password: String!, name: String!, email: String!): AccessToken!
+    register(username: ID!, password: String!, name: String!, email: String!, labels: [LabelInput!]!): AccessToken!
     authenticate(username: ID!, password: String!): AccessToken!
+  }
+
+  input LabelInput {
+    externalId: ID!
+    name: String!
+    type: String!
   }
 
   type AccessToken {
@@ -17,8 +23,10 @@ const typeDefs = `
 
   type Label {
     id: ID!
+    externalId: ID!
     name: String!
     slug: String!
+    type: String!
     threads: [Thread]!
   }
 

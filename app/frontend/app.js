@@ -19,6 +19,8 @@ import LocalStorageService from './src/services/LocalStorageService';
 
 import apolloConnect from './config/apolloConnect';
 
+// LocalStorageService.remove('authToken');
+
 const client = apolloConnect(() => LocalStorageService.get('authToken'));
 
 AuthService.use(client);

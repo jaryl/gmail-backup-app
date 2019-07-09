@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 
 import gql from 'graphql-tag';
 import { ApolloContext } from 'react-apollo';
@@ -22,26 +22,34 @@ import { SetupContext } from '../../hooks/SetupContext';
 import InputForm from './components/form';
 
 const CREATE_ACCOUNT_MUTATION = gql`
-  mutation ($username: ID!, $password: String!, $name: String!, $email: String!) {
-    register(username: $username, password: $password, name: $name, email: $email) {
+  mutation ($username: ID!, $password: String!, $name: String!, $email: String!, $labels: [LabelInput!]!) {
+    register(username: $username, password: $password, name: $name, email: $email, labels: $labels) {
       token
     }
   }
 `;
 
 const MailboxSetupScene = () => {
+  const [labels, setLabels] = useState([]);
+  const { client } = useContext(ApolloContext);
+
   const {
     isAuthenticated,
     profile,
     logout,
     clientId,
+    ready,
   } = useContext(SetupContext);
-
   const { injectToken } = useContext(AuthContext);
 
-  const { client } = useContext(ApolloContext);
-
   if (!isAuthenticated()) return null;
+
+  if (labels.length === 0 && ready) {
+    window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/labels' })
+      .then((response) => {
+        setLabels(response.result.labels);
+      });
+  }
 
   const initialValues = {
     username: '',
@@ -55,6 +63,13 @@ const MailboxSetupScene = () => {
       ...values,
       name: profile.name,
       email: profile.email,
+      labels: labels.map(({ id, name, type }) => {
+        return {
+          externalId: id,
+          name,
+          type,
+        };
+      }),
     };
 
     try {

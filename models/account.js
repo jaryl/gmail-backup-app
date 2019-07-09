@@ -16,5 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       sourceKey: 'id',
     });
   };
+
   return Account;
 };

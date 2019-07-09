@@ -30,10 +30,10 @@ const resolverMap = {
   // resolvers for root queries
 
   Query: {
-    mailbox: async (parent, args, { db, token }) => {
+    mailbox: (parent, args, { db, token }) => {
       const { accountId } = jwt.verify(token || args.token, store.JWT_SECRET);
-      const mailbox = args.id ? await db.Mailbox.findOne({ where: { id: args.id, accountId } }) : await db.Mailbox.findOne({ where: { accountId } });
-      return mailbox;
+      if (args.id) return db.Mailbox.findOne({ where: { id: args.id, accountId } });
+      return db.Mailbox.findOne({ where: { accountId } });
     },
     mailboxes: (parent, args, { db, token }) => {
       const { accountId } = jwt.verify(token || args.token, store.JWT_SECRET);
@@ -42,18 +42,26 @@ const resolverMap = {
   },
 
   Mutation: {
-    register: async (parent, { username, password, name, email }, { db }) => {
+    register: async (parent, { username, password, name, email, labels }, { db }) => {
       const existingAccount = await db.Account.findOne({ where: { username } });
       if (existingAccount) throw new ApolloError('This username is already taken.', 'DUPLICATE_KEY', { field: 'username' });
 
       const account = await db.Account.create({
         username,
         password,
-        Mailboxes: [
-          { name, email },
-        ],
+        Mailboxes: [{
+          name,
+          email,
+          Labels: [
+            { externalId: 'ALL', name: 'All', type: 'app' },
+            ...labels,
+          ],
+        }],
       }, {
-        include: [db.Mailbox], // TODO: include creation of All label?
+        include: [{
+          association: db.Account.associations.Mailboxes,
+          include: [db.Mailbox.associations.Labels],
+        }],
       });
 
       const token = generateAccessToken(account.id);
@@ -70,14 +78,18 @@ const resolverMap = {
   // resolvers types
 
   Label: {
-    threads: (parent, args, context, info) => _.filter(store.threadData, thread => _.includes(thread.labelIds, parent.id)),
+    threads: (parent, args, { db }, info) => [],
+    slug: parent => parent.name.toLowerCase(),
   },
 
   Mailbox: {
-    labels: (parent, args, context, info) => _.filter(store.labelData, { mailboxId: parent.id }),
-    label: (parent, args, context, info) => _.find(store.labelData, { mailboxId: parent.id, id: args.id }),
-    threads: (parent, args, context, info) => _.filter(store.threadData, { mailboxId: parent.id }),
-    thread: (parent, args, context, info) => _.find(store.threadData, { mailboxId: parent.id, id: args.id }),
+    labels: (parent, args, context, info) => parent.getLabels(),
+    label: async (parent, args, context, info) => {
+      const labels = await parent.getLabels({ where: { id: args.id } });
+      return labels[0];
+    },
+    threads: (parent, args, context, info) => [],
+    thread: (parent, args, context, info) => [],
     messages: (parent, args, context, info) => _.filter(store.messageData, { mailboxId: parent.id }),
   },
 
@@ -90,7 +102,7 @@ const resolverMap = {
   },
 
   Thread: {
-    labels: (parent, args, context, info) => _.filter(store.labelData, label => _.includes(parent.labelIds, label.id)),
+    labels: (parent, args, context, info) => [],
     messages: (parent, args, context, info) => _.filter(store.messageData, { threadId: parent.id }),
   },
 };

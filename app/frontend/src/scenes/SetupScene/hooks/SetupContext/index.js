@@ -7,13 +7,20 @@ const SetupContextProvider = ({
   ...props
 }) => {
   const [setupState, setSetupState] = useState({});
+  const [ready, setReady] = useState(false);
   // const [mailboxData, setMailboxData] = useState();
+
+  const start = () => {
+    console.log('Google API is ready.');
+    setReady(true);
+  };
 
   const login = (token, profile) => {
     setSetupState({
       token,
       profile,
     });
+    window.gapi.load('client', start);
   };
 
   const logout = () => {
@@ -29,6 +36,7 @@ const SetupContextProvider = ({
     profile: setupState.profile,
     token: setupState.token,
     isAuthenticated,
+    ready,
   };
 
   return (

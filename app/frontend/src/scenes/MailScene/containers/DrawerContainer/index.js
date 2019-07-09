@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -69,6 +69,21 @@ const DrawerContainer = ({ labels, ...props }) => {
     selectedThread,
   } = useContext(PresentationContext);
 
+  const listItems = labels.map(label => (
+    <ListItem
+      button
+      key={label.id}
+      selected={selectedLabel.slug === label.slug}
+      onClick={() => selectLabelWithSlug(label.slug)}
+      component={Link}
+      to={{ pathname: selectedThread ? `/${label.slug}/${selectedThread.id}` : `/${label.slug}` }}
+      replace={true}
+    >
+      <ListItemIcon><MailIcon /></ListItemIcon>
+      <ListItemText primary={label.name} />
+    </ListItem>
+  ));
+
   return (
     <Drawer variant="permanent"
       className={clsx(classes.drawer, {
@@ -90,22 +105,7 @@ const DrawerContainer = ({ labels, ...props }) => {
 
       <Divider />
 
-      <List component="nav">
-        {labels.map(label => (
-          <ListItem
-            button
-            key={label.id}
-            selected={selectedLabel.slug === label.slug}
-            onClick={() => selectLabelWithSlug(label.slug)}
-            component={Link}
-            to={{ pathname: selectedThread ? `/${label.slug}/${selectedThread.id}` : `/${label.slug}` }}
-            replace={true}
-          >
-            <ListItemIcon><MailIcon /></ListItemIcon>
-            <ListItemText primary={label.name} />
-          </ListItem>
-        ))}
-      </List>
+      <List component="nav">{listItems}</List>
 
       <Divider />
 

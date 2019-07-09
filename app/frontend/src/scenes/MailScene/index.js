@@ -44,6 +44,7 @@ const MAILBOX_QUERY = gql`
     labels {
       id
       name
+      type
       slug
     }
     threads {
@@ -69,6 +70,7 @@ const MainContainer = ({ match }) => {
         return (
           <PresentationContextProvider labelSlug={match.params.label} threadId={match.params.id} mailbox={data.mailbox}>
             <div className={classes.root}>
+
               <CssBaseline />
 
               <AppBarContainer
@@ -105,6 +107,7 @@ const MainContainer = ({ match }) => {
                   )}
                 </PresentationContext.Consumer>
               </main>
+
             </div>
           </PresentationContextProvider>
         );
