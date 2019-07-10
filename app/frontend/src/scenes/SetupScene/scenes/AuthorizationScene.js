@@ -14,7 +14,7 @@ import { GoogleContext } from '../../../contexts/GoogleContext';
 const AuthorizationScene = () => {
   const { clientId, isAuthenticated, handleLoginResponse } = useContext(GoogleContext);
 
-  if (isAuthenticated()) return null;
+  if (isAuthenticated) return null;
 
   return (
     <Grid container>

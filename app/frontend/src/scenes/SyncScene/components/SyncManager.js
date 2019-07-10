@@ -1,25 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import {
   Button,
   Typography,
 } from '@material-ui/core';
 
+import { GoogleContext } from '../../../contexts/GoogleContext';
+
 import useMailboxSynchronizer from '../hooks/useMailboxSynchronizer';
 
 const SyncManager = (props) => {
   const [mailboxInfo, setMailboxInfo] = useState();
+  const { ready } = useContext(GoogleContext);
 
   const [state, start, stop] = useMailboxSynchronizer();
 
-  if (!window.gapi.client) return <p>Loading...</p>;
+  useEffect(() => {
+    if (!ready) return;
 
-  window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/profile' })
-    .then((response) => {
-      setMailboxInfo(response.result);
-    });
+    window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/profile' })
+      .then(response => setMailboxInfo(response.result));
+  }, [ready]);
 
-  if (!mailboxInfo) return <p>Still loading...</p>;
+  if (!ready || !mailboxInfo) return <p>Loading...</p>;
+  // TODO: retrieve current user (from AuthContext?)
+  if (props.profile.email !== 'jaryl.sim@gmail.com') return <p>Wrong email account...</p>;
 
   return (<React.Fragment>
 

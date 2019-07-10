@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import gql from 'graphql-tag';
 import { ApolloContext } from 'react-apollo';
@@ -29,62 +29,61 @@ const CREATE_ACCOUNT_MUTATION = gql`
   }
 `;
 
+const initialValues = {
+  username: '',
+  password: '',
+  passwordConfirmation: '',
+  base: '',
+};
+
 const MailboxSetupScene = () => {
   const [labels, setLabels] = useState([]);
   const { client } = useContext(ApolloContext);
 
   const {
-    isAuthenticated,
-    profile,
-    logout,
     clientId,
+    profile,
+    handleLogoutResponse,
+    isAuthenticated,
     ready,
   } = useContext(GoogleContext);
-  const { injectToken } = useContext(AuthContext);
 
-  if (!isAuthenticated()) return null;
+  const { loginWithToken } = useContext(AuthContext);
 
-  if (labels.length === 0 && ready) {
+  useEffect(() => {
+    if (labels.length !== 0 || !ready) return;
+
     window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/labels' })
-      .then((response) => {
-        setLabels(response.result.labels);
-      });
-  }
-
-  const initialValues = {
-    username: '',
-    password: '',
-    passwordConfirmation: '',
-    base: '',
-  };
+      .then(response => setLabels(response.result.labels));
+  }, [ready]);
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     const variables = {
       ...values,
       name: profile.name,
       email: profile.email,
-      labels: labels.map(({ id, name, type }) => {
-        return {
-          externalId: id,
-          name,
-          type,
-        };
-      }),
+      labels: labels.map(({ id, name, type }) => ({
+        externalId: id,
+        name,
+        type,
+      })),
     };
 
     try {
       const result = await client.mutate({
         mutation: CREATE_ACCOUNT_MUTATION,
-        variables, // TODO: figure out what values to pass in
+        variables,
       });
-      injectToken(result.data.register.token);
-      // TODO: use result to update login status, and redirect to app
+
+      loginWithToken(result.data.register.token);
     } catch (error) {
       setErrors({ base: error.message });
     } finally {
       setSubmitting(false);
     }
   };
+
+  if (!isAuthenticated) return null;
 
   return (
     <Grid container>
@@ -112,7 +111,7 @@ const MailboxSetupScene = () => {
             <GoogleLogout
               clientId={clientId}
               buttonText="Logout"
-              onLogoutSuccess={() => logout()}
+              onLogoutSuccess={handleLogoutResponse}
             />
           </Box>
         </Paper>

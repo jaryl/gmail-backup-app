@@ -1,43 +1,57 @@
-import React, { useState } from 'react';
+import React, { useReducer, useEffect } from 'react';
 
 const GoogleContext = React.createContext();
 
-const GoogleContextProvider = ({
-  clientId,
-  ...props
-}) => {
-  const [setupState, setSetupState] = useState({});
-  const [ready, setReady] = useState(false);
+const initialState = {
+  token: null,
+  profile: null,
+  ready: false,
+};
 
-  const start = () => setReady(true);
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'login':
+      return {
+        ...state,
+        token: action.payload.tokenObj,
+        profile: action.payload.profileObj,
+      };
+    case 'logout':
+      return {
+        ...state,
+        token: null,
+        profile: null,
+      };
+    case 'load':
+      return {
+        ...state,
+        ready: true,
+      };
+    default:
+      throw new Error('invalid dispatch');
+  }
+};
 
-  const login = (token, profile) => {
-    setSetupState({
-      token,
-      profile,
-    });
-    window.gapi.load('client', start);
-  };
+const GoogleContextProvider = ({ clientId, ...props }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const logout = () => {
-    setSetupState({});
-  };
+  useEffect(() => {
+    if (!window.gapi) return;
+    const onApiLoaded = () => dispatch({ type: 'load' });
+    window.gapi.load('client', onApiLoaded);
+  }, [window.gapi]);
 
-  const handleLoginResponse = (response) => {
-    login(response.tokenObj, response.profileObj);
-  };
-
-  const isAuthenticated = () => !!setupState.token;
+  const handleLoginResponse = response => dispatch({ type: 'login', payload: response });
+  const handleLogoutResponse = () => dispatch({ type: 'logout' });
 
   const values = {
     clientId,
     handleLoginResponse,
-    login,
-    logout,
-    profile: setupState.profile,
-    token: setupState.token,
-    isAuthenticated,
-    ready,
+    handleLogoutResponse,
+    profile: state.profile,
+    token: state.token,
+    ready: state.ready,
+    isAuthenticated: !!state.token,
   };
 
   return (

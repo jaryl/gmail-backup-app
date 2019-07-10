@@ -36,15 +36,15 @@ const reducer = (state, action) => {
       };
     case 'stop':
       return {
-        messages: state.messages,
+        ...state,
         nextPageToken: null,
         status: 'stopped',
       };
     case 'tick':
       return {
+        ...state,
         messages: state.messages + action.payload.messages,
         nextPageToken: action.payload.nextPageToken,
-        status: state.status,
       };
     default:
       throw new Error('invalid dispatch');

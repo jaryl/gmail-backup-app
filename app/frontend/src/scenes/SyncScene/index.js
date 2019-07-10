@@ -17,13 +17,32 @@ import { GoogleContext } from '../../contexts/GoogleContext';
 
 import SyncManager from './components/SyncManager';
 
-const SyncScene = (props) => {
+const Profile = (props) => {
+  return (
+    <React.Fragment>
+      <Typography>{props.profile.name}</Typography>
+      <Typography>{props.profile.email}</Typography>
+      <Avatar alt={props.profile.name} src={props.profile.imageUrl} />
+      <GoogleLogout
+        clientId={props.clientId}
+        buttonText="Logout"
+        onLogoutSuccess={props.handleLogoutResponse}
+      />
+    </React.Fragment>
+  );
+};
+
+const SyncScene = () => {
   const { logout } = useContext(AuthContext);
-  const { clientId, profile, handleLoginResponse, logout: googleLogout } = useContext(GoogleContext);
+  const {
+    clientId,
+    profile,
+    handleLoginResponse,
+    handleLogoutResponse,
+    isAuthenticated,
+  } = useContext(GoogleContext);
 
-  const googleLoginDisplay = renderProps => <div {...renderProps} />;
-
-  const isMatch = (profile && (profile.email === 'jaryl.sim@gmail.com'));
+  const googleRenderlessDisplay = renderProps => <div {...renderProps} />;
 
   return (
     <Grid container>
@@ -35,17 +54,11 @@ const SyncScene = (props) => {
         <Paper>
           <Box p={3} mt={6}>
 
-            { profile && <React.Fragment>
-                <Typography>{profile.name}</Typography>
-                <Typography>{profile.email}</Typography>
-                <Avatar alt={profile.name} src={profile.imageUrl} />
-                <GoogleLogout
-                  clientId={clientId}
-                  buttonText="Logout"
-                  onLogoutSuccess={() => googleLogout()}
-                />
-              </React.Fragment>
-            }
+            {profile && <Profile
+              clientId={clientId}
+              profile={profile}
+              handleLogoutResponse={handleLogoutResponse}
+            />}
 
             <GoogleLogin
               clientId={clientId}
@@ -57,13 +70,16 @@ const SyncScene = (props) => {
               theme='dark'
               prompt='consent'
               isSignedIn={true}
-              render={profile ? googleLoginDisplay : null}
+              render={profile ? googleRenderlessDisplay : null}
             />
 
             <hr />
 
-            {isMatch && <SyncManager profile={profile} />}
-            {!isMatch && <Typography>You need to login with your Google account.</Typography>}
+            {isAuthenticated ? (
+              <SyncManager profile={profile} />
+            ) : (
+              <p>Please sign in with your Google account.</p>
+            )}
 
             <hr />
 

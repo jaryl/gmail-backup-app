@@ -49,6 +49,4 @@ const AuthContextProvider = ({
   );
 };
 
-console.log(AuthContextProvider);
-
 export { AuthContext, AuthContextProvider };
