@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 
-const SetupContext = React.createContext();
+const GoogleContext = React.createContext();
 
-const SetupContextProvider = ({
+const GoogleContextProvider = ({
   clientId,
   ...props
 }) => {
   const [setupState, setSetupState] = useState({});
   const [ready, setReady] = useState(false);
-  // const [mailboxData, setMailboxData] = useState();
 
-  const start = () => {
-    console.log('Google API is ready.');
-    setReady(true);
-  };
+  const start = () => setReady(true);
 
   const login = (token, profile) => {
     setSetupState({
@@ -27,10 +23,15 @@ const SetupContextProvider = ({
     setSetupState({});
   };
 
+  const handleLoginResponse = (response) => {
+    login(response.tokenObj, response.profileObj);
+  };
+
   const isAuthenticated = () => !!setupState.token;
 
   const values = {
     clientId,
+    handleLoginResponse,
     login,
     logout,
     profile: setupState.profile,
@@ -40,10 +41,10 @@ const SetupContextProvider = ({
   };
 
   return (
-    <SetupContext.Provider value={values} {...props}>
+    <GoogleContext.Provider value={values} {...props}>
       {props.children}
-    </SetupContext.Provider>
+    </GoogleContext.Provider>
   );
 };
 
-export { SetupContext, SetupContextProvider };
+export { GoogleContext, GoogleContextProvider };

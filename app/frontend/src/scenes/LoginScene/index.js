@@ -35,41 +35,31 @@ const LoginScene = (props) => {
     }
   };
 
+  if (loggedIn) return <Redirect to={{ pathname: '/', state: { from: props.location } }} />;
+
   return (
-    <React.Fragment>
-      { loggedIn ? (
-          <Redirect
-            to={{
-              pathname: '/',
-              state: { from: props.location },
-            }}
-          />
-      ) : (
-          <Grid container>
-            <Grid item sm={2} md={3} lg={4}></Grid>
-            <Grid item xs={12} sm={8} md={6} lg={4}>
-              <CssBaseline />
-              <Paper>
-                <Box p={3} mt={6}>
+    <Grid container>
+      <Grid item sm={2} md={3} lg={4}></Grid>
+      <Grid item xs={12} sm={8} md={6} lg={4}>
+        <CssBaseline />
+        <Paper>
+          <Box p={3} mt={6}>
 
-                  <Formik
-                    initialValues={initialValues}
-                    render={formikProps => <InputForm {...formikProps} />}
-                    onSubmit={handleSubmit}
-                  />
+            <Formik
+              initialValues={initialValues}
+              render={formikProps => <InputForm {...formikProps} />}
+              onSubmit={handleSubmit}
+            />
 
-                  <hr />
+            <hr />
 
-                  <Button variant="contained" color="secondary" component={Link} to='/setup'>Setup an Account</Button>
+            <Button variant="contained" color="secondary" component={Link} to='/setup'>Setup an Account</Button>
 
-                </Box>
-              </Paper>
-            </Grid>
-            <Grid item sm={2} md={3} lg={4}></Grid>
-          </Grid>
-      )
-      }
-    </React.Fragment>
+          </Box>
+        </Paper>
+      </Grid>
+      <Grid item sm={2} md={3} lg={4}></Grid>
+    </Grid>
   );
 };
 

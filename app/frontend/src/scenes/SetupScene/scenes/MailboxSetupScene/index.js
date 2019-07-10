@@ -17,7 +17,7 @@ import {
 import { GoogleLogout } from 'react-google-login';
 
 import { AuthContext } from '../../../../contexts/AuthContext';
-import { SetupContext } from '../../hooks/SetupContext';
+import { GoogleContext } from '../../../../contexts/GoogleContext';
 
 import InputForm from './components/form';
 
@@ -39,7 +39,7 @@ const MailboxSetupScene = () => {
     logout,
     clientId,
     ready,
-  } = useContext(SetupContext);
+  } = useContext(GoogleContext);
   const { injectToken } = useContext(AuthContext);
 
   if (!isAuthenticated()) return null;

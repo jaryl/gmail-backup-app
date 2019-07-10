@@ -66,6 +66,7 @@ const MainContainer = ({ match }) => {
       {({ loading, error, data }) => {
         if (loading) return <div>Loading...</div>;
         if (error) return <div>{error.message}</div>;
+        if (data.mailbox.threads.length === 0) return <Redirect from='/' to='/sync' />;
 
         return (
           <PresentationContextProvider labelSlug={match.params.label} threadId={match.params.id} mailbox={data.mailbox}>

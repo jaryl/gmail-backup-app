@@ -9,20 +9,12 @@ import {
 
 import { GoogleLogin } from 'react-google-login';
 
-import { SetupContext } from '../hooks/SetupContext';
+import { GoogleContext } from '../../../contexts/GoogleContext';
 
 const AuthorizationScene = () => {
-  const { clientId, isAuthenticated, login } = useContext(SetupContext);
+  const { clientId, isAuthenticated, handleLoginResponse } = useContext(GoogleContext);
 
   if (isAuthenticated()) return null;
-
-  const handleSuccess = (response) => {
-    login(response.tokenObj, response.profileObj);
-  };
-
-  const handleFailure = (response) => {
-    console.log(response);
-  };
 
   return (
     <Grid container>
@@ -35,8 +27,8 @@ const AuthorizationScene = () => {
               clientId={clientId}
               buttonText='Sign in with Google'
               scope='profile email https://www.googleapis.com/auth/gmail.readonly'
-              onSuccess={handleSuccess}
-              onFailure={handleFailure}
+              onSuccess={handleLoginResponse}
+              onFailure={handleLoginResponse}
               cookiePolicy={'single_host_origin'}
               theme='dark'
               prompt='consent'
