@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
 
-import { Redirect } from 'react-router-dom';
-
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 
 import {
@@ -16,6 +14,8 @@ import {
 
 import { AuthContext } from '../../contexts/AuthContext';
 import { GoogleContext } from '../../contexts/GoogleContext';
+
+import SyncManager from './components/SyncManager';
 
 const SyncScene = (props) => {
   const { logout } = useContext(AuthContext);
@@ -62,8 +62,8 @@ const SyncScene = (props) => {
 
             <hr />
 
-            {isMatch ? 'Match' : 'Not matched'}
-            <p>Progress goes here</p>
+            {isMatch && <SyncManager profile={profile} />}
+            {!isMatch && <Typography>You need to login with your Google account.</Typography>}
 
             <hr />
 
