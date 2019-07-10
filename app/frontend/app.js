@@ -8,7 +8,7 @@ import { ApolloProvider } from 'react-apollo';
 import clientId from './config/oauth';
 
 import { AuthContextProvider } from './src/contexts/AuthContext';
-import { GoogleContextProvider, GoogleContext } from './src/contexts/GoogleContext';
+import { GoogleContextProvider } from './src/contexts/GoogleContext';
 
 import AuthenticatedRoute from './src/components/AuthenticatedRoute';
 import MainErrorBoundary from './src/components/MainErrorBoundary';
@@ -19,33 +19,23 @@ import SetupScene from './src/scenes/SetupScene';
 import SyncScene from './src/scenes/SyncScene';
 
 import AuthService from './src/services/AuthService';
-import LocalStorageService from './src/services/LocalStorageService';
 
 import apolloConnect from './config/apolloConnect';
 
-const client = apolloConnect(() => LocalStorageService.get('authToken'));
+const apolloClient = apolloConnect(() => localStorage.getItem('authToken'));
 
-AuthService.use(client);
+const authService = new AuthService(apolloClient);
 
 const App = () => {
-  if (!AuthService.verify(LocalStorageService.get('authToken'))) LocalStorageService.remove('authToken');
-
   const authContextProviderProps = {
-    authService: AuthService,
-    initialLoggedIn: !!LocalStorageService.get('authToken'),
-    onLogin: (token) => {
-      LocalStorageService.set('authToken', token);
-      client.clearStore();
-    },
-    onLogout: () => {
-      LocalStorageService.remove('authToken');
-      client.clearStore();
-    },
+    authService,
+    onLogin: () => apolloClient.clearStore(), // TODO: maybe remove
+    onLogout: () => apolloClient.clearStore(),
   };
 
   return (
     <MainErrorBoundary>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={apolloClient}>
         <AuthContextProvider {...authContextProviderProps}>
           <GoogleContextProvider clientId={clientId}>
             <Router>

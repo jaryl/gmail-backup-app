@@ -1,37 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+const AUTH_TOKEN_KEY = 'authToken';
 
 const AuthContext = React.createContext();
 
 const AuthContextProvider = ({
   authService,
-  initialLoggedIn,
   onLogin,
   onLogout,
   ...props
 }) => {
-  const [loggedIn, setLoggedIn] = useState(initialLoggedIn);
+  const initialToken = localStorage.getItem(AUTH_TOKEN_KEY);
+  const [token, setToken] = useState(initialToken);
 
-  const handleLogin = async (params) => {
-    const { token: newToken } = await authService.authenticate(params);
-    onLogin(newToken);
-    setLoggedIn(true);
-  };
+  // update local storage with token (if changed)
+  useEffect(() => localStorage.setItem(AUTH_TOKEN_KEY, token), [token]);
 
-  const handleLogout = () => {
-    onLogout();
-    setLoggedIn(false);
-  };
-
-  const injectToken = (newToken) => {
-    onLogin(newToken);
-    setLoggedIn(true);
-  };
+  // check if token is expired, and remove if so
+  useEffect(() => {
+    if (!authService.verify(token)) {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      setToken(null);
+    }
+  });
 
   const values = {
-    loggedIn,
-    login: handleLogin,
-    logout: handleLogout,
-    injectToken,
+    token,
+    loggedIn: !!token,
+    login: async (params) => {
+      const { token: newToken } = await authService.authenticate(params);
+      setToken(newToken);
+      onLogin(newToken); // TODO: check if we to pass new token
+    },
+    logout: () => {
+      setToken(null);
+      onLogout();
+    },
+    loginWithToken: (newToken) => {
+      setToken(newToken);
+      onLogin(newToken); // TODO: check if we to pass new token
+    },
   };
 
   return (
@@ -40,5 +48,7 @@ const AuthContextProvider = ({
     </AuthContext.Provider>
   );
 };
+
+console.log(AuthContextProvider);
 
 export { AuthContext, AuthContextProvider };

@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-
 import jwt from 'jsonwebtoken';
 
 const AUTHENTICATE_MUTATION = gql`
@@ -10,19 +9,16 @@ const AUTHENTICATE_MUTATION = gql`
   }
 `;
 
-let client = null;
+function AuthService(client) {
+  this.client = client;
 
-const AuthService = {
-  use: (_client) => {
-    client = _client;
-    client.clearStore();
-  },
-  verify: (token) => {
+  this.verify = (token) => {
     if (!token) return false;
     const values = jwt.decode(token);
     return (new Date(values.exp * 1000) > new Date());
-  },
-  authenticate: ({ username, password }) => new Promise(async (resolve, reject) => {
+  };
+
+  this.authenticate = ({ username, password }) => new Promise(async (resolve, reject) => {
     try {
       const result = await client.mutate({
         mutation: AUTHENTICATE_MUTATION,
@@ -32,7 +28,7 @@ const AuthService = {
     } catch {
       reject(new Error('Please check your username and password'));
     }
-  }),
-};
+  });
+}
 
 export default AuthService;
