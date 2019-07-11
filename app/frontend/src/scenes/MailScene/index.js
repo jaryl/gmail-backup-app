@@ -8,7 +8,7 @@ import { CssBaseline, Grid, Paper } from '@material-ui/core';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../hooks/AuthContext';
 import { PresentationContext, PresentationContextProvider } from './hooks/PresentationContext';
 
 import AppBarContainer from './containers/AppBarContainer';

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { GoogleLogin as OriginalGoogleLogin } from 'react-google-login';
 
-import { GoogleContext } from '../../contexts/GoogleContext';
+import { GoogleContext } from '../../hooks/GoogleContext';
 
 const GoogleLogin = (props) => {
   const {

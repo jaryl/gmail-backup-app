@@ -12,7 +12,7 @@ import {
 
 import { Formik } from 'formik';
 
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../hooks/AuthContext';
 
 import InputForm from './components/InputForm';
 

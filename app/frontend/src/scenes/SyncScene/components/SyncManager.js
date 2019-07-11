@@ -5,7 +5,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { GoogleContext } from '../../../contexts/GoogleContext';
+import { GoogleContext } from '../../../hooks/GoogleContext';
 
 import useMailboxSynchronizer from '../hooks/useMailboxSynchronizer';
 

@@ -16,8 +16,8 @@ import {
 
 import { GoogleLogout } from '../../../../components/GoogleButtons';
 
-import { AuthContext } from '../../../../contexts/AuthContext';
-import { GoogleContext } from '../../../../contexts/GoogleContext';
+import { AuthContext } from '../../../../hooks/AuthContext';
+import { GoogleContext } from '../../../../hooks/GoogleContext';
 
 import InputForm from './components/form';
 

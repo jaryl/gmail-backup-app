@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Route, Redirect } from 'react-router-dom';
 
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../hooks/AuthContext';
 
 const AuthenticatedRoute = ({ component: Component, ...rest }) => (
   <AuthContext.Consumer>

@@ -9,7 +9,7 @@ import {
 
 import { GoogleLogin } from 'react-google-login';
 
-import { GoogleContext } from '../../../contexts/GoogleContext';
+import { GoogleContext } from '../../../hooks/GoogleContext';
 
 const AuthorizationScene = () => {
   const { clientId, isAuthenticated, handleLoginResponse } = useContext(GoogleContext);

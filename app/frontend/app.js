@@ -7,8 +7,8 @@ import { ApolloProvider } from 'react-apollo';
 
 import clientId from './config/oauth';
 
-import { AuthContextProvider } from './src/contexts/AuthContext';
-import { GoogleContextProvider } from './src/contexts/GoogleContext';
+import { AuthContextProvider } from './src/hooks/AuthContext';
+import { GoogleContextProvider } from './src/hooks/GoogleContext';
 
 import AuthenticatedRoute from './src/components/AuthenticatedRoute';
 import MainErrorBoundary from './src/components/MainErrorBoundary';

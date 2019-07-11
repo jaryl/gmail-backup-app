@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { Redirect } from 'react-router-dom';
 
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../hooks/AuthContext';
 
 import AuthorizationScene from './scenes/AuthorizationScene';
 import MailboxSetupScene from './scenes/MailboxSetupScene';

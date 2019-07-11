@@ -10,8 +10,8 @@ import {
   Avatar,
 } from '@material-ui/core';
 
-import { AuthContext } from '../../contexts/AuthContext';
-import { GoogleContext } from '../../contexts/GoogleContext';
+import { AuthContext } from '../../hooks/AuthContext';
+import { GoogleContext } from '../../hooks/GoogleContext';
 
 import { GoogleLogin, GoogleLogout } from '../../components/GoogleButtons';
 
