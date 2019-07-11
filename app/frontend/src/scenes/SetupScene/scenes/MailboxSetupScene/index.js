@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { GoogleLogout } from 'react-google-login';
+import { GoogleLogout } from '../../../../components/GoogleButtons';
 
 import { AuthContext } from '../../../../contexts/AuthContext';
 import { GoogleContext } from '../../../../contexts/GoogleContext';
@@ -41,9 +41,7 @@ const MailboxSetupScene = () => {
   const { client } = useContext(ApolloContext);
 
   const {
-    clientId,
     profile,
-    handleLogoutResponse,
     isAuthenticated,
     ready,
   } = useContext(GoogleContext);
@@ -108,11 +106,7 @@ const MailboxSetupScene = () => {
             <hr />
 
             <p>If you do not wish to continue, you may log out and this will prevent further access to your Gmail account from this app.</p>
-            <GoogleLogout
-              clientId={clientId}
-              buttonText="Logout"
-              onLogoutSuccess={handleLogoutResponse}
-            />
+            <GoogleLogout />
           </Box>
         </Paper>
       </Grid>

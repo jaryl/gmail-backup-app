@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
 
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
-
 import {
   CssBaseline,
   Box,
@@ -15,6 +13,8 @@ import {
 import { AuthContext } from '../../contexts/AuthContext';
 import { GoogleContext } from '../../contexts/GoogleContext';
 
+import { GoogleLogin, GoogleLogout } from '../../components/GoogleButtons';
+
 import SyncManager from './components/SyncManager';
 
 const Profile = (props) => {
@@ -23,26 +23,14 @@ const Profile = (props) => {
       <Typography>{props.profile.name}</Typography>
       <Typography>{props.profile.email}</Typography>
       <Avatar alt={props.profile.name} src={props.profile.imageUrl} />
-      <GoogleLogout
-        clientId={props.clientId}
-        buttonText="Logout"
-        onLogoutSuccess={props.handleLogoutResponse}
-      />
+      <GoogleLogout />
     </React.Fragment>
   );
 };
 
 const SyncScene = () => {
   const { logout } = useContext(AuthContext);
-  const {
-    clientId,
-    profile,
-    handleLoginResponse,
-    handleLogoutResponse,
-    isAuthenticated,
-  } = useContext(GoogleContext);
-
-  const googleRenderlessDisplay = renderProps => <div {...renderProps} />;
+  const { profile, isAuthenticated } = useContext(GoogleContext);
 
   return (
     <Grid container>
@@ -54,24 +42,8 @@ const SyncScene = () => {
         <Paper>
           <Box p={3} mt={6}>
 
-            {profile && <Profile
-              clientId={clientId}
-              profile={profile}
-              handleLogoutResponse={handleLogoutResponse}
-            />}
-
-            <GoogleLogin
-              clientId={clientId}
-              buttonText='Sign in with Google'
-              scope='profile email https://www.googleapis.com/auth/gmail.readonly'
-              onSuccess={handleLoginResponse}
-              onFailure={handleLoginResponse}
-              cookiePolicy={'single_host_origin'}
-              theme='dark'
-              prompt='consent'
-              isSignedIn={true}
-              render={profile ? googleRenderlessDisplay : null}
-            />
+            {profile && <Profile profile={profile} />}
+            <GoogleLogin />
 
             <hr />
 

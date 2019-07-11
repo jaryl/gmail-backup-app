@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 
 const GoogleContext = React.createContext();
 
@@ -32,8 +32,11 @@ const reducer = (state, action) => {
   }
 };
 
+const defaultScope = 'profile email https://www.googleapis.com/auth/gmail.readonly';
+
 const GoogleContextProvider = ({ clientId, ...props }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [scope] = useState(defaultScope);
 
   useEffect(() => {
     if (!window.gapi) return;
@@ -46,6 +49,7 @@ const GoogleContextProvider = ({ clientId, ...props }) => {
 
   const values = {
     clientId,
+    scope,
     handleLoginResponse,
     handleLogoutResponse,
     profile: state.profile,
