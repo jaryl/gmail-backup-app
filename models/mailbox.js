@@ -16,18 +16,31 @@ module.exports = (sequelize, DataTypes) => {
     },
     providerType: {
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
       type: DataTypes.STRING,
     },
     providerId: {
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
       type: DataTypes.STRING,
     },
     name: {
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
       type: DataTypes.STRING,
     },
     email: {
       allowNull: false,
+      validate: {
+        notEmpty: true,
+        isEmail: true,
+      },
       type: DataTypes.STRING,
     },
   }, {});

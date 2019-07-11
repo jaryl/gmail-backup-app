@@ -38,6 +38,12 @@ module.exports = {
       allowNull: false,
       type: Sequelize.DATE,
     },
+  }).then(() => {
+    queryInterface.addIndex('Mailboxes', ['accountId']);
+  }).then(() => {
+    queryInterface.addIndex('Mailboxes', ['accountId', 'email'], {
+      unique: true,
+    });
   }),
 
   down: queryInterface => queryInterface.dropTable('Mailboxes'),

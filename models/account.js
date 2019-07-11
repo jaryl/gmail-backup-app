@@ -6,8 +6,21 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
     },
-    username: DataTypes.STRING,
-    password: DataTypes.STRING,
+    username: {
+      unique: true,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+      type: DataTypes.STRING,
+    },
+    password: {
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+      type: DataTypes.STRING,
+    },
   }, {});
 
   Account.associate = function associations(models) {

@@ -14,7 +14,7 @@ module.exports = {
       },
       type: Sequelize.UUID,
     },
-    externalId: {
+    providerId: {
       allowNull: false,
       type: Sequelize.STRING,
     },
@@ -34,6 +34,12 @@ module.exports = {
       allowNull: false,
       type: Sequelize.DATE,
     },
+  }).then(() => {
+    queryInterface.addIndex('Labels', ['mailboxId']);
+  }).then(() => {
+    queryInterface.addIndex('Labels', ['mailboxId', 'name'], {
+      unique: true,
+    });
   }),
 
   down: queryInterface => queryInterface.dropTable('Labels'),

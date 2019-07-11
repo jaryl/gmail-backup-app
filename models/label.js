@@ -14,9 +14,26 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id',
       },
     },
-    externalId: DataTypes.STRING,
-    name: DataTypes.STRING,
-    type: DataTypes.STRING,
+    providerId: {
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+      type: DataTypes.STRING,
+    },
+    name: {
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+      type: DataTypes.STRING,
+    },
+    type: {
+      validate: {
+        notEmpty: true,
+      },
+      type: DataTypes.STRING,
+    },
   }, {});
 
   Label.associate = (models) => {
