@@ -12,7 +12,7 @@ const typeDefs = `
   }
 
   input LabelInput {
-    externalId: ID!
+    providerId: ID!
     name: String!
     type: String!
   }

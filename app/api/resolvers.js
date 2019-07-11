@@ -65,7 +65,7 @@ const resolverMap = {
           providerType,
           providerId,
           Labels: [
-            { externalId: 'ALL', name: 'All', type: 'app' },
+            { providerId: 'ALL', name: 'All', type: 'app' },
             ...labels,
           ],
         }],

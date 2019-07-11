@@ -64,20 +64,28 @@ const MailboxSetupScene = () => {
   const { loginWithToken } = useContext(AuthContext);
 
   useEffect(() => {
-    if (labels.length !== 0 || !ready) return;
+    let didCancel = false;
 
-    window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/labels' })
-      .then(response => setLabels(response.result.labels));
+    if (labels.length === 0 && ready) {
+      window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/labels' })
+        .then((response) => {
+          if (!didCancel) setLabels(response.result.labels);
+        });
+    }
+
+    return () => { didCancel = true; };
   }, [ready]);
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+    const { username, password } = values;
     const variables = {
-      ...values,
+      username,
+      password,
       name: profile.name,
       email: profile.email,
       providerId: profile.googleId,
       labels: labels.map(({ id, name, type }) => ({
-        externalId: id,
+        providerId: id,
         name,
         type,
       })),
@@ -91,6 +99,7 @@ const MailboxSetupScene = () => {
 
       loginWithToken(result.data.register.token);
     } catch (error) {
+      // TODO: figure out how to extract validation errors and populate the form
       setErrors({ base: error.message });
     } finally {
       setSubmitting(false);

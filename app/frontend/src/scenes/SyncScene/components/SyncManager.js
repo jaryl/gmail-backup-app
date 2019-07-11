@@ -16,10 +16,16 @@ const SyncManager = (props) => {
   const [state, start, stop] = useMailboxSynchronizer();
 
   useEffect(() => {
-    if (!ready) return;
+    let didCancel = false;
 
-    window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/profile' })
-      .then(response => setMailboxInfo(response.result));
+    if (ready) {
+      window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/profile' })
+        .then((response) => {
+          if (!didCancel) setMailboxInfo(response.result);
+        });
+    }
+
+    return () => { didCancel = true; };
   }, [ready]);
 
   if (!ready || !mailboxInfo) return <p>Loading...</p>;

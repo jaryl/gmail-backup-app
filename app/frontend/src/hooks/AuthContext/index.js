@@ -18,10 +18,13 @@ const AuthContextProvider = ({
 
   // check if token is expired, and remove if so
   useEffect(() => {
+    let didCancel = false;
+
     if (!authService.verify(token)) {
       localStorage.removeItem(AUTH_TOKEN_KEY);
-      setToken(null);
+      if (!didCancel) setToken(null);
     }
+    return () => { didCancel = true; };
   });
 
   const values = {

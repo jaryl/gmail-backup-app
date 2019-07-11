@@ -39,9 +39,15 @@ const GoogleContextProvider = ({ clientId, ...props }) => {
   const [scope] = useState(defaultScope);
 
   useEffect(() => {
-    if (!window.gapi) return;
-    const onApiLoaded = () => dispatch({ type: 'load' });
-    window.gapi.load('client', onApiLoaded);
+    let didCancel = false;
+
+    const onApiLoaded = () => {
+      if (!didCancel) dispatch({ type: 'load' });
+    };
+
+    if (window.gapi) window.gapi.load('client', onApiLoaded);
+
+    return () => { didCancel = true; };
   }, [window.gapi]);
 
   const handleLoginResponse = response => dispatch({ type: 'login', payload: response });
