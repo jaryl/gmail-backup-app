@@ -22,8 +22,23 @@ import { GoogleContext } from '../../../../hooks/GoogleContext';
 import InputForm from './components/form';
 
 const CREATE_ACCOUNT_MUTATION = gql`
-  mutation ($username: ID!, $password: String!, $name: String!, $email: String!, $labels: [LabelInput!]!) {
-    register(username: $username, password: $password, name: $name, email: $email, labels: $labels) {
+  mutation (
+    $username: ID!,
+    $password: String!,
+    $name: String!,
+    $email: String!,
+    $providerId: String!,
+    $labels: [LabelInput!]!
+  ) {
+    register(
+      username: $username,
+      password: $password,
+      name: $name,
+      email: $email,
+      providerType: GMAIL,
+      providerId: $providerId,
+      labels: $labels)
+    {
       token
     }
   }
@@ -60,6 +75,7 @@ const MailboxSetupScene = () => {
       ...values,
       name: profile.name,
       email: profile.email,
+      providerId: profile.googleId,
       labels: labels.map(({ id, name, type }) => ({
         externalId: id,
         name,

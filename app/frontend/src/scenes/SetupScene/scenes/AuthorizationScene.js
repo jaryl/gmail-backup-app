@@ -7,12 +7,11 @@ import {
   Grid,
 } from '@material-ui/core';
 
-import { GoogleLogin } from 'react-google-login';
-
 import { GoogleContext } from '../../../hooks/GoogleContext';
+import { GoogleLogin } from '../../../components/GoogleButtons';
 
 const AuthorizationScene = () => {
-  const { clientId, isAuthenticated, handleLoginResponse } = useContext(GoogleContext);
+  const { isAuthenticated } = useContext(GoogleContext);
 
   if (isAuthenticated) return null;
 
@@ -23,17 +22,7 @@ const AuthorizationScene = () => {
         <CssBaseline />
         <Paper>
           <Box p={3} mt={6}>
-            <GoogleLogin
-              clientId={clientId}
-              buttonText='Sign in with Google'
-              scope='profile email https://www.googleapis.com/auth/gmail.readonly'
-              onSuccess={handleLoginResponse}
-              onFailure={handleLoginResponse}
-              cookiePolicy={'single_host_origin'}
-              theme='dark'
-              prompt='consent'
-              isSignedIn={true}
-            />
+            <GoogleLogin />
           </Box>
         </Paper>
       </Grid>

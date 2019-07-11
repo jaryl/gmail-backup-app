@@ -14,6 +14,14 @@ module.exports = {
       },
       type: Sequelize.UUID,
     },
+    providerType: {
+      allowNull: false,
+      type: Sequelize.STRING,
+    },
+    providerId: {
+      allowNull: false,
+      type: Sequelize.STRING,
+    },
     name: {
       allowNull: false,
       type: Sequelize.STRING,

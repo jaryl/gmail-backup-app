@@ -7,7 +7,7 @@ const typeDefs = `
   }
 
   type Mutation {
-    register(username: ID!, password: String!, name: String!, email: String!, labels: [LabelInput!]!): AccessToken!
+    register(username: ID!, password: String!, name: String!, email: String!, providerType: Provider!, providerId: String!, labels: [LabelInput!]!): AccessToken!
     authenticate(username: ID!, password: String!): AccessToken!
   }
 
@@ -15,6 +15,10 @@ const typeDefs = `
     externalId: ID!
     name: String!
     type: String!
+  }
+
+  enum Provider {
+    GMAIL
   }
 
   type AccessToken {

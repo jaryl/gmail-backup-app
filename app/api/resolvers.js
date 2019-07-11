@@ -42,7 +42,17 @@ const resolverMap = {
   },
 
   Mutation: {
-    register: async (parent, { username, password, name, email, labels }, { db }) => {
+    register: async (parent, args, { db }) => {
+      const {
+        username,
+        password,
+        name,
+        email,
+        providerType,
+        providerId,
+        labels,
+      } = args;
+
       const existingAccount = await db.Account.findOne({ where: { username } });
       if (existingAccount) throw new ApolloError('This username is already taken.', 'DUPLICATE_KEY', { field: 'username' });
 
@@ -52,6 +62,8 @@ const resolverMap = {
         Mailboxes: [{
           name,
           email,
+          providerType,
+          providerId,
           Labels: [
             { externalId: 'ALL', name: 'All', type: 'app' },
             ...labels,
