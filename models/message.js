@@ -1,25 +1,26 @@
 module.exports = (sequelize, DataTypes) => {
-  const Mailbox = sequelize.define('Mailbox', {
+  const Message = sequelize.define('Message', {
     id: {
       type: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
     },
-    accountId: {
+    mailboxId: {
       type: DataTypes.UUIDV4,
       allowNull: false,
       references: {
-        model: 'Accounts',
+        model: 'Mailboxes',
         key: 'id',
       },
     },
-    providerType: {
+    threadId: {
+      type: DataTypes.UUIDV4,
       allowNull: false,
-      validate: {
-        notEmpty: true,
+      references: {
+        model: 'Threads',
+        key: 'id',
       },
-      type: DataTypes.STRING,
     },
     providerId: {
       allowNull: false,
@@ -28,44 +29,41 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: DataTypes.STRING,
     },
-    name: {
+    receivedAt: {
+      allowNull: false,
+      validate: {
+        isDate: true,
+      },
+      type: DataTypes.DATE,
+    },
+    snippet: {
       allowNull: false,
       validate: {
         notEmpty: true,
       },
       type: DataTypes.STRING,
     },
-    email: {
+    size: {
       allowNull: false,
       validate: {
-        notEmpty: true,
-        isEmail: true,
+        isInt: true,
+        min: 1,
       },
       type: DataTypes.STRING,
     },
   }, {});
 
-  Mailbox.associate = function associations(models) {
-    Mailbox.belongsTo(models.Account, {
-      foreignKey: 'accountId',
-      sourceKey: 'id',
-    });
-
-    Mailbox.hasMany(models.Label, {
+  Message.associate = (models) => {
+    Message.belongsTo(models.Mailbox, {
       foreignKey: 'mailboxId',
       sourceKey: 'id',
     });
 
-    Mailbox.hasMany(models.Thread, {
-      foreignKey: 'mailboxId',
-      sourceKey: 'id',
-    });
-
-    Mailbox.hasMany(models.Message, {
-      foreignKey: 'mailboxId',
+    Message.belongsTo(models.Thread, {
+      foreignKey: 'threadId',
       sourceKey: 'id',
     });
   };
 
-  return Mailbox;
+  return Message;
 };

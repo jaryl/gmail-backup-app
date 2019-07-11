@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Labels', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Messages', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -14,15 +14,15 @@ module.exports = {
       },
       type: Sequelize.UUID,
     },
+    threadId: {
+      allowNull: false,
+      references: {
+        model: 'Threads',
+        key: 'id',
+      },
+      type: Sequelize.UUID,
+    },
     providerId: {
-      allowNull: false,
-      type: Sequelize.STRING,
-    },
-    name: {
-      allowNull: false,
-      type: Sequelize.STRING,
-    },
-    type: {
       allowNull: false,
       type: Sequelize.STRING,
     },
@@ -35,16 +35,14 @@ module.exports = {
       type: Sequelize.DATE,
     },
   }).then(() => {
-    queryInterface.addIndex('Labels', ['mailboxId']);
+    queryInterface.addIndex('Messages', ['threadId']);
   }).then(() => {
-    queryInterface.addIndex('Labels', ['mailboxId', 'name'], {
-      unique: true,
-    });
+    queryInterface.addIndex('Messages', ['providerId']);
   }).then(() => {
-    queryInterface.addIndex('Labels', ['mailboxId', 'providerId'], {
+    queryInterface.addIndex('Messages', ['mailboxId', 'providerId'], {
       unique: true,
     });
   }),
 
-  down: queryInterface => queryInterface.dropTable('Labels'),
+  down: queryInterface => queryInterface.dropTable('Messages'),
 };
