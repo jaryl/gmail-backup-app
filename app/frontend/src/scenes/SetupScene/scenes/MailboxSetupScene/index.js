@@ -1,7 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
-
-import gql from 'graphql-tag';
-import { ApolloContext } from 'react-apollo';
+import React from 'react';
 
 import { Formik } from 'formik';
 
@@ -16,33 +13,9 @@ import {
 
 import { GoogleLogout } from '../../../../components/GoogleButtons';
 
-import { AuthContext } from '../../../../hooks/AuthContext';
-import { GoogleContext } from '../../../../hooks/GoogleContext';
+import useFormSubmission from './hooks/use-form-submission';
 
 import InputForm from './components/form';
-
-const CREATE_ACCOUNT_MUTATION = gql`
-  mutation (
-    $username: ID!,
-    $password: String!,
-    $name: String!,
-    $email: String!,
-    $providerId: String!,
-    $labels: [LabelInput!]!
-  ) {
-    register(
-      username: $username,
-      password: $password,
-      name: $name,
-      email: $email,
-      providerType: GMAIL,
-      providerId: $providerId,
-      labels: $labels)
-    {
-      token
-    }
-  }
-`;
 
 const initialValues = {
   username: '',
@@ -52,60 +25,13 @@ const initialValues = {
 };
 
 const MailboxSetupScene = () => {
-  const [labels, setLabels] = useState([]);
-  const { client } = useContext(ApolloContext);
-
   const {
+    handleSubmit,
     profile,
-    isAuthenticated,
     ready,
-    api,
-  } = useContext(GoogleContext);
+  } = useFormSubmission();
 
-  const { loginWithToken } = useContext(AuthContext);
-
-  useEffect(() => {
-    let didCancel = false;
-
-    if (labels.length === 0 && ready) {
-      const result = api.getAllLabels();
-      if (!didCancel) setLabels(result.labels);
-    }
-
-    return () => { didCancel = true; };
-  }, [ready]);
-
-  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
-    const { username, password } = values;
-    const variables = {
-      username,
-      password,
-      name: profile.name,
-      email: profile.email,
-      providerId: profile.googleId,
-      labels: labels.map(({ id, name, type }) => ({
-        providerId: id,
-        name,
-        type,
-      })),
-    };
-
-    try {
-      const result = await client.mutate({
-        mutation: CREATE_ACCOUNT_MUTATION,
-        variables,
-      });
-
-      loginWithToken(result.data.register.token);
-    } catch (error) {
-      // TODO: figure out how to extract validation errors and populate the form
-      setErrors({ base: error.message });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  if (!isAuthenticated) return null;
+  if (!ready) return null; // TODO: replace with loading indicator
 
   return (
     <Grid container>

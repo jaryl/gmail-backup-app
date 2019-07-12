@@ -71,7 +71,7 @@ const GoogleContextProvider = ({ clientId, ...props }) => {
     handleLogoutResponse,
     profile: state.profile,
     token: state.token,
-    ready: state.ready,
+    ready: state.ready, // TODO: remove this, just check if api is available
     isAuthenticated: !!state.token,
     api,
   };

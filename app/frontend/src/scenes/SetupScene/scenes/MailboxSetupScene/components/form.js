@@ -41,7 +41,7 @@ const InputForm = (props) => {
         id="password"
         name="password"
         label="Password"
-        helperText={touched.password ? errors.password : ""}
+        helperText={touched.password ? errors.password : ''}
         error={touched.password && Boolean(errors.password)}
         value={password}
         onChange={handleChange}
@@ -54,7 +54,7 @@ const InputForm = (props) => {
         id="passwordConfirmation"
         name="passwordConfirmation"
         label="Confirm Password"
-        helperText={touched.passwordConfirmation ? errors.passwordConfirmation : ""}
+        helperText={touched.passwordConfirmation ? errors.passwordConfirmation : ''}
         error={touched.passwordConfirmation && Boolean(errors.passwordConfirmation)}
         value={passwordConfirmation}
         onChange={handleChange}
