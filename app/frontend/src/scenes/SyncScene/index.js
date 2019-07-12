@@ -12,6 +12,7 @@ import {
 
 import { AuthContext } from '../../hooks/AuthContext';
 import { GoogleContext } from '../../hooks/GoogleContext';
+import { MailboxContext } from '../../hooks/MailboxContext';
 
 import { GoogleLogin, GoogleLogout } from '../../components/GoogleButtons';
 
@@ -28,9 +29,10 @@ const Profile = (props) => {
   );
 };
 
-const SyncScene = () => {
+const SyncScene = ({ match }) => {
   const { logout } = useContext(AuthContext);
   const { profile, isAuthenticated } = useContext(GoogleContext);
+  const { mailboxes } = useContext(MailboxContext);
 
   return (
     <Grid container>
@@ -48,7 +50,7 @@ const SyncScene = () => {
             <hr />
 
             {isAuthenticated ? (
-              <SyncManager profile={profile} />
+              <SyncManager profile={profile} mailbox={mailboxes[match.params.mailbox]} />
             ) : (
               <p>Please sign in with your Google account.</p>
             )}

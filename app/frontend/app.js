@@ -7,8 +7,9 @@ import { ApolloProvider } from 'react-apollo';
 
 import clientId from './config/oauth';
 
-import { AuthContextProvider } from './src/hooks/AuthContext';
 import { GoogleContextProvider } from './src/hooks/GoogleContext';
+import { AuthContextProvider } from './src/hooks/AuthContext';
+import { MailboxContextProvider } from './src/hooks/MailboxContext';
 
 import AuthenticatedRoute from './src/components/AuthenticatedRoute';
 import MainErrorBoundary from './src/components/MainErrorBoundary';
@@ -29,8 +30,8 @@ const authService = new AuthService(apolloClient);
 const App = () => {
   const authContextProviderProps = {
     authService,
-    onLogin: () => apolloClient.clearStore(), // TODO: maybe remove
-    onLogout: () => apolloClient.clearStore(),
+    onLogin: () => apolloClient.cache.reset(), // TODO: maybe remove
+    onLogout: () => apolloClient.cache.reset(),
   };
 
   return (
@@ -38,14 +39,16 @@ const App = () => {
       <ApolloProvider client={apolloClient}>
         <AuthContextProvider {...authContextProviderProps}>
           <GoogleContextProvider clientId={clientId}>
-            <Router>
-              <Switch>
-                <Route path="/login" render={props => <LoginScene {...props} />} />
-                <Route path="/setup" render={props => <SetupScene {...props} />} />
-                <AuthenticatedRoute path="/sync" render={props => <SyncScene {...props} />} />
-                <AuthenticatedRoute path="/" render={props => <MailScene {...props} />} />
-              </Switch>
-            </Router>
+            <MailboxContextProvider>
+              <Router>
+                <Switch>
+                  <Route path="/login" render={props => <LoginScene {...props} />} />
+                  <Route path="/setup" render={props => <SetupScene {...props} />} />
+                  <AuthenticatedRoute path="/:mailbox/sync" render={props => <SyncScene {...props} />} />
+                  <AuthenticatedRoute path="/:mailbox/" render={props => <MailScene {...props} />} />
+                </Switch>
+              </Router>
+            </MailboxContextProvider>
           </GoogleContextProvider>
         </AuthContextProvider>
       </ApolloProvider>

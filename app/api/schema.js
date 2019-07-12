@@ -2,8 +2,8 @@ const typeDefs = `
   scalar DateTime
 
   type Query {
-    mailboxes(token: String): [Mailbox!]!
-    mailbox(id: ID, token: String): Mailbox!
+    mailboxes: [Mailbox!]!
+    mailbox(id: ID): Mailbox!
   }
 
   type Mutation {

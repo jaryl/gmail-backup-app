@@ -31,13 +31,13 @@ const resolverMap = {
 
   Query: {
     mailbox: (parent, args, { db, token }) => {
-      const { accountId } = jwt.verify(token || args.token, store.JWT_SECRET);
+      const { accountId } = jwt.verify(token, store.JWT_SECRET);
       if (args.id) return db.Mailbox.findOne({ where: { id: args.id, accountId } });
       return db.Mailbox.findOne({ where: { accountId } });
     },
     mailboxes: (parent, args, { db, token }) => {
-      const { accountId } = jwt.verify(token || args.token, store.JWT_SECRET);
-      return db.mailbox.findAll({ where: { accountId } });
+      const { accountId } = jwt.verify(token, store.JWT_SECRET);
+      return db.Mailbox.findAll({ where: { accountId } });
     },
   },
 

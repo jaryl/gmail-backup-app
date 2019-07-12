@@ -1,5 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import {
   Button,
   Typography,
@@ -7,9 +9,9 @@ import {
 
 import { GoogleContext } from '../../../hooks/GoogleContext';
 
-import useMessageSynchronizer from '../hooks//useMessageSynchronizer';
+import useMessageSynchronizer from '../hooks/useMessageSynchronizer';
 
-const SyncManager = (props) => {
+const SyncManager = ({ profile, mailbox }) => {
   const [mailboxInfo, setMailboxInfo] = useState();
   const { ready } = useContext(GoogleContext);
 
@@ -28,15 +30,16 @@ const SyncManager = (props) => {
     return () => { didCancel = true; };
   }, [ready]);
 
-  if (!ready || !mailboxInfo) return <p>Loading...</p>;
-  // TODO: retrieve current user (from AuthContext?)
-  if (props.profile.email !== 'jaryl.sim@gmail.com') return <p>Wrong email account...</p>;
+  if (!ready || !mailboxInfo || !mailbox) return <p>Loading...</p>;
+
+  if (profile.email !== mailbox.email) return <p>Wrong email account...</p>;
 
   return (<React.Fragment>
 
     <Typography>{state.messages}/{mailboxInfo.messagesTotal}</Typography>
 
     {(state.status === 'pending') && <Button variant="contained" color="secondary" onClick={() => start()}>Start Sync</Button>}
+    {(state.status === 'stopped') && <Button variant="contained" color="primary" component={Link} to={{ pathname: '/0' }}>Go to Mailbox</Button>}
 
   </React.Fragment>);
 };

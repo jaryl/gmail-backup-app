@@ -66,7 +66,7 @@ const MainContainer = ({ match }) => {
       {({ loading, error, data }) => {
         if (loading) return <div>Loading...</div>;
         if (error) return <div>{error.message}</div>;
-        if (data.mailbox.threads.length === 0) return <Redirect from='/' to='/sync' />;
+        if (data.mailbox.threads.length === 0) return <Redirect from='/' to={`/${match.params.mailbox}/sync`} />;
 
         return (
           <PresentationContextProvider labelSlug={match.params.label} threadId={match.params.id} mailbox={data.mailbox}>
@@ -119,9 +119,9 @@ const MainContainer = ({ match }) => {
 
 const MailScene = () => (
   <Switch>
-    <Route exact path="/:label" component={MainContainer} />
-    <Route exact path="/:label/:id" component={MainContainer} />
-    <Redirect from='/' to='/all' />
+    <Route exact path="/:mailbox/:label" component={MainContainer} />
+    <Route exact path="/:mailbox/:label/:id" component={MainContainer} />
+    <Redirect from='/:mailbox' to='/:mailbox/all' />
   </Switch>
 );
 
