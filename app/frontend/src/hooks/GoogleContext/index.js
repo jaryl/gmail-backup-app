@@ -1,5 +1,7 @@
 import React, { useState, useReducer, useEffect } from 'react';
 
+import GoogleApiService from '../../services/GoogleApiService';
+
 const GoogleContext = React.createContext();
 
 const initialState = {
@@ -37,6 +39,7 @@ const defaultScope = 'profile email https://www.googleapis.com/auth/gmail.readon
 const GoogleContextProvider = ({ clientId, ...props }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [scope] = useState(defaultScope);
+  const [api, setApi] = useState();
 
   useEffect(() => {
     let didCancel = false;
@@ -50,6 +53,14 @@ const GoogleContextProvider = ({ clientId, ...props }) => {
     return () => { didCancel = true; };
   }, [window.gapi]);
 
+  useEffect(() => {
+    if (state.ready) {
+      setApi(new GoogleApiService(window.gapi.client));
+    } else {
+      setApi(null);
+    }
+  }, [state.ready]);
+
   const handleLoginResponse = response => dispatch({ type: 'login', payload: response });
   const handleLogoutResponse = () => dispatch({ type: 'logout' });
 
@@ -62,6 +73,7 @@ const GoogleContextProvider = ({ clientId, ...props }) => {
     token: state.token,
     ready: state.ready,
     isAuthenticated: !!state.token,
+    api,
   };
 
   return (

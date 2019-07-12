@@ -59,6 +59,7 @@ const MailboxSetupScene = () => {
     profile,
     isAuthenticated,
     ready,
+    api,
   } = useContext(GoogleContext);
 
   const { loginWithToken } = useContext(AuthContext);
@@ -67,10 +68,8 @@ const MailboxSetupScene = () => {
     let didCancel = false;
 
     if (labels.length === 0 && ready) {
-      window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/labels' })
-        .then((response) => {
-          if (!didCancel) setLabels(response.result.labels);
-        });
+      const result = api.getAllLabels();
+      if (!didCancel) setLabels(result.labels);
     }
 
     return () => { didCancel = true; };

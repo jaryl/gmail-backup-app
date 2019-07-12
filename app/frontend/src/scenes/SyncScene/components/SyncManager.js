@@ -13,22 +13,22 @@ import useMessageSynchronizer from '../hooks/useMessageSynchronizer';
 
 const SyncManager = ({ profile, mailbox }) => {
   const [mailboxInfo, setMailboxInfo] = useState();
-  const { ready } = useContext(GoogleContext);
+  const { ready, api } = useContext(GoogleContext);
 
   const [state, start] = useMessageSynchronizer(mailbox);
 
   useEffect(() => {
     let didCancel = false;
 
-    if (ready) {
-      window.gapi.client.request({ path: 'https://www.googleapis.com/gmail/v1/users/me/profile' })
-        .then((response) => {
-          if (!didCancel) setMailboxInfo(response.result);
-        });
-    }
+    (async function doQuery() {
+      if (api) {
+        const { result } = await api.getProfile();
+        if (!didCancel) setMailboxInfo(result);
+      }
+    }());
 
     return () => { didCancel = true; };
-  }, [ready]);
+  }, [api]);
 
   if (!ready || !mailboxInfo || !mailbox) return <p>Loading...</p>;
 

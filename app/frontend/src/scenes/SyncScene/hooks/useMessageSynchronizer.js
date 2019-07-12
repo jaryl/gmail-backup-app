@@ -3,6 +3,8 @@ import { useReducer, useContext } from 'react';
 import gql from 'graphql-tag';
 import { ApolloContext } from 'react-apollo';
 
+import { GoogleContext } from '../../../hooks/GoogleContext';
+
 const SYNC_MESSAGE_MUTATION = gql`
   mutation (
     $mailboxId: ID!,
@@ -27,53 +29,46 @@ const SYNC_MESSAGE_MUTATION = gql`
   }
 `;
 
-const performSync = (token, dispatch, client, mailbox) => {
-  const params = token ? `?pageToken=${token}` : '';
-  window.gapi.client.request({ path: `https://www.googleapis.com/gmail/v1/users/me/messages${params}` })
-    .then(async (response) => {
-      const messages = response.result.messages.map(async ({ id }) => {
-        const { body, headers, result } = await window.gapi.client.request({ path: `https://www.googleapis.com/gmail/v1/users/me/messages/${id}?fields=id,threadId,labelIds,historyId,internalDate,snippet,sizeEstimate` });
+const performSync = async (token, dispatch, api, client, mailbox) => {
+  const { result: r } = await api.getAllMessage(token);
+  const { messages, nextPageToken } = r;
 
-        if (!client) throw new Error('WHY NO CLIENT?');
+  const results = await messages.map(async ({ id }) => {
+    const { result } = await api.getMessage(id);
 
-        const variables = {
-          mailboxId: mailbox.id,
-          receivedAt: new Date(parseInt(result.internalDate, 10)),
-          snippet: result.snippet,
-          size: result.sizeEstimate,
-          labelIds: result.labelIds,
-          gmailPayload: {
-            id: result.id,
-            threadId: result.threadId,
-            historyId: result.historyId,
-          },
-        };
+    const variables = {
+      mailboxId: mailbox.id,
+      receivedAt: new Date(parseInt(result.internalDate, 10)),
+      snippet: result.snippet,
+      size: result.sizeEstimate,
+      labelIds: result.labelIds || [],
+      gmailPayload: {
+        id: result.id,
+        threadId: result.threadId,
+        historyId: result.historyId,
+      },
+    };
 
-        const mutation = await client.mutate({
-          mutation: SYNC_MESSAGE_MUTATION,
-          variables,
-        });
-      });
-
-      return response;
-    })
-    .then((response) => {
-      dispatch({
-        type: 'tick',
-        payload: {
-          messages: response.result.messages.length,
-          nextPageToken: response.result.nextPageToken,
-        },
-      });
-      if (!response.result.nextPageToken) {
-        dispatch({ type: 'stop' });
-      } else {
-        performSync(response.result.nextPageToken, dispatch, client, mailbox);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
+    const mutation = await client.mutate({
+      mutation: SYNC_MESSAGE_MUTATION,
+      variables,
     });
+
+    return mutation;
+  });
+
+  dispatch({
+    type: 'tick',
+    payload: {
+      messages: results.length,
+      nextPageToken,
+    },
+  });
+  if (!nextPageToken) {
+    dispatch({ type: 'stop' });
+  } else {
+    performSync(nextPageToken, dispatch, api, client, mailbox);
+  }
 };
 
 const initialState = {
@@ -110,10 +105,11 @@ const reducer = (state, action) => {
 const useMessageSynchronizer = (mailbox) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { client } = useContext(ApolloContext);
+  const { api } = useContext(GoogleContext);
 
   const start = () => {
     dispatch({ type: 'start' });
-    performSync(null, dispatch, client, mailbox);
+    performSync(null, dispatch, api, client, mailbox);
   };
 
   return [
