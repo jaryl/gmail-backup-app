@@ -7,13 +7,13 @@ import {
 
 import { GoogleContext } from '../../../hooks/GoogleContext';
 
-import useMailboxSynchronizer from '../hooks/useMailboxSynchronizer';
+import useMessageSynchronizer from '../hooks//useMessageSynchronizer';
 
 const SyncManager = (props) => {
   const [mailboxInfo, setMailboxInfo] = useState();
   const { ready } = useContext(GoogleContext);
 
-  const [state, start, stop] = useMailboxSynchronizer();
+  const [state, start] = useMessageSynchronizer();
 
   useEffect(() => {
     let didCancel = false;
@@ -35,10 +35,8 @@ const SyncManager = (props) => {
   return (<React.Fragment>
 
     <Typography>{state.messages}/{mailboxInfo.messagesTotal}</Typography>
-    <Typography>{state.threads}/{mailboxInfo.threadsTotal}</Typography>
 
-    {(state.status === 'started') && <Button variant="contained" color="secondary" onClick={() => stop()}>Stop Sync</Button>}
-    {(state.status === 'stopped') && <Button variant="contained" color="secondary" onClick={() => start()}>Start Sync</Button>}
+    {(state.status === 'pending') && <Button variant="contained" color="secondary" onClick={() => start()}>Start Sync</Button>}
 
   </React.Fragment>);
 };

@@ -17,13 +17,13 @@ const performSync = (token, dispatch) => {
       } else {
         performSync(response.result.nextPageToken, dispatch);
       }
-    });
+    }); // TODO: add error handling here?
 };
 
 const initialState = {
   messages: 0,
   nextPageToken: null,
-  status: 'stopped',
+  status: 'pending',
 };
 
 const reducer = (state, action) => {
@@ -59,12 +59,9 @@ const useMessageSynchronizer = () => {
     performSync(null, dispatch);
   };
 
-  const stop = () => dispatch({ type: 'stop' });
-
   return [
     state,
     start,
-    stop,
   ];
 };
 

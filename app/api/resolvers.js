@@ -79,11 +79,26 @@ const resolverMap = {
       const token = generateAccessToken(account.id);
       return { token };
     },
+
     authenticate: async (parent, { username, password }, { db }) => {
       const account = await db.Account.findOne({ where: { username, password } }); // TODO; password should be encrypted/salted
       if (!account) throw new ApolloError('Failed to authenticate', 'AUTH_FAILED', { field: ['username', 'password'] });
       const token = generateAccessToken(account.id);
       return { token };
+    },
+
+    syncMessage: async (parent, { mailboxId, threadId, providerId, receivedAt, snippet, size }, { db, token }) => {
+      const { accountId } = jwt.verify(token, store.JWT_SECRET);
+      const mailbox = await db.Mailbox.findOne({ where: { id: mailboxId, accountId } });
+      const thread = await db.Thread.findOne({ where: { id: threadId, mailboxId } });
+      return db.Message.create({
+        mailboxId: mailbox.id,
+        threadId: thread.id,
+        providerId,
+        receivedAt,
+        snippet,
+        size,
+      });
     },
   },
 

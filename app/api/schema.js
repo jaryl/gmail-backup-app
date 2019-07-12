@@ -9,12 +9,18 @@ const typeDefs = `
   type Mutation {
     register(username: ID!, password: String!, name: String!, email: String!, providerType: Provider!, providerId: String!, labels: [LabelInput!]!): AccessToken!
     authenticate(username: ID!, password: String!): AccessToken!
+    syncMessage(mailboxId: ID!, providerId: ID!, receivedAt: DateTime!, snippet: String!, size: Int!, gmailPayload: GmailPayloadInput): Message!
   }
 
   input LabelInput {
     providerId: ID!
     name: String!
     type: String!
+  }
+
+  input GmailPayloadInput {
+    threadId: ID!
+    historyId: ID!
   }
 
   enum Provider {
