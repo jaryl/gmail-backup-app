@@ -26,6 +26,28 @@ module.exports = {
       allowNull: false,
       type: Sequelize.STRING,
     },
+    receivedAt: {
+      allowNull: false,
+      validate: {
+        isDate: true,
+      },
+      type: Sequelize.DATE,
+    },
+    snippet: {
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+      type: Sequelize.STRING,
+    },
+    size: {
+      allowNull: false,
+      validate: {
+        isInt: true,
+        min: 1,
+      },
+      type: Sequelize.STRING,
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,

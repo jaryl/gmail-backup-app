@@ -19,29 +19,25 @@ const MailboxContext = React.createContext();
 
 const MailboxContextProvider = (props) => {
   const { client } = useContext(ApolloContext);
-  const { loggedIn } = useContext(AuthContext);
+  const { loggedIn, token } = useContext(AuthContext);
   const [mailboxes, setMailboxes] = useState();
 
   useEffect(() => {
     let didCancel = false;
 
-    if (!didCancel) {
-      if (loggedIn) {
-        (async function doQuery() {
-          try {
-            const result = await client.query({ query: MAILBOXES_QUERY });
-            setMailboxes(result.data.mailboxes);
-          } catch (error) {
-            console.log(error);
-          }
-        }());
-      } else {
-        setMailboxes([]);
-      }
-    }
+    if (loggedIn) {
+      (async function doQuery() {
+        try {
+          const result = await client.query({ query: MAILBOXES_QUERY });
+          if (!didCancel) setMailboxes(result.data.mailboxes);
+        } catch (error) {
+          console.log(error);
+        }
+      }());
+    } else if (!didCancel) setMailboxes([]);
 
     return () => { didCancel = true; };
-  }, [loggedIn]);
+  }, [token]);
 
   const values = {
     mailboxes,

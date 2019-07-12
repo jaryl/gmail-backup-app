@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DrawerContainer = ({ labels, ...props }) => {
+const DrawerContainer = ({ labels, mailboxIndex, ...props }) => {
   const classes = useStyles({ drawerWidth: 240 });
   const theme = useTheme();
   const open = props.drawerOpen;
@@ -76,7 +76,7 @@ const DrawerContainer = ({ labels, ...props }) => {
       selected={selectedLabel.slug === label.slug}
       onClick={() => selectLabelWithSlug(label.slug)}
       component={Link}
-      to={{ pathname: selectedThread ? `/${label.slug}/${selectedThread.id}` : `/${label.slug}` }}
+      to={{ pathname: selectedThread ? `/${mailboxIndex}/${label.slug}/${selectedThread.id}` : `/${mailboxIndex}/${label.slug}` }}
       replace={true}
     >
       <ListItemIcon><MailIcon /></ListItemIcon>

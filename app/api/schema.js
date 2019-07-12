@@ -3,13 +3,13 @@ const typeDefs = `
 
   type Query {
     mailboxes: [Mailbox!]!
-    mailbox(id: ID): Mailbox!
+    mailbox(id: ID!): Mailbox!
   }
 
   type Mutation {
     register(username: ID!, password: String!, name: String!, email: String!, providerType: Provider!, providerId: String!, labels: [LabelInput!]!): AccessToken!
     authenticate(username: ID!, password: String!): AccessToken!
-    syncMessage(mailboxId: ID!, providerId: ID!, receivedAt: DateTime!, snippet: String!, size: Int!, gmailPayload: GmailPayloadInput): Message!
+    syncMessage(mailboxId: ID!, receivedAt: DateTime!, snippet: String!, size: Int!, providerType: Provider!, labelIds: [ID]!, gmailPayload: GmailPayloadInput): Message!
   }
 
   input LabelInput {
@@ -19,6 +19,7 @@ const typeDefs = `
   }
 
   input GmailPayloadInput {
+    id: ID!
     threadId: ID!
     historyId: ID!
   }
@@ -54,7 +55,7 @@ const typeDefs = `
     id: ID!
     threadId: ID!
     snippet: String!
-    timestamp: DateTime!
+    receivedAt: DateTime!
     thread: Thread!
     from: User!
     to: [User!]!

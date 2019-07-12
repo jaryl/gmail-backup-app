@@ -6,8 +6,8 @@ import { Query } from 'react-apollo';
 import EmailListing from '../scenes/EmailListing';
 
 const THREADS_QUERY = gql`
-query($id: ID!) {
-  mailbox {
+query($mailboxId: ID!, $id: ID!) {
+  mailbox(id: $mailboxId) {
     label(id: $id) {
       id
       name
@@ -21,13 +21,13 @@ query($id: ID!) {
 }
 `;
 
-const EmailListingContainer = ({ labelId }) => {
+const EmailListingContainer = ({ mailbox, labelId, ...props }) => {
   return (
-    <Query query={THREADS_QUERY} variables={{ id: labelId }}>
+    <Query query={THREADS_QUERY} variables={{ mailboxId: mailbox.id, id: labelId }}>
       {({ loading, error, data }) => {
         if (loading) return <div>Loading...</div>;
         if (error) return <div>{error.message}</div>;
-        return <EmailListing threads={data.mailbox.label.threads} />;
+        return <EmailListing threads={data.mailbox.label.threads} {...props} />;
       }}
     </Query>
   );

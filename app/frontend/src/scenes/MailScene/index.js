@@ -9,6 +9,8 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
 import { AuthContext } from '../../hooks/AuthContext';
+import { MailboxContext } from '../../hooks/MailboxContext';
+
 import { PresentationContext, PresentationContextProvider } from './hooks/PresentationContext';
 
 import AppBarContainer from './containers/AppBarContainer';
@@ -38,8 +40,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const MAILBOX_QUERY = gql`
-{
-  mailbox {
+query($id: ID!) {
+  mailbox(id: $id) {
     email
     labels {
       id
@@ -60,12 +62,18 @@ const MainContainer = ({ match }) => {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { logout } = useContext(AuthContext);
+  const { mailboxes } = useContext(MailboxContext);
+
+  if (!mailboxes || mailboxes.length === 0) return <div>Loading...</div>;
+
+  const mailbox = mailboxes[match.params.mailbox];
 
   return (
-    <Query query={MAILBOX_QUERY}>
+    <Query query={MAILBOX_QUERY} variables={{ id: mailboxes[match.params.mailbox].id }}>
       {({ loading, error, data }) => {
         if (loading) return <div>Loading...</div>;
         if (error) return <div>{error.message}</div>;
+
         if (data.mailbox.threads.length === 0) return <Redirect from='/' to={`/${match.params.mailbox}/sync`} />;
 
         return (
@@ -85,6 +93,7 @@ const MainContainer = ({ match }) => {
                 drawerWidth={240}
                 onCloseDrawer={() => setDrawerOpen(false)}
                 labels={data.mailbox.labels}
+                mailboxIndex={match.params.mailbox}
               />
 
               <main className={classes.content}>
@@ -96,12 +105,12 @@ const MainContainer = ({ match }) => {
                       <Grid container spacing={0} direction="row">
                         <Grid item xs={3}>
                           <Paper square={true} className={classes.paper}>
-                            <EmailListingContainer labelId={selectedLabel.id} />
+                            <EmailListingContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} labelId={selectedLabel.id} />
                           </Paper>
                         </Grid>
 
                         <Grid item xs>
-                          {selectedThread && <EmailViewerContainer threadId={selectedThread.id} />}
+                          {selectedThread && <EmailViewerContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} threadId={selectedThread.id} />}
                         </Grid>
                       </Grid>
                     </React.Fragment>

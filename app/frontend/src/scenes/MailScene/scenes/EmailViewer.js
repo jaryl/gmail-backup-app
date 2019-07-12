@@ -40,7 +40,7 @@ const EmailViewer = ({ thread }) => {
                 <Typography variant="body1">{message.from.name}</Typography>
               </Grid>
               <Grid item xs>
-                <Typography variant="body1" align="right">{new Date(message.timestamp).toGMTString()}</Typography>
+                <Typography variant="body1" align="right">{new Date(message.receivedAt).toGMTString()}</Typography>
               </Grid>
             </Grid>
           </Box>

@@ -19,8 +19,8 @@ fragment UserParts on User {
   email
 }
 
-query($id: ID!) {
-  mailbox {
+query($mailboxId: ID!, $id: ID!) {
+  mailbox(id: $mailboxId) {
     thread(id: $id) {
       id
       snippet
@@ -35,14 +35,14 @@ query($id: ID!) {
         cc { ...UserParts }
         bcc { ...UserParts }
         snippet
-        timestamp
+        receivedAt
       }
     }
   }
 }
 `;
 
-const EmailViewerContainer = ({ threadId }) => {
+const EmailViewerContainer = ({ mailbox, threadId, ...props }) => {
   const loadingView = <Grid container>
     <Grid item sm={2} md={3} lg={4}></Grid>
     <Grid item xs={12} sm={8} md={6} lg={4}>
@@ -71,11 +71,11 @@ const EmailViewerContainer = ({ threadId }) => {
   </Grid>);
 
   return (
-    <Query query={CONVERSATION_QUERY} variables={{ id: threadId }}>
+    <Query query={CONVERSATION_QUERY} variables={{ mailboxId: mailbox.id, id: threadId }}>
       {({ loading, error, data }) => {
         if (loading) return loadingView;
         if (error) return errorView(error.message);
-        return <EmailViewer thread={data.mailbox.thread} />;
+        return <EmailViewer thread={data.mailbox.thread} {...props} />;
       }}
     </Query>
   );

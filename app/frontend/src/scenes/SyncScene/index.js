@@ -34,6 +34,8 @@ const SyncScene = ({ match }) => {
   const { profile, isAuthenticated } = useContext(GoogleContext);
   const { mailboxes } = useContext(MailboxContext);
 
+  if (!mailboxes) return <div>Loading...</div>;
+
   return (
     <Grid container>
       <Grid item lg={3}></Grid>

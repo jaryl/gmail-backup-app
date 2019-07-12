@@ -1,8 +1,8 @@
 const { ApolloError } = require('apollo-server-express');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
+const { Op } = require('sequelize');
 
-const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 
 const store = require('./store');
@@ -32,8 +32,7 @@ const resolverMap = {
   Query: {
     mailbox: (parent, args, { db, token }) => {
       const { accountId } = jwt.verify(token, store.JWT_SECRET);
-      if (args.id) return db.Mailbox.findOne({ where: { id: args.id, accountId } });
-      return db.Mailbox.findOne({ where: { accountId } });
+      return db.Mailbox.findOne({ where: { id: args.id, accountId } });
     },
     mailboxes: (parent, args, { db, token }) => {
       const { accountId } = jwt.verify(token, store.JWT_SECRET);
@@ -87,26 +86,47 @@ const resolverMap = {
       return { token };
     },
 
-    syncMessage: async (parent, { mailboxId, threadId, providerId, receivedAt, snippet, size }, { db, token }) => {
+    syncMessage: async (parent, { mailboxId, receivedAt, snippet, size, providerType, labelIds, gmailPayload }, { db, token }) => {
       const { accountId } = jwt.verify(token, store.JWT_SECRET);
       const mailbox = await db.Mailbox.findOne({ where: { id: mailboxId, accountId } });
-      const thread = await db.Thread.findOne({ where: { id: threadId, mailboxId } });
-      return db.Message.create({
-        mailboxId: mailbox.id,
-        threadId: thread.id,
-        providerId,
-        receivedAt,
-        snippet,
-        size,
-      });
+
+      if (providerType === 'GMAIL') {
+        const labels = await db.Label.findAll({ where: { providerId: labelIds } });
+
+        const [message] = await db.sequelize.transaction(t => db.Thread.findOrCreate({
+          where: { providerId: gmailPayload.threadId },
+          defaults: {
+            mailboxId: mailbox.dataValues.id,
+            providerId: gmailPayload.threadId,
+            labelIds: labels.map(label => label.dataValues.id), // a tad unecessary
+            snippet: (snippet.length === 0) ? '[EMPTY SNIPPET]' : snippet,
+          },
+          transaction: t,
+        }).then(([thread]) => {
+          return db.Message.findOrCreate({
+            where: { providerId: gmailPayload.id },
+            defaults: {
+              mailboxId: mailbox.dataValues.id,
+              threadId: thread.dataValues.id,
+              providerId: gmailPayload.id,
+              receivedAt,
+              snippet: (snippet.length === 0) ? '[EMPTY SNIPPET]' : snippet,
+              size,
+            },
+            transaction: t,
+          });
+        }));
+
+        return message;
+      }
     },
   },
 
   // resolvers types
 
   Label: {
-    threads: (parent, args, { db }, info) => [],
-    slug: parent => parent.name.toLowerCase(),
+    threads: (parent, args, { db }, info) => db.Thread.findAll({ where: { labelIds: { [Op.contains]: [parent.dataValues.id] } } }),
+    slug: parent => parent.name.replace(/\s+/g, '-').toLowerCase(),
   },
 
   Mailbox: {
@@ -115,22 +135,25 @@ const resolverMap = {
       const labels = await parent.getLabels({ where: { id: args.id } });
       return labels[0];
     },
-    threads: (parent, args, context, info) => [],
-    thread: (parent, args, context, info) => [],
-    messages: (parent, args, context, info) => _.filter(store.messageData, { mailboxId: parent.id }),
+    threads: (parent, args, context, info) => parent.getThreads(),
+    thread: (parent, args, { db }, info) => db.Thread.findOne({ where: { mailboxId: parent.id, id: args.id } }),
+    messages: (parent, args, context, info) => parent.getMessages(),
   },
 
   Message: {
-    thread: (parent, args, context, info) => _.find(store.messageData, { id: parent.threadId }),
-    from: (parent, args, context, info) => _.find(store.userData, { email: parent.from }),
-    to: (parent, args, context, info) => _.filter(store.userData, user => parent.to.includes(user.email)),
-    cc: (parent, args, context, info) => _.filter(store.userData, user => parent.cc.includes(user.email)),
-    bcc: (parent, args, context, info) => _.filter(store.userData, user => parent.bcc.includes(user.email)),
+    thread: (parent, args, context, info) => parent.getThread(),
+    from: (parent, args, context, info) => ({ email: 'john.doe@example.net', name: 'John Doe' }),
+    to: (parent, args, context, info) => ([
+      { email: 'john.doe@example.net', name: 'John Doe' },
+      { email: 'jane.doe@example.net', name: 'Jane Doe' },
+    ]),
+    cc: (parent, args, context, info) => [],
+    bcc: (parent, args, context, info) => [],
   },
 
   Thread: {
-    labels: (parent, args, context, info) => [],
-    messages: (parent, args, context, info) => _.filter(store.messageData, { threadId: parent.id }),
+    labels: (parent, args, { db }, info) => db.Label.findAll({ where: { id: { [Op.in]: parent.dataValues.labelIds } } }),
+    messages: async (parent, args, context, info) => parent.getMessages(),
   },
 };
 

@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     labelIds: {
-      type: DataTypes.ARRAY(DataTypes.UUIDV4),
+      type: DataTypes.ARRAY(DataTypes.UUID),
       defaultValue: [],
     },
     snippet: {

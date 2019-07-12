@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const EmailListing = ({ threads }) => {
+const EmailListing = ({ threads, mailboxIndex }) => {
   const classes = useStyles();
 
   const { selectedLabel, selectedThread, selectThread } = useContext(PresentationContext);
@@ -42,7 +42,7 @@ const EmailListing = ({ threads }) => {
     selected={selectedThread && selectedThread.id === thread.id}
     onClick={() => selectThread(thread.id)}
     component={Link}
-    to={{ pathname: `/${selectedLabel.slug}/${thread.id}` }}
+    to={{ pathname: `/${mailboxIndex}/${selectedLabel.slug}/${thread.id}` }}
     replace={true}
   >
     <ListItemAvatar className={classes.avatar}>

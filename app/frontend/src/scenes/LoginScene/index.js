@@ -13,13 +13,11 @@ import {
 import { Formik } from 'formik';
 
 import { AuthContext } from '../../hooks/AuthContext';
-// import { MailboxContext } from '../../hooks/MailboxContext';
 
 import InputForm from './components/InputForm';
 
 const LoginScene = (props) => {
   const { loggedIn, login } = useContext(AuthContext);
-  // const { mailboxes } = useContext(MailboxContext);
 
   const initialValues = {
     username: '',

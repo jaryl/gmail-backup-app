@@ -15,7 +15,7 @@ const SyncManager = ({ profile, mailbox }) => {
   const [mailboxInfo, setMailboxInfo] = useState();
   const { ready } = useContext(GoogleContext);
 
-  const [state, start] = useMessageSynchronizer();
+  const [state, start] = useMessageSynchronizer(mailbox);
 
   useEffect(() => {
     let didCancel = false;
