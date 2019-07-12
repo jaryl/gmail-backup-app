@@ -16,7 +16,8 @@ module.exports = {
     },
     providerType: {
       allowNull: false,
-      type: Sequelize.STRING,
+      type: Sequelize.ENUM,
+      values: ['GMAIL'],
     },
     providerId: {
       allowNull: false,

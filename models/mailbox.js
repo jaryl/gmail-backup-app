@@ -16,10 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     providerType: {
       allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-      type: DataTypes.STRING,
+      values: ['GMAIL'],
+      type: DataTypes.ENUM,
     },
     providerId: {
       allowNull: false,
