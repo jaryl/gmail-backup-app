@@ -1,5 +1,7 @@
 const { ApolloError } = require('apollo-server-express');
 
+const bcrypt = require('bcrypt');
+
 const store = require('../store');
 
 const register = async (parent, args, { db }) => {
@@ -18,7 +20,7 @@ const register = async (parent, args, { db }) => {
 
   const account = await db.Account.create({
     username,
-    password,
+    password: await bcrypt.hash(password, 12),
     Mailboxes: [{
       name,
       email,
