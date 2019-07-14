@@ -12,13 +12,13 @@ function GoogleApiService(client) {
   };
 
   this.getAllMessage = (token) => {
-    const params = token ? `?pageToken=${token}` : '';
-    return client.request({ path: `${GOOGLE_API_BASE}/users/me/messages${params}` });
+    const params = token ? `pageToken=${token}` : '';
+    return client.request({ path: `${GOOGLE_API_BASE}/users/me/messages?${params}` });
   };
 
   this.getMessage = (id) => {
-    const params = '?fields=id,threadId,labelIds,historyId,internalDate,snippet,sizeEstimate';
-    return client.request({ path: `${GOOGLE_API_BASE}/users/me/messages/${id}${params}` });
+    const params = 'format=raw';
+    return client.request({ path: `${GOOGLE_API_BASE}/users/me/messages/${id}?${params}` });
   };
 }
 

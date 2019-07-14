@@ -7,9 +7,30 @@ const typeDefs = `
   }
 
   type Mutation {
-    register(username: ID!, password: String!, name: String!, email: String!, providerType: Provider!, providerId: String!, labels: [LabelInput!]!): AccessToken!
-    authenticate(username: ID!, password: String!): AccessToken!
-    syncMessage(mailboxId: ID!, receivedAt: DateTime!, snippet: String!, size: Int!, providerType: Provider!, labelIds: [ID]!, gmailPayload: GmailPayloadInput): Message!
+    register(username: ID!,
+      password: String!,
+      name: String!,
+      email: String!,
+      providerType: Provider!,
+      providerId: String!,
+      labels: [LabelInput!]!
+    ): AccessToken!
+
+    authenticate(
+      username: ID!,
+      password: String!
+    ): AccessToken!
+
+    syncMessage(
+      mailboxId: ID!,
+      receivedAt: DateTime!,
+      snippet: String!,
+      size: Int!,
+      providerType: Provider!,
+      labelIds: [ID]!,
+      payload: String!,
+      gmailPayload: GmailPayloadInput
+    ): Message!
   }
 
   input LabelInput {
@@ -56,11 +77,8 @@ const typeDefs = `
     threadId: ID!
     snippet: String!
     receivedAt: DateTime!
+    payload: String!
     thread: Thread!
-    from: User!
-    to: [User!]!
-    cc: [User]!
-    bcc: [User]!
   }
 
   type Thread {

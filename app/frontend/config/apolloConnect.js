@@ -8,7 +8,10 @@ import { onError } from 'apollo-link-error';
 const apolloConnect = (getToken) => {
   const link = createHttpLink({ uri: 'http://localhost:4000/api' });
 
-  const withError = onError(({ graphQLErrors, networkError }) => {
+  const withError = onError((error) => {
+    console.error(error);
+
+    const { graphQLErrors, networkError } = error;
     if (graphQLErrors) {
       graphQLErrors.map(({ message, locations, path }) => {
         console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);

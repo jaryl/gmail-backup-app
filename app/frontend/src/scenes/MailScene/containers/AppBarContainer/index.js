@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -57,6 +59,7 @@ const AppBarContainer = (props) => {
         </IconButton>
         <Typography variant="h6" noWrap className={classes.mainAppTitle}>Gmail Backup App</Typography>
         <Button variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
+        <Button variant="contained" color="secondary" component={Link} to={{ pathname: `/${props.mailboxIndex}/sync` }}>Sync</Button>
       </Toolbar>
     </AppBar>
   );

@@ -48,6 +48,10 @@ module.exports = {
       },
       type: Sequelize.STRING,
     },
+    payload: {
+      allowNull: false,
+      type: Sequelize.BLOB('tiny'),
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,

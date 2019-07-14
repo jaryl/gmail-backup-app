@@ -12,6 +12,7 @@ const SYNC_MESSAGE_MUTATION = gql`
     $snippet: String!,
     $size: Int!,
     $labelIds: [ID]!,
+    $payload: String!,
     $gmailPayload: GmailPayloadInput
   ) {
     syncMessage(
@@ -21,6 +22,7 @@ const SYNC_MESSAGE_MUTATION = gql`
       size: $size,
       providerType: GMAIL,
       labelIds: $labelIds,
+      payload: $payload,
       gmailPayload: $gmailPayload
     )
     {
@@ -36,12 +38,16 @@ const performSync = async (token, dispatch, api, client, mailbox) => {
   const results = await messages.map(async ({ id }) => {
     const { result } = await api.getMessage(id);
 
+    // TODO: use fake data now, replace with direct upload to S3
+    const payload = 'VG86IHJtLTBiNnMxejFjYmd3bWJmc2F1MTZ1YWZxbWFiNWszeG1AZW0uZWEuY29tDQpGcm9tOiAiSmFyeWwgU2ltIiA8amFyeWwuc2ltQGdtYWlsLmNvbT4NCkRhdGU6IFdlZCwgMTAgU2VwIDIwMTQgMTg6MTY6MDAgLTA3MDANCk1lc3NhZ2UtSUQ6IDxDQUc1WW1SK3JQZndRN0x6YStjVnRXN3ZwbkNqVGZRcE9FdWV0dDM5YVlNKzVhc2gzWXdAbWFpbC5nbWFpbC5jb20-DQpTdWJqZWN0OiB1bnN1YnNjcmliZQ0KTUlNRS1WZXJzaW9uOiAxLjANCkNvbnRlbnQtVHlwZTogdGV4dC9wbGFpbjsgY2hhcnNldD1VVEYtOA0KQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogN2JpdA0KQ29udGVudC1EaXNwb3NpdGlvbjogaW5saW5lDQoNClRoaXMgbWVzc2FnZSB3YXMgYXV0b21hdGljYWxseSBnZW5lcmF0ZWQgYnkgR21haWwuDQo=';
+
     const variables = {
       mailboxId: mailbox.id,
       receivedAt: new Date(parseInt(result.internalDate, 10)),
       snippet: result.snippet,
       size: result.sizeEstimate,
       labelIds: result.labelIds || [],
+      payload,
       gmailPayload: {
         id: result.id,
         threadId: result.threadId,

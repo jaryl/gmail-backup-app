@@ -43,6 +43,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: DataTypes.STRING,
     },
+    payload: {
+      allowNull: false,
+      type: DataTypes.BLOB('tiny'),
+    },
     size: {
       allowNull: false,
       validate: {

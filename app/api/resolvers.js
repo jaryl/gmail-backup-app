@@ -86,7 +86,18 @@ const resolverMap = {
       return { token };
     },
 
-    syncMessage: async (parent, { mailboxId, receivedAt, snippet, size, providerType, labelIds, gmailPayload }, { db, token }) => {
+    syncMessage: async (parent, args, { db, token }) => {
+      const {
+        mailboxId,
+        receivedAt,
+        snippet,
+        size,
+        providerType,
+        labelIds,
+        payload,
+        gmailPayload,
+      } = args;
+
       const { accountId } = jwt.verify(token, store.JWT_SECRET);
       const mailbox = await db.Mailbox.findOne({ where: { id: mailboxId, accountId } });
 
@@ -112,6 +123,7 @@ const resolverMap = {
               receivedAt,
               snippet: (snippet.length === 0) ? '[EMPTY SNIPPET]' : snippet,
               size,
+              payload,
             },
             transaction: t,
           });
@@ -142,13 +154,6 @@ const resolverMap = {
 
   Message: {
     thread: (parent, args, context, info) => parent.getThread(),
-    from: (parent, args, context, info) => ({ email: 'john.doe@example.net', name: 'John Doe' }),
-    to: (parent, args, context, info) => ([
-      { email: 'john.doe@example.net', name: 'John Doe' },
-      { email: 'jane.doe@example.net', name: 'Jane Doe' },
-    ]),
-    cc: (parent, args, context, info) => [],
-    bcc: (parent, args, context, info) => [],
   },
 
   Thread: {

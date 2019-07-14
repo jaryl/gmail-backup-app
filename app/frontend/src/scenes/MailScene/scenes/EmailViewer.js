@@ -19,16 +19,27 @@ const EmailViewer = ({ thread }) => {
   });
 
   const conversation = thread.messages.map((message) => {
-    // TODO: find a better way to do this
-    const to = `To: ${message.to.map(user => user.name).join(', ')}`;
-    const cc = (message.cc.length === 0) ? '' : `Cc: ${message.bcc.map(user => user.name).join(', ')}`;
-    const bcc = (message.bcc.length === 0) ? '' : `Bcc: ${message.bcc.map(user => user.name).join(', ')}`;
+    // TODO: reinstate this after parsing the payload
+
+    // const to = `To: ${message.to.map(user => user.name).join(', ')}`;
+    // const cc = (message.cc.length === 0) ? '' : `Cc: ${message.bcc.map(user => user.name).join(', ')}`;
+    // const bcc = (message.bcc.length === 0) ? '' : `Bcc: ${message.bcc.map(user => user.name).join(', ')}`;
+    // const headers = [to, cc, bcc].filter(v => !!v).join(', ');
+
+    // const moreFrom = `${message.from.name} <${message.from.email}>`;
+    // const moreTo = `${message.to.map(user => `${user.name} <${user.email}>`).join(', ')}`;
+    // const moreCc = (message.cc.length === 0) ? '' : `Cc: ${message.to.map(user => `${user.name} <${user.email}>`).join(', ')}`;
+    // const moreBcc = (message.bcc.length === 0) ? '' : `Bcc: ${message.to.map(user => `${user.name} <${user.email}>`).join(', ')}`;
+
+    // TODO: for now, hard code some fake values
+
+    const to = 'To: John Doe';
+    const cc = 'Cc: Jane Doe';
+    const bcc = 'Bcc: John Smith';
     const headers = [to, cc, bcc].filter(v => !!v).join(', ');
 
-    const moreFrom = `${message.from.name} <${message.from.email}>`;
-    const moreTo = `${message.to.map(user => `${user.name} <${user.email}>`).join(', ')}`;
-    const moreCc = (message.cc.length === 0) ? '' : `Cc: ${message.to.map(user => `${user.name} <${user.email}>`).join(', ')}`;
-    const moreBcc = (message.bcc.length === 0) ? '' : `Bcc: ${message.to.map(user => `${user.name} <${user.email}>`).join(', ')}`;
+    const moreFrom = 'John Doe <john.doe@example.net>';
+    const moreTo = 'Jane Doe <jane.doe@example.net>';
 
     return (
       <Box key={message.id} p={2}>
@@ -37,7 +48,7 @@ const EmailViewer = ({ thread }) => {
           <Box px={3} py={2}>
             <Grid container>
               <Grid item xs={9}>
-                <Typography variant="body1">{message.from.name}</Typography>
+                <Typography variant="body1">{message.from ? message.from.name : 'John Doe'}</Typography>
               </Grid>
               <Grid item xs>
                 <Typography variant="body1" align="right">{new Date(message.receivedAt).toGMTString()}</Typography>
@@ -52,8 +63,8 @@ const EmailViewer = ({ thread }) => {
             <ExpansionPanelDetails style={{ flexDirection: 'column' }}>
               <Typography variant="body2" color="primary">From: {moreFrom}</Typography>
               <Typography variant="body2" color="primary">To: {moreTo}</Typography>
-              {(message.cc.length > 0) && <Typography variant="body2" color="primary">Cc: {moreCc}</Typography>}
-              {(message.bcc.length > 0) && <Typography variant="body2" color="primary">Bcc: {moreBcc}</Typography>}
+              {/* {(message.cc.length > 0) && <Typography variant="body2" color="primary">Cc: {moreCc}</Typography>}
+              {(message.bcc.length > 0) && <Typography variant="body2" color="primary">Bcc: {moreBcc}</Typography>} */}
             </ExpansionPanelDetails>
           </ExpansionPanel>
 
@@ -65,6 +76,8 @@ const EmailViewer = ({ thread }) => {
       </Box>
     );
   });
+
+  // TODO: replace snippet with fully parsed payload body
 
   return (
     <div>

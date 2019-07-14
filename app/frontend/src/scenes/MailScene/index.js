@@ -85,7 +85,9 @@ const MainContainer = ({ match }) => {
               <AppBarContainer
                 drawerOpen={drawerOpen}
                 drawerWidth={240}
-                onOpenDrawer={() => setDrawerOpen(true)} onLogout={logout}
+                onOpenDrawer={() => setDrawerOpen(true)}
+                onLogout={logout}
+                mailboxIndex={match.params.mailbox}
               />
 
               <DrawerContainer

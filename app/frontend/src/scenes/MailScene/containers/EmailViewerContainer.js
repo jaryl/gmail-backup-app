@@ -14,11 +14,6 @@ import {
 import EmailViewer from '../scenes/EmailViewer';
 
 const CONVERSATION_QUERY = gql`
-fragment UserParts on User {
-  name
-  email
-}
-
 query($mailboxId: ID!, $id: ID!) {
   mailbox(id: $mailboxId) {
     thread(id: $id) {
@@ -30,10 +25,6 @@ query($mailboxId: ID!, $id: ID!) {
       }
       messages {
         id
-        from { ...UserParts }
-        to { ...UserParts }
-        cc { ...UserParts }
-        bcc { ...UserParts }
         snippet
         receivedAt
       }
