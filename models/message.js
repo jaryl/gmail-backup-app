@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     payload: {
       allowNull: false,
-      type: DataTypes.BLOB('tiny'),
+      type: DataTypes.TEXT,
     },
     size: {
       allowNull: false,

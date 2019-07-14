@@ -50,7 +50,7 @@ module.exports = {
     },
     payload: {
       allowNull: false,
-      type: Sequelize.BLOB('tiny'),
+      type: Sequelize.TEXT,
     },
     createdAt: {
       allowNull: false,

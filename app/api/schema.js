@@ -77,6 +77,7 @@ const typeDefs = `
     threadId: ID!
     snippet: String!
     receivedAt: DateTime!
+    size: Int!
     payload: String!
     thread: Thread!
   }

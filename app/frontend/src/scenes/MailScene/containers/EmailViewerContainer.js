@@ -11,7 +11,10 @@ import {
   Grid,
 } from '@material-ui/core';
 
-import EmailViewer from '../scenes/EmailViewer';
+import base64url from 'base64url';
+import parse from 'emailjs-mime-parser';
+
+import EmailViewer from '../components/EmailViewer';
 
 const CONVERSATION_QUERY = gql`
 query($mailboxId: ID!, $id: ID!) {
@@ -27,6 +30,8 @@ query($mailboxId: ID!, $id: ID!) {
         id
         snippet
         receivedAt
+        size
+        payload
       }
     }
   }

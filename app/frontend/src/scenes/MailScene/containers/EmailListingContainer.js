@@ -3,7 +3,7 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
-import EmailListing from '../scenes/EmailListing';
+import EmailListing from '../components/EmailListing';
 
 const THREADS_QUERY = gql`
 query($mailboxId: ID!, $id: ID!) {
