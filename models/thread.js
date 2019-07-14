@@ -25,13 +25,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ARRAY(DataTypes.UUID),
       defaultValue: [],
     },
-    snippet: {
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-      type: DataTypes.STRING,
-    },
   }, {});
 
   Thread.associate = (models) => {

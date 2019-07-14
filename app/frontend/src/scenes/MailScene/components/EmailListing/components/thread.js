@@ -43,7 +43,7 @@ const Thread = ({ thread, mailboxIndex }) => {
       <ListItemAvatar className={classes.avatar}>
         <Badge color="primary" variant="dot"><React.Fragment /></Badge>
       </ListItemAvatar>
-      <ListItemText primary={thread.sender} secondary={thread.snippet} />
+      <ListItemText primary={thread.sender} secondary={'thread.snippet is no more'} />
       <ListItemText className={classes.dateTimeDisplay} secondary={thread.datetime} />
     </ListItem>
   );

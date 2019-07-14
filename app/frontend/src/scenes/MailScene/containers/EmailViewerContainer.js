@@ -11,9 +11,6 @@ import {
   Grid,
 } from '@material-ui/core';
 
-import base64url from 'base64url';
-import parse from 'emailjs-mime-parser';
-
 import EmailViewer from '../components/EmailViewer';
 
 const CONVERSATION_QUERY = gql`
@@ -21,14 +18,12 @@ query($mailboxId: ID!, $id: ID!) {
   mailbox(id: $mailboxId) {
     thread(id: $id) {
       id
-      snippet
       labels {
         id
         name
       }
       messages {
         id
-        snippet
         receivedAt
         size
         payload

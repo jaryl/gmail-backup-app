@@ -9,7 +9,7 @@ import {
 
 import { GoogleContext } from '../../../hooks/GoogleContext';
 
-import useMessageSynchronizer from '../hooks/useMessageSynchronizer';
+import useMessageSynchronizer from '../hooks/use-message-synchronizer';
 
 const SyncManager = ({ profile, mailbox }) => {
   const [mailboxInfo, setMailboxInfo] = useState();

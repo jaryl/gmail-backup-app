@@ -24,7 +24,6 @@ const typeDefs = `
     syncMessage(
       mailboxId: ID!,
       receivedAt: DateTime!,
-      snippet: String!,
       size: Int!,
       providerType: Provider!,
       labelIds: [ID]!,
@@ -75,7 +74,6 @@ const typeDefs = `
   type Message {
     id: ID!
     threadId: ID!
-    snippet: String!
     receivedAt: DateTime!
     size: Int!
     payload: String!
@@ -84,7 +82,6 @@ const typeDefs = `
 
   type Thread {
     id: ID!
-    snippet: String!
     labels: [Label]!
     messages: [Message!]!
   }

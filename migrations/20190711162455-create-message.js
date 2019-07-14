@@ -33,13 +33,6 @@ module.exports = {
       },
       type: Sequelize.DATE,
     },
-    snippet: {
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-      type: Sequelize.STRING,
-    },
     size: {
       allowNull: false,
       validate: {

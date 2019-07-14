@@ -51,7 +51,6 @@ query($id: ID!) {
     }
     threads {
       id
-      snippet
     }
   }
 }

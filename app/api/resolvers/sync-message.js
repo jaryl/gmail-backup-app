@@ -6,7 +6,6 @@ const syncMessage = async (parent, args, { db, token }) => {
   const {
     mailboxId,
     receivedAt,
-    snippet,
     size,
     providerType,
     labelIds,
@@ -27,7 +26,6 @@ const syncMessage = async (parent, args, { db, token }) => {
         mailboxId: mailbox.dataValues.id,
         providerId: gmailPayload.threadId,
         labelIds: (labels.concat(allLabel)).map(label => label.dataValues.id), // a tad unecessary
-        snippet: (snippet.length === 0) ? '[EMPTY SNIPPET]' : snippet,
       },
       transaction: t,
     }).then(([thread]) => db.Message.findOrCreate({
@@ -37,7 +35,6 @@ const syncMessage = async (parent, args, { db, token }) => {
         threadId: thread.dataValues.id,
         providerId: gmailPayload.id,
         receivedAt,
-        snippet: (snippet.length === 0) ? '[EMPTY SNIPPET]' : snippet,
         size,
         payload,
       },

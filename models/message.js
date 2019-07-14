@@ -36,13 +36,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: DataTypes.DATE,
     },
-    snippet: {
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-      type: DataTypes.STRING,
-    },
     payload: {
       allowNull: false,
       type: DataTypes.TEXT,

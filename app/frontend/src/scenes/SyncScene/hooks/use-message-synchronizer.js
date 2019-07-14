@@ -9,7 +9,6 @@ const SYNC_MESSAGE_MUTATION = gql`
   mutation (
     $mailboxId: ID!,
     $receivedAt: DateTime!,
-    $snippet: String!,
     $size: Int!,
     $labelIds: [ID]!,
     $payload: String!,
@@ -18,7 +17,6 @@ const SYNC_MESSAGE_MUTATION = gql`
     syncMessage(
       mailboxId: $mailboxId,
       receivedAt: $receivedAt,
-      snippet: $snippet,
       size: $size,
       providerType: GMAIL,
       labelIds: $labelIds,
@@ -44,7 +42,6 @@ const performSync = async (token, dispatch, api, client, mailbox) => {
     const variables = {
       mailboxId: mailbox.id,
       receivedAt: new Date(parseInt(result.internalDate, 10)),
-      snippet: result.snippet,
       size: result.sizeEstimate,
       labelIds: result.labelIds || [],
       payload,

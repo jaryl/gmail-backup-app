@@ -23,10 +23,6 @@ module.exports = {
       type: Sequelize.ARRAY(Sequelize.UUID),
       defaultValue: [],
     },
-    snippet: {
-      allowNull: false,
-      type: Sequelize.STRING,
-    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
