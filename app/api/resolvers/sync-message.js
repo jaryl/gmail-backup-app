@@ -21,7 +21,7 @@ const syncMessage = async (parent, args, { db, token }) => {
     const allLabel = await db.Label.findAll({ where: { type: 'app', providerId: 'ALL' } });
 
     const [message] = await db.sequelize.transaction(t => db.Thread.findOrCreate({
-      where: { providerId: gmailPayload.threadId },
+      where: { providerId: gmailPayload.threadId, mailboxId },
       defaults: {
         mailboxId: mailbox.dataValues.id,
         providerId: gmailPayload.threadId,
@@ -29,7 +29,7 @@ const syncMessage = async (parent, args, { db, token }) => {
       },
       transaction: t,
     }).then(([thread]) => db.Message.findOrCreate({
-      where: { providerId: gmailPayload.id },
+      where: { providerId: gmailPayload.id, mailboxId },
       defaults: {
         mailboxId: mailbox.dataValues.id,
         threadId: thread.dataValues.id,

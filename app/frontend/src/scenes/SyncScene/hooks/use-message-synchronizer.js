@@ -67,6 +67,7 @@ const performSync = async (token, dispatch, api, client, mailbox) => {
       nextPageToken,
     },
   });
+
   if (!nextPageToken) {
     dispatch({ type: 'stop' });
   } else {
