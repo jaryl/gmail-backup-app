@@ -18,9 +18,10 @@ class MainErrorBoundary extends React.Component {
     return { hasError: true };
   }
 
-  // componentDidCatch(error, info) {
-  //   // TODO: log error here
-  // }
+  componentDidCatch(error, info) {
+    console.log(error, info);
+    // TODO: log error here
+  }
 
   render() {
     if (this.state.hasError) {
@@ -31,7 +32,7 @@ class MainErrorBoundary extends React.Component {
              <CssBaseline />
              <Paper>
                <Box p={3} mt={6}>
-                 <Typography align="center" variant="h6">Something went wrong</Typography>
+                 <Typography align="center" variant="h6">Something went wrongs</Typography>
                  <Typography align="center" variant="body1">Please refresh your browser.</Typography>
                </Box>
              </Paper>

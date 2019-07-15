@@ -16,15 +16,45 @@ import addrs from 'email-addresses';
 import base64url from 'base64url';
 import parse from 'emailjs-mime-parser';
 
+import Content from './components/content';
+import Attachment from './components/attachment';
+
+const extractContent = (node, results = []) => {
+  switch (node.contentType.type) {
+    case 'multipart':
+      node.childNodes.forEach(childNode => extractContent(childNode, results));
+      break;
+    case 'text':
+    case 'application':
+      results.push({
+        content: new TextDecoder('utf-8').decode(node.content),
+        type: node.contentType.value,
+      });
+      break;
+    default:
+      throw new Error(`Hit default case for ${node.contentType.value}`);
+  }
+  return results;
+};
+
 const Message = ({ message }) => {
   const email = parse(base64url.decode(message.payload));
+
+  const extractedContent = extractContent(email);
+  const content = extractedContent
+    .filter(node => ['text/plain', 'text/html'].includes(node.type))
+    .map((node, index) => <Content key={index} {...node} />);
+
+  const attachments = extractedContent
+    .filter(node => !['text/plain', 'text/html'].includes(node.type))
+    .map((node, index) => <Attachment key={index} {...node} />);
 
   const msg = {
     from: addrs.parseOneAddress(email.headers.from[0].initial),
     to: addrs.parseAddressList(email.headers.to.map(header => header.initial).join(',')),
     cc: [],
     bcc: [],
-    body: new TextDecoder('utf-8').decode(email.content),
+    body: content,
   };
 
   return (
@@ -55,8 +85,17 @@ const Message = ({ message }) => {
         </ExpansionPanel>
 
         <Box px={3} py={2}>
-          <Typography variant="body2">{msg.body}</Typography>
+          {content}
         </Box>
+
+        {attachments.length > 0 && (
+          <React.Fragment>
+            <hr />
+            <Box px={3} py={2}>
+              {attachments}
+            </Box>
+          </React.Fragment>
+        )}
 
       </Paper>
     </Box>
