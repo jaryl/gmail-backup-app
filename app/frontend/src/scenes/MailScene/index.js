@@ -8,6 +8,9 @@ import { CssBaseline, Grid, Paper } from '@material-ui/core';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
+import ListingErrorBoundary from './components/listing-error-boundary';
+import ConversationErrorBoundary from './components/conversation-error-boundary';
+
 import { AuthContext } from '../../hooks/AuthContext';
 import { MailboxContext } from '../../hooks/MailboxContext';
 
@@ -97,27 +100,33 @@ const MainContainer = ({ match }) => {
                 mailboxIndex={match.params.mailbox}
               />
 
-              <main className={classes.content}>
-                <PresentationContext.Consumer>
-                  {({ selectedLabel, selectedThread }) => (
-                    <React.Fragment>
-                      <div className={classes.toolbar} />
+                <main className={classes.content}>
+                  <PresentationContext.Consumer>
+                    {({ selectedLabel, selectedThread }) => (
+                      <React.Fragment>
+                        <div className={classes.toolbar} />
 
-                      <Grid container spacing={0} direction="row">
-                        <Grid item xs={3}>
-                          <Paper square={true} className={classes.paper}>
-                            <EmailListingContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} labelId={selectedLabel.id} />
-                          </Paper>
-                        </Grid>
+                        <Grid container spacing={0} direction="row">
+                          <Grid item xs={3}>
+                            <Paper square={true} className={classes.paper}>
+                              <ListingErrorBoundary>
+                                <EmailListingContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} labelId={selectedLabel.id} />
+                              </ListingErrorBoundary>
+                            </Paper>
+                          </Grid>
 
-                        <Grid item xs>
-                          {selectedThread && <EmailViewerContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} threadId={selectedThread.id} />}
+                          <Grid item xs>
+                            <ConversationErrorBoundary>
+                              <React.Fragment>
+                                {selectedThread && <EmailViewerContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} threadId={selectedThread.id} />}
+                              </React.Fragment>
+                            </ConversationErrorBoundary>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </React.Fragment>
-                  )}
-                </PresentationContext.Consumer>
-              </main>
+                      </React.Fragment>
+                    )}
+                  </PresentationContext.Consumer>
+                </main>
 
             </div>
           </PresentationContextProvider>
