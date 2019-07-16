@@ -12,6 +12,7 @@ const SYNC_MESSAGE_MUTATION = gql`
     $size: Int!,
     $labelIds: [ID]!,
     $payload: String!,
+    $snippet: String,
     $gmailPayload: GmailPayloadInput
   ) {
     syncMessage(
@@ -21,6 +22,7 @@ const SYNC_MESSAGE_MUTATION = gql`
       providerType: GMAIL,
       labelIds: $labelIds,
       payload: $payload,
+      snippet: $snippet,
       gmailPayload: $gmailPayload
     )
     {
@@ -39,7 +41,7 @@ const performSync = async (token, dispatch, api, client, mailbox) => {
     const { result } = await api.getMessage(id);
 
     // TODO: use fake data now if above 1mb, replace with direct upload to S3
-    const payload = (result.sizeEstimate < 1000 * 80) ? result.raw : FAKE_PAYLOAD;
+    const payload = (result.raw.length < 1000 * 80) ? result.raw : FAKE_PAYLOAD;
 
     const variables = {
       mailboxId: mailbox.id,
@@ -47,6 +49,7 @@ const performSync = async (token, dispatch, api, client, mailbox) => {
       size: result.sizeEstimate,
       labelIds: result.labelIds || [],
       payload,
+      snippet: result.snippet,
       gmailPayload: {
         id: result.id,
         threadId: result.threadId,

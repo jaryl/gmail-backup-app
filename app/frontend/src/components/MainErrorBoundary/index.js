@@ -19,7 +19,7 @@ class MainErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    // console.log(error, info);
+    console.log('componentDidCatch', error, info);
     // TODO: log error here
   }
 

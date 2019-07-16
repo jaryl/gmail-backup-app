@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: DataTypes.STRING,
     },
+    snippet: {
+      allowNull: false,
+      type: DataTypes.STRING,
+    },
     receivedAt: {
       allowNull: false,
       validate: {

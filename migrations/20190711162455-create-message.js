@@ -26,6 +26,10 @@ module.exports = {
       allowNull: false,
       type: Sequelize.STRING,
     },
+    snippet: {
+      allowNull: false,
+      type: Sequelize.STRING,
+    },
     receivedAt: {
       allowNull: false,
       validate: {

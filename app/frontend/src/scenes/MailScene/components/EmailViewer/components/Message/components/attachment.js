@@ -1,12 +1,14 @@
 import React from 'react';
 
-import DOMPurify from 'dompurify';
+import {
+  Button,
+} from '@material-ui/core';
 
 const Attachment = ({ content, type }) => {
   return (
     <React.Fragment>
       <strong>{type}</strong>
-      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
+      <Button type="submit" variant="contained" color="primary" size="large">Download</Button>
     </React.Fragment>
   );
 };

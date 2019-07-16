@@ -8,7 +8,7 @@ import {
   Chip,
 } from '@material-ui/core';
 
-const Thread = ({ thread }) => {
+const Thread = ({ thread, subject }) => {
   const labels = thread.labels.map(label => <Chip key={label.id} label={label.name} variant="outlined" />);
 
   return (
@@ -16,7 +16,7 @@ const Thread = ({ thread }) => {
       <Box p={3}>
         <Grid container>
           <Grid item xs={9}>
-            <Typography variant="h6" component="h1">{'thread.snippet is no more'}</Typography>
+            <Typography variant="h6" component="h1">{subject}</Typography>
           </Grid>
           <Grid item xs align="right">
             {labels}

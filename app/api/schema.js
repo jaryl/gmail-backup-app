@@ -28,6 +28,7 @@ const typeDefs = `
       providerType: Provider!,
       labelIds: [ID]!,
       payload: String!,
+      snippet: String,
       gmailPayload: GmailPayloadInput
     ): Message!
   }
@@ -77,6 +78,7 @@ const typeDefs = `
     receivedAt: DateTime!
     size: Int!
     payload: String!
+    snippet: String!
     thread: Thread!
   }
 
@@ -84,6 +86,7 @@ const typeDefs = `
     id: ID!
     labels: [Label]!
     messages: [Message!]!
+    lastMessage: Message!
   }
 
   type User {

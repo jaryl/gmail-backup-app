@@ -10,6 +10,7 @@ const syncMessage = async (parent, args, { db, token }) => {
     providerType,
     labelIds,
     payload,
+    snippet,
     gmailPayload,
   } = args;
 
@@ -37,6 +38,7 @@ const syncMessage = async (parent, args, { db, token }) => {
         receivedAt,
         size,
         payload,
+        snippet: snippet || '[EMPTY CONTENT]',
       },
       transaction: t,
     })));
