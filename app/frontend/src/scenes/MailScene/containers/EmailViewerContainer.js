@@ -25,6 +25,7 @@ query($mailboxId: ID!, $id: ID!) {
       messages {
         id
         receivedAt
+        snippet
         size
         payload
       }
