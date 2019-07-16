@@ -38,7 +38,9 @@ const register = async (parent, args, { db }) => {
     }],
   });
 
-  const token = store.generateAccessToken(account.id);
+  const mailboxes = await account.getMailboxes(); // TODO: sequelize might have a better approach to getting both account and maiblxoes
+
+  const token = store.generateAccessToken(account.id, mailboxes.map(mailbox => mailbox.id));
   return { token };
 };
 
