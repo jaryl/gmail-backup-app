@@ -16,6 +16,7 @@ query($mailboxId: ID!, $id: ID!) {
         id
         lastMessage {
           snippet
+          receivedAt
         }
       }
     }

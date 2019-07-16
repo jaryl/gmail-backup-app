@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 
 import { Link } from 'react-router-dom';
+import Moment from 'react-moment';
 
 import {
   Badge,
@@ -29,6 +30,15 @@ const Thread = ({ thread, mailboxIndex }) => {
   const classes = useStyles();
   const { selectedLabel, selectedThread, selectThread } = useContext(PresentationContext);
 
+  // const calendarStrings = {
+  //   lastDay: '[Yesterday at] LT',
+  //   sameDay: '[Today at] LT',
+  //   nextDay: '[Tomorrow at] LT',
+  //   lastWeek: '[last] dddd [at] LT',
+  //   nextWeek: 'dddd [at] LT',
+  //   sameElse: 'll',
+  // };
+
   return (
     <ListItem
       button
@@ -44,7 +54,8 @@ const Thread = ({ thread, mailboxIndex }) => {
         <Badge color="primary" variant="dot"><React.Fragment /></Badge>
       </ListItemAvatar>
       <ListItemText primary={thread.sender} secondary={thread.lastMessage.snippet} />
-      <ListItemText className={classes.dateTimeDisplay} secondary={thread.datetime} />
+      <ListItemText className={classes.dateTimeDisplay} secondary={<Moment fromNow>{new Date(thread.lastMessage.receivedAt)}</Moment>} />
+
     </ListItem>
   );
 };
