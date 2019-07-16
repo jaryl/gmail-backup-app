@@ -31,6 +31,7 @@ const extractContent = (node, results = []) => {
       results.push({
         content: new TextDecoder('utf-8').decode(node.content),
         type: node.contentType.value,
+        filename: node.contentType.params.name,
       });
       break;
     default:
