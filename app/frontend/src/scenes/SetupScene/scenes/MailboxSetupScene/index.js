@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import {
   CssBaseline,
@@ -16,6 +17,16 @@ import { GoogleLogout } from '../../../../components/GoogleButtons';
 import useFormSubmission from './hooks/use-form-submission';
 
 import InputForm from './components/form';
+
+const SetupSchema = Yup.object().shape({
+  username: Yup.string()
+    .required('Required'),
+  password: Yup.string()
+    .required('Required'),
+  passwordConfirmation: Yup.string()
+    .required('Required')
+    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+});
 
 const initialValues = {
   username: '',
@@ -50,6 +61,7 @@ const MailboxSetupScene = () => {
             <Formik
               initialValues={initialValues}
               render={formikProps => <InputForm {...formikProps} />}
+              validationSchema={SetupSchema}
               onSubmit={handleSubmit}
             />
 

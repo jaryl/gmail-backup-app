@@ -71,7 +71,9 @@ const resolverMap = {
 
   Thread: {
     labels: (parent, args, { db }, info) => db.Label.findAll({ where: { id: { [Op.in]: parent.dataValues.labelIds } } }),
-    messages: async (parent, args, context, info) => parent.getMessages(),
+    messages: async (parent, args, context, info) => parent.getMessages({
+      order: [['receivedAt', 'DESC']]
+    }),
     lastMessage: async (parent, args, { db }, info) => {
       const messages = await db.Message.findAll({
         where: { threadId: parent.id },

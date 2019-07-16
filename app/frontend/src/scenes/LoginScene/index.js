@@ -11,10 +11,18 @@ import {
 } from '@material-ui/core';
 
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import { AuthContext } from '../../hooks/AuthContext';
 
 import InputForm from './components/InputForm';
+
+const LoginSchema = Yup.object().shape({
+  username: Yup.string()
+    .required('Required'),
+  password: Yup.string()
+    .required('Required'),
+});
 
 const LoginScene = (props) => {
   const { loggedIn, login } = useContext(AuthContext);
@@ -48,6 +56,7 @@ const LoginScene = (props) => {
             <Formik
               initialValues={initialValues}
               render={formikProps => <InputForm {...formikProps} />}
+              validationSchema={LoginSchema}
               onSubmit={handleSubmit}
             />
 

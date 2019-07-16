@@ -12,8 +12,6 @@ import {
 
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
-import Moment from 'react-moment';
-
 import addrs from 'email-addresses';
 import base64url from 'base64url';
 import parse from 'emailjs-mime-parser';
@@ -70,7 +68,7 @@ const Message = ({ message }) => {
               <Typography variant="body1">{msg.from.name || msg.from.email}</Typography>
             </Grid>
             <Grid item xs>
-              <Typography variant="body1" align="right">{<Moment fromNow>{new Date(message.receivedAt)}</Moment>}</Typography>
+              <Typography variant="body1" align="right">{new Date(message.receivedAt).toUTCString()}</Typography>
             </Grid>
           </Grid>
         </Box>
