@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: DataTypes.DATE,
     },
+    labelIds: {
+      type: DataTypes.ARRAY(DataTypes.UUID),
+      defaultValue: [],
+    },
     payload: {
       allowNull: false,
       type: DataTypes.TEXT,

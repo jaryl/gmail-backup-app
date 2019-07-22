@@ -66,7 +66,6 @@ const performSync = async (token, dispatch, api, client, mailbox) => {
   });
 
   const results = await Promise.all(promises);
-  console.log(results);
 
   dispatch({
     type: 'tick',

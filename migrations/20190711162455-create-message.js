@@ -45,6 +45,11 @@ module.exports = {
       },
       type: Sequelize.STRING,
     },
+    labelIds: {
+      allowNull: false,
+      type: Sequelize.ARRAY(Sequelize.UUID),
+      defaultValue: [],
+    },
     payload: {
       allowNull: false,
       type: Sequelize.TEXT,

@@ -56,6 +56,12 @@ const resolverMap = {
         order: [['lastMessageReceivedAt', 'DESC']],
       });
     },
+    messages: (parent, args, { db }, info) => {
+      return db.Message.findAll({
+        where: { labelIds: { [Op.contains]: [parent.dataValues.id] } },
+        order: [['receivedAt', 'DESC']],
+      });
+    },
     slug: parent => parent.name.replace(/\s+/g, '-').toLowerCase(),
   },
 
@@ -74,6 +80,7 @@ const resolverMap = {
 
   Message: {
     thread: (parent, args, context, info) => parent.getThread(),
+    labels: (parent, args, { db }, info) => db.Label.findAll({ where: { id: { [Op.in]: parent.dataValues.labelIds } } }),
   },
 
   Thread: {

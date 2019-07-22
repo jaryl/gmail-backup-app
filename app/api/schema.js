@@ -60,6 +60,7 @@ const typeDefs = `
     slug: String!
     type: String!
     threads: [Thread]!
+    messages: [Message]!
   }
 
   type Mailbox {
@@ -77,6 +78,7 @@ const typeDefs = `
     threadId: ID!
     receivedAt: DateTime!
     size: Int!
+    labels: [Label]!
     payload: String!
     snippet: String!
     thread: Thread!
