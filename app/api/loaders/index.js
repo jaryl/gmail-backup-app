@@ -5,8 +5,7 @@ const db = require('../../../models');
 
 const LAST_MESSAGES_BY_THREAD_IDS_SQL = `
   SELECT
-    "Thread"."id", "Thread"."mailboxId", "Thread"."providerId", "Thread"."labelIds", "Thread"."createdAt", "Thread"."updatedAt",
-    "Messages"."id" AS "lastMessage.id", "Messages"."mailboxId" AS "lastMessage.mailboxId", "Messages"."threadId" AS "lastMessage.threadId", "Messages"."providerId" AS "lastMessage.providerId", "Messages"."snippet" AS "lastMessage.snippet", "Messages"."receivedAt" AS "lastMessage.receivedAt", "Messages"."payload" AS "lastMessage.payload", "Messages"."size" AS "lastMessage.size", "Messages"."createdAt" AS "lastMessage.createdAt", "Messages"."updatedAt" AS "lastMessage.updatedAt"
+    "Thread"."id", "Messages"."id" AS "lastMessage.id", "Messages"."mailboxId" AS "lastMessage.mailboxId", "Messages"."threadId" AS "lastMessage.threadId", "Messages"."providerId" AS "lastMessage.providerId", "Messages"."snippet" AS "lastMessage.snippet", "Messages"."receivedAt" AS "lastMessage.receivedAt", "Messages"."payload" AS "lastMessage.payload", "Messages"."size" AS "lastMessage.size", "Messages"."createdAt" AS "lastMessage.createdAt", "Messages"."updatedAt" AS "lastMessage.updatedAt"
   FROM "Threads" AS "Thread"
   LEFT JOIN "Messages" AS "Messages" ON "Messages"."id" = (
     SELECT "id" from "Messages" AS "Messages"
