@@ -37,7 +37,7 @@ const performSync = async (token, dispatch, api, client, mailbox) => {
   const { result: r } = await api.getAllMessage(token);
   const { messages, nextPageToken } = r;
 
-  const results = await messages.map(async ({ id }) => {
+  const promises = messages.map(async ({ id }) => {
     const { result } = await api.getMessage(id);
 
     // TODO: use fake data now if above 1mb, replace with direct upload to S3
@@ -64,6 +64,9 @@ const performSync = async (token, dispatch, api, client, mailbox) => {
 
     return mutation;
   });
+
+  const results = await Promise.all(promises);
+  console.log(results);
 
   dispatch({
     type: 'tick',
