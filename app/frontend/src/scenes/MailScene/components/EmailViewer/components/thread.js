@@ -16,7 +16,7 @@ const Thread = ({ thread, subject }) => {
       <Box p={3}>
         <Grid container>
           <Grid item xs={9}>
-            <Typography variant="h6" component="h1">{subject}</Typography>
+            <Typography variant="h6" component="h1" dangerouslySetInnerHTML={{ __html: subject }} />
           </Grid>
           <Grid item xs align="right">
             {labels}
