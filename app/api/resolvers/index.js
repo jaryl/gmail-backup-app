@@ -50,7 +50,9 @@ const resolverMap = {
   // resolvers types
 
   Label: {
-    threads: (parent, args, { db }, info) => db.Thread.findAll({ where: { labelIds: { [Op.contains]: [parent.dataValues.id] } } }),
+    threads: (parent, args, { db }, info) => {
+      return db.Thread.findAll({ where: { labelIds: { [Op.contains]: [parent.dataValues.id] } } });
+    },
     slug: parent => parent.name.replace(/\s+/g, '-').toLowerCase(),
   },
 
@@ -74,13 +76,8 @@ const resolverMap = {
     messages: async (parent, args, context, info) => parent.getMessages({
       order: [['receivedAt', 'DESC']]
     }),
-    lastMessage: async (parent, args, { db }, info) => {
-      const messages = await db.Message.findAll({
-        where: { threadId: parent.id },
-        order: [['receivedAt', 'DESC']],
-        limit: 1,
-      });
-      return messages[0];
+    lastMessage: async (parent, args, { db, loaders }, info) => {
+      return loaders.lastMessagesByThreadIds.load(parent.id);
     },
   },
 };

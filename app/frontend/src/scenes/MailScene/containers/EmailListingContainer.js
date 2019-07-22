@@ -15,6 +15,7 @@ query($mailboxId: ID!, $id: ID!) {
       threads {
         id
         lastMessage {
+          id
           snippet
           receivedAt
         }

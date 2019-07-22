@@ -4,6 +4,7 @@ const { ApolloServer, gql } = require('apollo-server-express');
 
 const schema = require('./schema');
 const resolvers = require('./resolvers');
+const loaders = require('./loaders');
 
 const db = require('../../models');
 const store = require('./store'); // TODO: remove this fake store, and replace with db
@@ -19,6 +20,7 @@ const server = new ApolloServer({
       db,
       store,
       token,
+      loaders,
     };
   },
 });
