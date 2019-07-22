@@ -24,6 +24,13 @@ const extractContent = (node, results = []) => {
     case 'multipart':
       node.childNodes.forEach(childNode => extractContent(childNode, results));
       break;
+    case 'image':
+      results.push({
+        content: node.content,
+        type: node.contentType.value,
+        filename: node.contentType.params.name,
+      });
+      break;
     case 'text':
     case 'application':
       results.push({
@@ -45,6 +52,8 @@ const Message = ({ message }) => {
   const content = extractedContent
     .filter(node => ['text/plain', 'text/html'].includes(node.type))
     .map((node, index) => <Content key={index} {...node} />);
+
+  // TODO: treat image nodes differently?
 
   const attachments = extractedContent
     .filter(node => !['text/plain', 'text/html'].includes(node.type))
