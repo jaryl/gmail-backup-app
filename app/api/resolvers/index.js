@@ -51,7 +51,10 @@ const resolverMap = {
 
   Label: {
     threads: (parent, args, { db }, info) => {
-      return db.Thread.findAll({ where: { labelIds: { [Op.contains]: [parent.dataValues.id] } } });
+      return db.Thread.findAll({
+        where: { labelIds: { [Op.contains]: [parent.dataValues.id] } },
+        order: [['lastMessageReceivedAt', 'DESC']],
+      });
     },
     slug: parent => parent.name.replace(/\s+/g, '-').toLowerCase(),
   },
@@ -62,7 +65,9 @@ const resolverMap = {
       const labels = await parent.getLabels({ where: { id: args.id } });
       return labels[0];
     },
-    threads: (parent, args, context, info) => parent.getThreads(),
+    threads: (parent, args, context, info) => parent.getThreads({
+      order: [['lastMessageReceivedAt', 'DESC']],
+    }),
     thread: (parent, args, { db }, info) => db.Thread.findOne({ where: { mailboxId: parent.id, id: args.id } }),
     messages: (parent, args, context, info) => parent.getMessages(),
   },

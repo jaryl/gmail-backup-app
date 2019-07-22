@@ -23,6 +23,10 @@ module.exports = {
       type: Sequelize.ARRAY(Sequelize.UUID),
       defaultValue: [],
     },
+    lastMessageReceivedAt: {
+      allowNull: true,
+      type: Sequelize.DATE,
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,

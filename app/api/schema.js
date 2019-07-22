@@ -86,6 +86,7 @@ const typeDefs = `
     id: ID!
     labels: [Label]!
     messages: [Message!]!
+    lastMessageReceivedAt: DateTime!
     lastMessage: Message!
   }
 

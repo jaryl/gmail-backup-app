@@ -21,7 +21,7 @@ const syncMessage = async (parent, args, { db, token }) => {
     const labels = await db.Label.findAll({ where: { providerId: labelIds } });
     const allLabel = await db.Label.findAll({ where: { type: 'app', providerId: 'ALL' } });
 
-    const [message] = await db.sequelize.transaction(t => db.Thread.findOrCreate({
+    const result = await db.sequelize.transaction(async t => db.Thread.findOrCreate({
       where: { providerId: gmailPayload.threadId, mailboxId },
       defaults: {
         mailboxId,
@@ -41,9 +41,16 @@ const syncMessage = async (parent, args, { db, token }) => {
         snippet: snippet || '[EMPTY CONTENT]',
       },
       transaction: t,
+    }).then(([message]) => {
+      if (thread.lastMessageReceivedAt >= message.receivedAt) return message;
+      thread.update(
+        { lastMessageReceivedAt: message.receivedAt },
+        { transaction: t },
+      );
+      return message;
     })));
 
-    return message;
+    return result;
   }
 };
 

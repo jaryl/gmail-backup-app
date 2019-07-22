@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ARRAY(DataTypes.UUID),
       defaultValue: [],
     },
+    lastMessageReceivedAt: {
+      allowNull: true,
+      type: DataTypes.DATE,
+    },
   }, {});
 
   Thread.associate = (models) => {

@@ -14,6 +14,7 @@ query($mailboxId: ID!, $id: ID!) {
       slug
       threads {
         id
+        lastMessageReceivedAt
         lastMessage {
           id
           snippet
