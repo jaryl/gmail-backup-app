@@ -1,3 +1,5 @@
+const { AuthenticationError } = require('apollo-server-express');
+
 const jwt = require('jsonwebtoken');
 
 const { Op } = require('sequelize');
@@ -17,7 +19,7 @@ const syncMessage = async (parent, args, { db, token }) => {
   } = args;
 
   const { mailboxIds } = jwt.verify(token, store.JWT_SECRET);
-  if (!mailboxIds.includes(mailboxId)) throw new Error('User does not have access to this mailbox'); // TODO: find better way to present error
+  if (!mailboxIds.includes(mailboxId)) throw new AuthenticationError('User does not have access to this mailbox');
 
   if (providerType === 'GMAIL') {
     const labels = await db.Label.findAll({

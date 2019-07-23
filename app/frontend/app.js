@@ -32,7 +32,7 @@ const authService = new AuthService(apolloClient);
 const App = () => {
   const authContextProviderProps = {
     authService,
-    onLogin: () => apolloClient.cache.reset(), // TODO: maybe remove
+    onLogin: () => apolloClient.cache.reset(),
     onLogout: () => apolloClient.cache.reset(),
   };
 

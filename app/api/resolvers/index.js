@@ -1,4 +1,3 @@
-const { ApolloError } = require('apollo-server-express');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { Op } = require('sequelize');

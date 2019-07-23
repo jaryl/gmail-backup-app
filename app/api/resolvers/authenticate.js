@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const store = require('../store');
 
 const authenticate = async (parent, { username, password }, { db }) => {
-  const account = await db.Account.findOne({ where: { username } }); // TODO; password should be encrypted/salted
+  const account = await db.Account.findOne({ where: { username } });
   const successful = await bcrypt.compare(password, account.password);
   if (successful) {
     const mailboxes = await account.getMailboxes();
