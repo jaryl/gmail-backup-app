@@ -84,7 +84,7 @@ const Message = ({ message }) => {
 
         <ExpansionPanel square={false} elevation={0}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="body2" color="primary">To: {msg.to.map(recipient => recipient.name || recipient.address).join(', ')}</Typography>
+            <Typography variant="body2" color="primary">To: {msg.to ? msg.to.map(recipient => recipient.name || recipient.address).join(', ') : email.headers.to.map(header => header.initial).join(', ')}</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ flexDirection: 'column' }}>
             <Typography variant="body2" color="primary">From: {email.headers.from[0].initial}</Typography>

@@ -11,6 +11,20 @@ const register = require('./register');
 const authenticate = require('./authenticate');
 const syncMessage = require('./sync-message');
 
+const CONVERSATIONS_SQL = `
+SELECT * FROM "Threads" AS "Thread"
+JOIN (
+  SELECT "Message"."threadId", MAX("Message"."receivedAt") AS "receivedAt"
+  FROM "Messages" AS "Message"
+  WHERE :labelId = ANY("Message"."labelIds")
+    AND "Message"."receivedAt" > :after
+    AND "Message"."receivedAt" < :before
+  GROUP BY "Message"."threadId"
+) "Message"
+ON "Thread"."id" = "Message"."threadId"
+ORDER BY "Message"."receivedAt" DESC;
+`;
+
 const resolverMap = {
   // custom scalar types
 
@@ -49,17 +63,30 @@ const resolverMap = {
 
   // resolvers types
 
+  // Conversation: {
+  // },
+
   Label: {
-    threads: (parent, args, { db }, info) => {
-      return db.Thread.findAll({
-        where: { labelIds: { [Op.contains]: [parent.dataValues.id] } },
-        order: [['lastMessageReceivedAt', 'DESC']],
+    threads: (parent, { after, before }, { db }, info) => {
+      return db.sequelize.query(CONVERSATIONS_SQL, {
+        replacements: {
+          labelId: parent.id,
+          after: after || new Date(0),
+          // after: after || new Date(2019, 1), // keep around for testing
+          before: before || new Date(),
+        },
+        model: db.Thread,
+        mapToModel: true,
+        nest: true,
+        raw: true,
+        type: db.sequelize.QueryTypes.SELECT,
       });
     },
     messages: (parent, args, { db }, info) => {
       return db.Message.findAll({
         where: { labelIds: { [Op.contains]: [parent.dataValues.id] } },
         order: [['receivedAt', 'DESC']],
+        having: {},
       });
     },
     slug: parent => parent.name.replace(/\s+/g, '-').toLowerCase(),

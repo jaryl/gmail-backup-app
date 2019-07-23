@@ -59,7 +59,7 @@ const typeDefs = `
     name: String!
     slug: String!
     type: String!
-    threads: [Thread]!
+    threads(before: DateTime, after: DateTime): [Thread]!
     messages: [Message]!
   }
 
