@@ -25,6 +25,16 @@ ON "Thread"."id" = "Message"."threadId"
 ORDER BY "Message"."receivedAt" DESC;
 `;
 
+const THREAD_LABELS_SQL = `
+SELECT * FROM "Labels" AS "Label"
+JOIN (
+  SELECT ARRAY_AGG("Message"."labelIds") AS "labelIds"
+  FROM (SELECT "threadId", UNNEST("labelIds") AS "labelIds" FROM "Messages") "Message"
+  WHERE "Message"."threadId" = :threadId
+) "Messages"
+ON "Label"."id" = ANY("Messages"."labelIds");
+`;
+
 const resolverMap = {
   // custom scalar types
 
@@ -106,6 +116,16 @@ const resolverMap = {
   },
 
   Thread: {
+    labels: (parent, args, { db }, info) => {
+      return db.sequelize.query(THREAD_LABELS_SQL, {
+        replacements: { threadId: parent.id },
+        model: db.Label,
+        mapToModel: true,
+        nest: true,
+        raw: true,
+        type: db.sequelize.QueryTypes.SELECT,
+      });
+    },
     messages: async (parent, args, context, info) => parent.getMessages({
       order: [['receivedAt', 'DESC']]
     }),

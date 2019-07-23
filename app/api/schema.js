@@ -86,6 +86,7 @@ const typeDefs = `
 
   type Thread {
     id: ID!
+    labels: [Label]!
     messages: [Message!]!
     lastMessage: Message!
   }
