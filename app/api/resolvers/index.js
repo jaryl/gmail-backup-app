@@ -63,9 +63,6 @@ const resolverMap = {
 
   // resolvers types
 
-  // Conversation: {
-  // },
-
   Label: {
     threads: (parent, { after, before }, { db }, info) => {
       return db.sequelize.query(CONVERSATIONS_SQL, {
@@ -98,9 +95,7 @@ const resolverMap = {
       const labels = await parent.getLabels({ where: { id: args.id } });
       return labels[0];
     },
-    threads: (parent, args, context, info) => parent.getThreads({
-      order: [['lastMessageReceivedAt', 'DESC']],
-    }),
+    threads: (parent, args, context, info) => parent.getThreads(),
     thread: (parent, args, { db }, info) => db.Thread.findOne({ where: { mailboxId: parent.id, id: args.id } }),
     messages: (parent, args, context, info) => parent.getMessages(),
   },
@@ -111,7 +106,6 @@ const resolverMap = {
   },
 
   Thread: {
-    labels: (parent, args, { db }, info) => db.Label.findAll({ where: { id: { [Op.in]: parent.dataValues.labelIds } } }),
     messages: async (parent, args, context, info) => parent.getMessages({
       order: [['receivedAt', 'DESC']]
     }),

@@ -30,12 +30,11 @@ const syncMessage = async (parent, args, { db, token }) => {
       },
     });
 
-    const result = await db.sequelize.transaction(async t => db.Thread.findOrCreate({
+    const [result] = await db.sequelize.transaction(async t => db.Thread.findOrCreate({
       where: { providerId: gmailPayload.threadId, mailboxId },
       defaults: {
         mailboxId,
         providerId: gmailPayload.threadId,
-        labelIds: labels.map(label => label.dataValues.id), // a tad unecessary
       },
       transaction: t,
     }).then(([thread]) => db.Message.findOrCreate({
@@ -51,13 +50,6 @@ const syncMessage = async (parent, args, { db, token }) => {
         snippet: snippet || '[EMPTY CONTENT]',
       },
       transaction: t,
-    }).then(([message]) => {
-      if (thread.lastMessageReceivedAt >= message.receivedAt) return message;
-      thread.update(
-        { lastMessageReceivedAt: message.receivedAt },
-        { transaction: t },
-      );
-      return message;
     })));
 
     return result;

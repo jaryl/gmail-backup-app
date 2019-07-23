@@ -18,15 +18,6 @@ module.exports = {
       allowNull: false,
       type: Sequelize.STRING,
     },
-    labelIds: {
-      allowNull: false,
-      type: Sequelize.ARRAY(Sequelize.UUID),
-      defaultValue: [],
-    },
-    lastMessageReceivedAt: {
-      allowNull: true,
-      type: Sequelize.DATE,
-    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,

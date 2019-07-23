@@ -86,9 +86,7 @@ const typeDefs = `
 
   type Thread {
     id: ID!
-    labels: [Label]!
     messages: [Message!]!
-    lastMessageReceivedAt: DateTime!
     lastMessage: Message!
   }
 
