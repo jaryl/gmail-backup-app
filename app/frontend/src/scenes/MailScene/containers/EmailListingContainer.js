@@ -12,12 +12,23 @@ query($mailboxId: ID!, $id: ID!) {
       id
       name
       slug
-      threads {
-        id
-        lastMessage {
-          id
-          snippet
-          receivedAt
+      threadsConnection {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        edges {
+          cursor
+          node {
+            id
+            lastMessage {
+              id
+              snippet
+              receivedAt
+            }
+          }
         }
       }
     }
@@ -31,7 +42,8 @@ const EmailListingContainer = ({ mailbox, labelId, ...props }) => {
       {({ loading, error, data }) => {
         if (loading) return <div>Loading...</div>;
         if (error) return <div>{error.message}</div>;
-        return <EmailListing threads={data.mailbox.label.threads} {...props} />;
+        const threads = data.mailbox.label.threadsConnection.edges.map(edge => edge.node);
+        return <EmailListing threads={threads} {...props} />;
       }}
     </Query>
   );

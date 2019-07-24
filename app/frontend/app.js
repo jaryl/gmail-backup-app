@@ -23,11 +23,13 @@ import AuthService from './src/services/AuthService';
 
 import apolloConnect from './config/apolloConnect';
 
-// localStorage.removeItem('authToken');
-
 const apolloClient = apolloConnect(() => localStorage.getItem('authToken'));
 
 const authService = new AuthService(apolloClient);
+
+if (!authService.verify(localStorage.getItem('authToken'))) {
+  localStorage.removeItem('authToken');
+}
 
 const App = () => {
   const authContextProviderProps = {

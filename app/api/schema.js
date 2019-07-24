@@ -1,6 +1,17 @@
 const typeDefs = `
   scalar DateTime
 
+  interface Node {
+    id: ID!
+  }
+
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+  }
+
   type Query {
     mailboxes: [Mailbox!]!
     mailbox(id: ID!): Mailbox!
@@ -59,8 +70,7 @@ const typeDefs = `
     name: String!
     slug: String!
     type: String!
-    threads(before: DateTime, after: DateTime): [Thread]!
-    messages: [Message]!
+    threadsConnection(first: Int, after: String, last: Int, before: String): LabelThreadsConnection
   }
 
   type Mailbox {
@@ -94,6 +104,16 @@ const typeDefs = `
   type User {
     name: String
     email: String!
+  }
+
+  type LabelThreadsConnection {
+    pageInfo: PageInfo!
+    edges: [LabelThreadsEdge]
+  }
+
+  type LabelThreadsEdge {
+    cursor: String!
+    node: Thread
   }
 `;
 

@@ -1,5 +1,7 @@
-const DataLoader = require('dataloader');
 const _ = require('lodash');
+
+const DataLoader = require('dataloader');
+const { Op } = require('sequelize');
 
 const db = require('../../../models');
 
@@ -26,6 +28,13 @@ const orderedFor = (rows, collection, field, node) => {
 };
 
 const loaders = {
+  lastMessagesByMessageIds: new DataLoader(async (ids) => {
+    const results = await db.Message.findAll({
+      where: { id: { [Op.in]: ids } },
+    });
+    return orderedFor(results, ids, 'id');
+  }),
+
   lastMessagesByThreadIds: new DataLoader(async (ids) => {
     const results = await db.sequelize.query(LAST_MESSAGES_BY_THREAD_IDS_SQL, {
       replacements: { ids },
@@ -35,9 +44,7 @@ const loaders = {
       raw: true,
       type: db.sequelize.QueryTypes.SELECT,
     });
-
-    const dataLoaded = orderedFor(results, ids, 'id', 'lastMessage');
-    return dataLoaded;
+    return orderedFor(results, ids, 'id', 'lastMessage');
   }),
   // messagesByIds: new DataLoader(async (ids) => {
   //   const results = db.Message.findAll({ where: { id: { [Op.in]: ids } } });
