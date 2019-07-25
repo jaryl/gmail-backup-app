@@ -80,7 +80,7 @@ const connection = async (parent, { first, after, last, before }, { db }, info) 
   });
 
   const edges = results.map((message) => {
-    const cursor = encodeCursor({ id: message.id, date: message.receivedAt });
+    const cursor = encodeCursor({ id: message.threadId, date: message.receivedAt });
     return {
       cursor,
       node: {

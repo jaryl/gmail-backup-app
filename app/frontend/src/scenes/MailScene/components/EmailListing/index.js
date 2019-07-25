@@ -10,8 +10,20 @@ import { Search as SearchIcon } from '@material-ui/icons';
 
 import Thread from './components/thread';
 
-const EmailListing = ({ threads, mailboxIndex }) => {
-  const listItems = threads.map(thread => <Thread key={thread.id} thread={thread} mailboxIndex={mailboxIndex} />);
+const EmailListing = ({ onLoadMore, pageInfo, edges, mailboxIndex }) => {
+  const checkIfLastCursor = (cursor) => {
+    if (pageInfo.endCursor === cursor) onLoadMore();
+  };
+
+  const listItems = edges.map(edge => (
+    <Thread
+      key={edge.cursor}
+      cursor={edge.cursor}
+      thread={edge.node}
+      mailboxIndex={mailboxIndex}
+      checkIfLastCursor={checkIfLastCursor}
+    />
+  ));
 
   return (
     <React.Fragment>

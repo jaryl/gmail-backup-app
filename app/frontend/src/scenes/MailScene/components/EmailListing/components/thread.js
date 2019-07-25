@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Thread = ({ thread, mailboxIndex }) => {
+const Thread = ({ thread, mailboxIndex, cursor, checkIfLastCursor }) => {
   const classes = useStyles();
   const { selectedLabel, selectedThread, selectThread } = useContext(PresentationContext);
   const { scrollPosition } = useContext(ScrollContext);
@@ -36,11 +36,8 @@ const Thread = ({ thread, mailboxIndex }) => {
 
   useEffect(() => {
     if (!element.current) return;
-    // TODO: embed thread with cursor
-    // TODO: return if cursor is not the last
     if (element.current.getBoundingClientRect().bottom <= scrollPosition) {
-      // TODO: trigger new query
-      console.log(`end of ${thread}`);
+      checkIfLastCursor(cursor);
     }
   }, [scrollPosition]);
 
