@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
@@ -13,6 +13,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 import { PresentationContext } from '../../../hooks/PresentationContext';
+import { ScrollContext } from '../../../../../hooks/ScrollContext';
 
 const useStyles = makeStyles(() => ({
   avatar: {
@@ -29,15 +30,19 @@ const useStyles = makeStyles(() => ({
 const Thread = ({ thread, mailboxIndex }) => {
   const classes = useStyles();
   const { selectedLabel, selectedThread, selectThread } = useContext(PresentationContext);
+  const { scrollPosition } = useContext(ScrollContext);
 
-  // const calendarStrings = {
-  //   lastDay: '[Yesterday at] LT',
-  //   sameDay: '[Today at] LT',
-  //   nextDay: '[Tomorrow at] LT',
-  //   lastWeek: '[last] dddd [at] LT',
-  //   nextWeek: 'dddd [at] LT',
-  //   sameElse: 'll',
-  // };
+  const element = useRef(null);
+
+  useEffect(() => {
+    if (!element.current) return;
+    // TODO: embed thread with cursor
+    // TODO: return if cursor is not the last
+    if (element.current.getBoundingClientRect().bottom <= scrollPosition) {
+      // TODO: trigger new query
+      console.log(`end of ${thread}`);
+    }
+  }, [scrollPosition]);
 
   return (
     <ListItem
@@ -55,6 +60,8 @@ const Thread = ({ thread, mailboxIndex }) => {
       </ListItemAvatar>
       <ListItemText primary={thread.sender} secondary={<span dangerouslySetInnerHTML={{ __html: thread.lastMessage.snippet }} />} />
       <ListItemText className={classes.dateTimeDisplay} secondary={<Moment fromNow>{new Date(thread.lastMessage.receivedAt)}</Moment>} />
+
+      <div ref={element} />
 
     </ListItem>
   );

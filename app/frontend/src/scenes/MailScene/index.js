@@ -15,6 +15,7 @@ import { AuthContext } from '../../hooks/AuthContext';
 import { MailboxContext } from '../../hooks/MailboxContext';
 
 import { PresentationContext, PresentationContextProvider } from './hooks/PresentationContext';
+import { ScrollContext, ScrollContextProvider } from '../../hooks/ScrollContext';
 
 import AppBarContainer from './containers/AppBarContainer';
 import DrawerContainer from './containers/DrawerContainer';
@@ -109,23 +110,31 @@ const MainContainer = ({ match }) => {
                   <PresentationContext.Consumer>
                     {({ selectedLabel, selectedThread }) => (
                       <React.Fragment>
-                        <div className={classes.toolbar} />
+                        <ScrollContextProvider>
+                          <ScrollContext.Consumer>
+                            {({ scrollHandler }) => (
+                              <React.Fragment>
+                                <div className={classes.toolbar} />
 
-                        <Grid container spacing={0} direction="row">
-                          <Grid item xs={3} className={classes.scrollpane}>
-                            <Paper square={true}>
-                              <ListingErrorBoundary>
-                                <EmailListingContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} labelId={selectedLabel.id} />
-                              </ListingErrorBoundary>
-                            </Paper>
-                          </Grid>
+                                <Grid container spacing={0} direction="row">
+                                  <Grid item xs={3} className={classes.scrollpane} onScroll={scrollHandler}>
+                                    <Paper square={true}>
+                                      <ListingErrorBoundary>
+                                        <EmailListingContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} labelId={selectedLabel.id} />
+                                      </ListingErrorBoundary>
+                                    </Paper>
+                                  </Grid>
 
-                          <Grid item xs className={classes.scrollpane}>
-                            <ConversationErrorBoundary>
-                            {selectedThread ? <EmailViewerContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} threadId={selectedThread.id} /> : <React.Fragment />}
-                            </ConversationErrorBoundary>
-                          </Grid>
-                        </Grid>
+                                  <Grid item xs className={classes.scrollpane}>
+                                    <ConversationErrorBoundary>
+                                      {selectedThread ? <EmailViewerContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} threadId={selectedThread.id} /> : <React.Fragment />}
+                                    </ConversationErrorBoundary>
+                                  </Grid>
+                                </Grid>
+                              </React.Fragment>
+                            )}
+                          </ScrollContext.Consumer>
+                        </ScrollContextProvider>
                       </React.Fragment>
                     )}
                   </PresentationContext.Consumer>
