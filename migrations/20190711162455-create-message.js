@@ -67,6 +67,8 @@ module.exports = {
   }).then(() => {
     queryInterface.addIndex('Messages', ['providerId']);
   }).then(() => {
+    queryInterface.addIndex('Messages', ['id', 'receivedAt']);
+  }).then(() => {
     queryInterface.addIndex('Messages', ['mailboxId', 'providerId'], {
       unique: true,
     });

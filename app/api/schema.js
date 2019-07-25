@@ -1,10 +1,6 @@
 const typeDefs = `
   scalar DateTime
 
-  interface Node {
-    id: ID!
-  }
-
   type PageInfo {
     hasNextPage: Boolean!
     hasPreviousPage: Boolean!

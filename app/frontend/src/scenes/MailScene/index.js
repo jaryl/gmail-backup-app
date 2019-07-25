@@ -40,6 +40,11 @@ const useStyles = makeStyles(theme => ({
   paper: {
     height: '100vh',
   },
+  scrollpane: {
+    overflow: 'auto',
+    overflowX: 'hidden',
+    height: 'calc(100vh - 64px)',
+  },
 }));
 
 const MAILBOX_QUERY = gql`
@@ -107,19 +112,17 @@ const MainContainer = ({ match }) => {
                         <div className={classes.toolbar} />
 
                         <Grid container spacing={0} direction="row">
-                          <Grid item xs={3}>
-                            <Paper square={true} className={classes.paper}>
+                          <Grid item xs={3} className={classes.scrollpane}>
+                            <Paper square={true}>
                               <ListingErrorBoundary>
                                 <EmailListingContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} labelId={selectedLabel.id} />
                               </ListingErrorBoundary>
                             </Paper>
                           </Grid>
 
-                          <Grid item xs>
+                          <Grid item xs className={classes.scrollpane}>
                             <ConversationErrorBoundary>
-                              <React.Fragment>
-                                {selectedThread && <EmailViewerContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} threadId={selectedThread.id} />}
-                              </React.Fragment>
+                            {selectedThread ? <EmailViewerContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} threadId={selectedThread.id} /> : <React.Fragment />}
                             </ConversationErrorBoundary>
                           </Grid>
                         </Grid>

@@ -14,7 +14,7 @@ const EmailListing = ({ threads, mailboxIndex }) => {
   const listItems = threads.map(thread => <Thread key={thread.id} thread={thread} mailboxIndex={mailboxIndex} />);
 
   return (
-    <div>
+    <React.Fragment>
       <TextField fullWidth
         id="outlined-search"
         type="search"
@@ -33,7 +33,7 @@ const EmailListing = ({ threads, mailboxIndex }) => {
       <List component="nav">
         {listItems}
       </List>
-    </div>
+    </React.Fragment>
   );
 };
 

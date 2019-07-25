@@ -2,7 +2,6 @@ const { ApolloError } = require('apollo-server-express');
 
 const MAX_EDGES_PER_QUERY = 25;
 
-// TODO: exclude nodes from before and after cursors
 const THREADS_SQL = `
 SELECT * FROM (
   SELECT DISTINCT ON ("Message"."threadId") *
@@ -10,8 +9,8 @@ SELECT * FROM (
   WHERE :labelId = ANY("Message"."labelIds")
     AND "Message"."receivedAt" >= :afterDate
     AND "Message"."receivedAt" <= :beforeDate
-    AND (:afterId IS NULL OR "Message"."id" != :afterId)
-    AND (:beforeId IS NULL OR "Message"."id" != :beforeId)
+    AND (:afterId IS NULL OR "Message"."threadId" != :afterId)
+    AND (:beforeId IS NULL OR "Message"."threadId" != :beforeId)
   ORDER BY "Message"."threadId", "Message"."receivedAt" DESC
 ) AS "Message"
 ORDER BY "Message"."receivedAt" DESC
@@ -24,8 +23,7 @@ SELECT COUNT(*) FROM (
   FROM "Messages" AS "Message"
   WHERE :labelId = ANY("Message"."labelIds")
     AND "Message"."receivedAt" <= :receivedAt
-    AND "Message"."id" != :messageId
-  ORDER BY "Message"."threadId", "Message"."receivedAt" DESC
+    AND "Message"."threadId" != :threadId
 ) AS "Message";
 `;
 
@@ -35,12 +33,12 @@ SELECT COUNT(*) FROM (
   FROM "Messages" AS "Message"
   WHERE :labelId = ANY("Message"."labelIds")
     AND "Message"."receivedAt" >= :receivedAt
-    AND "Message"."id" != :messageId
-  ORDER BY "Message"."threadId", "Message"."receivedAt" DESC
+    AND "Message"."threadId" != :threadId
 ) AS "Message";
 `;
 
 const encodeCursor = ({ id, date }) => Buffer.from(JSON.stringify({ id, date })).toString('base64');
+
 const decodeCursor = (cursor) => {
   try {
     return JSON.parse(Buffer.from(cursor, 'base64'));
@@ -58,16 +56,14 @@ const connection = async (parent, { first, after, last, before }, { db }, info) 
 
   if (first && last) throw new ApolloError('Arguments first and last cannot both be set', 'INVALID_PAGINATION', { field: ['first', 'last'] });
 
-  // TODO: add index for createdAt and id (do this last)
-
   const afterCursor = decodeCursor(after);
   const beforeCursor = decodeCursor(before);
 
   const cursorReplacements = {
     afterId: beforeCursor.id,
-    afterDate: beforeCursor.date || new Date(0),
+    afterDate: beforeCursor.date ? new Date(beforeCursor.date) : new Date(0),
     beforeId: afterCursor.id,
-    beforeDate: afterCursor.date || new Date(),
+    beforeDate: afterCursor.date ? new Date(afterCursor.date) : new Date(),
   };
 
   const results = await db.sequelize.query(THREADS_SQL, {
@@ -94,8 +90,8 @@ const connection = async (parent, { first, after, last, before }, { db }, info) 
     };
   });
 
-  const startCursor = edges.length ? encodeCursor({ id: results[0].id, date: results[0].receivedAt }) : null;
-  const endCursor = edges.length ? encodeCursor({ id: results[results.length - 1].id, date: results[results.length - 1].receivedAt }) : null;
+  const startCursor = edges.length ? encodeCursor({ id: results[0].threadId, date: results[0].receivedAt }) : null;
+  const endCursor = edges.length ? encodeCursor({ id: results[results.length - 1].threadId, date: results[results.length - 1].receivedAt }) : null;
 
   const hasNextPage = (async () => {
     if (edges.length === 0) return false;
@@ -103,12 +99,11 @@ const connection = async (parent, { first, after, last, before }, { db }, info) 
       replacements: {
         labelId: parent.id,
         receivedAt: results[results.length - 1].receivedAt,
-        messageId: results[results.length - 1].id,
+        threadId: results[results.length - 1].threadId,
       },
       raw: true,
       type: db.sequelize.QueryTypes.SELECT,
     });
-    // console.log(beforeCount, `hasNextPage: ${parseInt(beforeCount.count, 10)}`);
     return parseInt(beforeCount.count, 10) > 0;
   })();
 
@@ -118,12 +113,11 @@ const connection = async (parent, { first, after, last, before }, { db }, info) 
       replacements: {
         labelId: parent.id,
         receivedAt: results[0].receivedAt,
-        messageId: results[0].id,
+        threadId: results[0].threadId,
       },
       raw: true,
       type: db.sequelize.QueryTypes.SELECT,
     });
-    // console.log(afterCount, `hasPreviousPage: ${parseInt(afterCount.count, 10)}`);
     return parseInt(afterCount.count, 10) > 0;
   })();
 
