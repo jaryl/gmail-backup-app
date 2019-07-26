@@ -46,8 +46,8 @@ const EmailListing = ({ onLoadBefore, onLoadAfter, pageInfo, edges, mailboxIndex
       threshold: 1.0,
     });
 
-    observer.observe(firstElement.current);
-    observer.observe(lastElement.current);
+    if (firstElement.current) observer.observe(firstElement.current);
+    if (lastElement.current) observer.observe(lastElement.current);
 
     return () => observer.disconnect();
   }, [pageInfo, edges]);
