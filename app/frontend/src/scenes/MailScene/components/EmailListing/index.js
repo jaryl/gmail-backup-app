@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 
 import {
   TextField,
@@ -10,10 +10,27 @@ import { Search as SearchIcon } from '@material-ui/icons';
 
 import Thread from './components/thread';
 
+import { ScrollContext } from '../../../../hooks/ScrollContext';
+
 const EmailListing = ({ onLoadMore, pageInfo, edges, mailboxIndex }) => {
-  const checkIfLastCursor = (cursor) => {
-    if (pageInfo.endCursor === cursor) onLoadMore();
-  };
+  const { rootRef } = useContext(ScrollContext);
+
+  const lastElement = useRef(null);
+
+  useEffect(() => {
+    const callback = (e) => {
+      if (e[0].isIntersecting && pageInfo.endCursor === e[0].target.dataset.cursor) onLoadMore();
+    };
+
+    const observer = new IntersectionObserver(callback, {
+      root: rootRef.current,
+      threshold: 1.0,
+    });
+
+    if (lastElement.current) observer.observe(lastElement.current);
+
+    return () => observer.disconnect();
+  }, [pageInfo, edges]);
 
   const listItems = edges.map(edge => (
     <Thread
@@ -21,7 +38,7 @@ const EmailListing = ({ onLoadMore, pageInfo, edges, mailboxIndex }) => {
       cursor={edge.cursor}
       thread={edge.node}
       mailboxIndex={mailboxIndex}
-      checkIfLastCursor={checkIfLastCursor}
+      ref={lastElement}
     />
   ));
 

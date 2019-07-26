@@ -1,21 +1,12 @@
-import React, { useState } from 'react';
-import { debounce } from 'lodash';
+import React, { useRef } from 'react';
 
 const ScrollContext = React.createContext();
 
-const ScrollContextProvider = (props) => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-
-  const debouncedCall = debounce(e => setScrollPosition(e.target.scrollTop), 100);
-
-  const scrollHandler = (e) => {
-    e.persist();
-    debouncedCall(e);
-  };
+const ScrollContextProvider = ({ emailListingRef, ...props }) => {
+  const rootRef = useRef(emailListingRef);
 
   const values = {
-    scrollHandler,
-    scrollPosition,
+    rootRef,
   };
 
   return (

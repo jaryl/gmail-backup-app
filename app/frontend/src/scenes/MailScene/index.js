@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 
@@ -67,6 +67,7 @@ query($id: ID!) {
 
 const MainContainer = ({ match }) => {
   const classes = useStyles();
+  const emailListingRef = useRef(null);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { logout } = useContext(AuthContext);
@@ -110,30 +111,26 @@ const MainContainer = ({ match }) => {
                   <PresentationContext.Consumer>
                     {({ selectedLabel, selectedThread }) => (
                       <React.Fragment>
-                        <ScrollContextProvider>
-                          <ScrollContext.Consumer>
-                            {({ scrollHandler }) => (
-                              <React.Fragment>
-                                <div className={classes.toolbar} />
+                        <ScrollContextProvider values={{ emailListingRef }}>
+                          <React.Fragment>
+                            <div className={classes.toolbar} />
 
-                                <Grid container spacing={0} direction="row">
-                                  <Grid item xs={3} className={classes.scrollpane} onScroll={scrollHandler}>
-                                    <Paper square={true}>
-                                      <ListingErrorBoundary>
-                                        <EmailListingContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} labelId={selectedLabel.id} />
-                                      </ListingErrorBoundary>
-                                    </Paper>
-                                  </Grid>
+                            <Grid container spacing={0} direction="row">
+                              <Grid item xs={3} className={classes.scrollpane} ref={emailListingRef}>
+                                <Paper square={true}>
+                                  <ListingErrorBoundary>
+                                    <EmailListingContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} labelId={selectedLabel.id} />
+                                  </ListingErrorBoundary>
+                                </Paper>
+                              </Grid>
 
-                                  <Grid item xs className={classes.scrollpane}>
-                                    <ConversationErrorBoundary>
-                                      {selectedThread ? <EmailViewerContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} threadId={selectedThread.id} /> : <React.Fragment />}
-                                    </ConversationErrorBoundary>
-                                  </Grid>
-                                </Grid>
-                              </React.Fragment>
-                            )}
-                          </ScrollContext.Consumer>
+                              <Grid item xs className={classes.scrollpane}>
+                                <ConversationErrorBoundary>
+                                  {selectedThread ? <EmailViewerContainer mailbox={mailbox} mailboxIndex={match.params.mailbox} threadId={selectedThread.id} /> : <React.Fragment />}
+                                </ConversationErrorBoundary>
+                              </Grid>
+                            </Grid>
+                          </React.Fragment>
                         </ScrollContextProvider>
                       </React.Fragment>
                     )}
