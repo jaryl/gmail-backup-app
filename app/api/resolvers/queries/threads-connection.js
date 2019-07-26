@@ -93,6 +93,8 @@ const connection = async (parent, { first, after, last, before }, { db }, info) 
   const startCursor = edges.length ? encodeCursor({ id: results[0].threadId, date: results[0].receivedAt }) : null;
   const endCursor = edges.length ? encodeCursor({ id: results[results.length - 1].threadId, date: results[results.length - 1].receivedAt }) : null;
 
+  // TODO: process hasNextPage and hasPreviousPage only when necessary (defer to resolver?)
+
   const hasNextPage = (async () => {
     if (edges.length === 0) return false;
     const [beforeCount] = await db.sequelize.query(PAGINATION_BEFORE_SQL, {

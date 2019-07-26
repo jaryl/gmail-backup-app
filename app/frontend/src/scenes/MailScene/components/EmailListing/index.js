@@ -17,7 +17,7 @@ const EmailListing = ({ onLoadMore, pageInfo, edges, mailboxIndex }) => {
 
   const listItems = edges.map(edge => (
     <Thread
-      key={edge.cursor}
+      key={edge.cursor} // TODO: investigate why can't use thread id as key
       cursor={edge.cursor}
       thread={edge.node}
       mailboxIndex={mailboxIndex}

@@ -5,6 +5,8 @@ import { Query } from 'react-apollo';
 
 import EmailListing from '../components/EmailListing';
 
+const MAX_ELEMENTS_IN_LIST = 100;
+
 const THREADS_QUERY = gql`
 query($mailboxId: ID!, $id: ID!, $after: String) {
   mailbox(id: $mailboxId) {
@@ -14,8 +16,6 @@ query($mailboxId: ID!, $id: ID!, $after: String) {
       slug
       threadsConnection(after: $after) {
         pageInfo {
-          hasNextPage
-          hasPreviousPage
           startCursor
           endCursor
         }
@@ -38,6 +38,13 @@ query($mailboxId: ID!, $id: ID!, $after: String) {
 
 const updateQuery = (prev, { fetchMoreResult }) => {
   if (!fetchMoreResult) return prev;
+
+  prev.mailbox.label.threadsConnection.edges.push(...fetchMoreResult.mailbox.label.threadsConnection.edges);
+  prev.mailbox.label.threadsConnection.edges.splice(0, prev.mailbox.label.threadsConnection.edges.length - MAX_ELEMENTS_IN_LIST);
+
+  // TODO: capture the first cursor, and listen for scroll events, so that when users scroll back up, we can reload data upwards
+  // console.log(newEdges.length);
+
   return {
     mailbox: {
       ...prev.mailbox,
@@ -49,10 +56,7 @@ const updateQuery = (prev, { fetchMoreResult }) => {
             ...prev.mailbox.label.threadsConnection.pageInfo,
             ...fetchMoreResult.mailbox.label.threadsConnection.pageInfo,
           },
-          edges: [
-            ...prev.mailbox.label.threadsConnection.edges,
-            ...fetchMoreResult.mailbox.label.threadsConnection.edges,
-          ],
+          edges: prev.mailbox.label.threadsConnection.edges,
         },
       },
     },
