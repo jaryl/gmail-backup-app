@@ -13,8 +13,14 @@ SELECT * FROM (
     AND (:beforeId IS NULL OR "Message"."threadId" != :beforeId)
   ORDER BY "Message"."threadId", "Message"."receivedAt" DESC
 ) AS "Message"
-ORDER BY "Message"."receivedAt" DESC
-LIMIT :limit;
+ORDER BY
+  CASE
+    WHEN :last IS NOT NULL THEN "Message"."receivedAt"
+  END ASC,
+  CASE
+    WHEN :first IS NOT NULL THEN "Message"."receivedAt"
+  END DESC
+LIMIT COALESCE(:last, :first, 25);
 `;
 
 const PAGINATION_BEFORE_SQL = `
@@ -59,19 +65,18 @@ const connection = async (parent, { first, after, last, before }, { db }, info) 
   const afterCursor = decodeCursor(after);
   const beforeCursor = decodeCursor(before);
 
-  const cursorReplacements = {
-    afterId: beforeCursor.id,
-    afterDate: beforeCursor.date ? new Date(beforeCursor.date) : new Date(0),
-    beforeId: afterCursor.id,
-    beforeDate: afterCursor.date ? new Date(afterCursor.date) : new Date(),
+  const replacements = {
+    beforeId: beforeCursor.id,
+    beforeDate: beforeCursor.date ? new Date(beforeCursor.date) : new Date(),
+    afterId: afterCursor.id,
+    afterDate: afterCursor.date ? new Date(afterCursor.date) : new Date(0),
+    labelId: parent.id,
+    first: first || (last ? null : MAX_EDGES_PER_QUERY),
+    last: last || null,
   };
 
   const results = await db.sequelize.query(THREADS_SQL, {
-    replacements: {
-      ...cursorReplacements,
-      labelId: parent.id,
-      limit: (first || last || MAX_EDGES_PER_QUERY),
-    },
+    replacements,
     model: db.Message,
     mapToModel: true,
     nest: true,

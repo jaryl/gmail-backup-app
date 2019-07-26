@@ -1,12 +1,10 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
 const ScrollContext = React.createContext();
 
-const ScrollContextProvider = ({ emailListingRef, ...props }) => {
-  const rootRef = useRef(emailListingRef);
-
+const ScrollContextProvider = ({ targetRef, ...props }) => {
   const values = {
-    rootRef,
+    rootRef: targetRef,
   };
 
   return (

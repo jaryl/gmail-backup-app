@@ -15,7 +15,7 @@ import { AuthContext } from '../../hooks/AuthContext';
 import { MailboxContext } from '../../hooks/MailboxContext';
 
 import { PresentationContext, PresentationContextProvider } from './hooks/PresentationContext';
-import { ScrollContext, ScrollContextProvider } from '../../hooks/ScrollContext';
+import { ScrollContextProvider } from '../../hooks/ScrollContext';
 
 import AppBarContainer from './containers/AppBarContainer';
 import DrawerContainer from './containers/DrawerContainer';
@@ -111,7 +111,7 @@ const MainContainer = ({ match }) => {
                   <PresentationContext.Consumer>
                     {({ selectedLabel, selectedThread }) => (
                       <React.Fragment>
-                        <ScrollContextProvider values={{ emailListingRef }}>
+                        <ScrollContextProvider targetRef={emailListingRef}>
                           <React.Fragment>
                             <div className={classes.toolbar} />
 

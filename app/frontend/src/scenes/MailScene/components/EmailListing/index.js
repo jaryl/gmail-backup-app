@@ -12,14 +12,33 @@ import Thread from './components/thread';
 
 import { ScrollContext } from '../../../../hooks/ScrollContext';
 
-const EmailListing = ({ onLoadMore, pageInfo, edges, mailboxIndex }) => {
+const EmailListing = ({ onLoadBefore, onLoadAfter, pageInfo, edges, mailboxIndex }) => {
   const { rootRef } = useContext(ScrollContext);
 
+  const firstElement = useRef(null);
   const lastElement = useRef(null);
 
+  const lastCursor = useRef(null);
+
   useEffect(() => {
-    const callback = (e) => {
-      if (e[0].isIntersecting && pageInfo.endCursor === e[0].target.dataset.cursor) onLoadMore();
+    const callback = ([entry]) => {
+      if (!entry.isIntersecting) return;
+      switch (entry.target.dataset.cursor) {
+        case firstElement.current.dataset.cursor:
+          if (lastCursor.current !== firstElement.current.dataset.cursor) {
+            onLoadAfter();
+            lastCursor.current = firstElement.current.dataset.cursor;
+            rootRef.current.scrollTop = 200;
+          }
+          break;
+        case lastElement.current.dataset.cursor:
+          if (lastCursor.current !== lastElement.current.dataset.cursor) {
+            onLoadBefore();
+            lastCursor.current = lastElement.current.dataset.cursor;
+          }
+          break;
+        default:
+      }
     };
 
     const observer = new IntersectionObserver(callback, {
@@ -27,20 +46,30 @@ const EmailListing = ({ onLoadMore, pageInfo, edges, mailboxIndex }) => {
       threshold: 1.0,
     });
 
-    if (lastElement.current) observer.observe(lastElement.current);
+    observer.observe(firstElement.current);
+    observer.observe(lastElement.current);
 
     return () => observer.disconnect();
   }, [pageInfo, edges]);
 
-  const listItems = edges.map(edge => (
-    <Thread
-      key={edge.cursor} // TODO: investigate why can't use thread id as key
-      cursor={edge.cursor}
-      thread={edge.node}
-      mailboxIndex={mailboxIndex}
-      ref={lastElement}
-    />
-  ));
+  const listItems = edges.map((edge, index) => {
+    let ref = null;
+    if (index === 0) {
+      ref = firstElement;
+    } else if (index === edges.length - 1) {
+      ref = lastElement;
+    }
+
+    return (
+      <Thread
+        key={edge.cursor} // TODO: investigate why can't use thread id as key
+        cursor={edge.cursor}
+        thread={edge.node}
+        mailboxIndex={mailboxIndex}
+        ref={ref}
+      />
+    );
+  });
 
   return (
     <React.Fragment>
