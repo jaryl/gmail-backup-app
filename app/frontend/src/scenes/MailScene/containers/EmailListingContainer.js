@@ -12,6 +12,7 @@ const MAX_ELEMENTS_IN_LIST = 100;
 const THREADS_QUERY = gql`
 query($mailboxId: ID!, $id: ID!, $after: String, $before: String, $first: Int, $last: Int) {
   mailbox(id: $mailboxId) {
+    id
     label(id: $id) {
       id
       name

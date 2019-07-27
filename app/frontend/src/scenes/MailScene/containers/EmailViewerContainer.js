@@ -16,6 +16,7 @@ import EmailViewer from '../components/EmailViewer';
 const CONVERSATION_QUERY = gql`
 query($mailboxId: ID!, $id: ID!) {
   mailbox(id: $mailboxId) {
+    id
     thread(id: $id) {
       id
       labels {

@@ -51,6 +51,7 @@ const useStyles = makeStyles(theme => ({
 const MAILBOX_QUERY = gql`
 query($id: ID!) {
   mailbox(id: $id) {
+    id
     email
     labels {
       id
